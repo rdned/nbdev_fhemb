@@ -5,4 +5,4 @@ d = { 'settings': { 'branch': 'main',
                 'doc_host': 'https://rdned.github.io',
                 'git_url': 'https://github.com/rdned/nbdev_fhemb',
                 'lib_path': 'nbdev_fhemb'},
-  'syms': {'nbdev_fhemb.core': {'nbdev_fhemb.core.foo': ('core.html#foo', 'nbdev_fhemb/core.py')}}}
+  'syms': {'nbdev_fhemb.core': {'nbdev_fhemb.core.foo': ('core.html#foo', 'nbdev_fhemb/core.py')}, 'nbdev_fhemb.tfreq': {}}}
