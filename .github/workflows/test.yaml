@@ -7,14 +7,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Install external dependency (fhemb)
-      - name: Install external dependency
+      - name: Checkout external dependency
+        uses: actions/checkout@v4
+        with:
+          repository: rdned/fhemb
+          path: dep
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and install external dependency
         run: |
-          git clone https://github.com/rdned/fhemb dep
           python -m pip install build
           cd dep
           python -m build --wheel --outdir dist
           pip install dist/*.whl
 
-      # Run nbdev CI
       - uses: answerdotai/workflows/nbdev-ci@master
