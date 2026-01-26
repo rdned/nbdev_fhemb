@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Python 
-        uses: actions/setup-python@v5 
-        with: 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
           python-version: "3.10"
 
       - uses: actions/checkout@v4
@@ -31,6 +31,27 @@ jobs:
 
       - name: Export library
         run: nbdev_export
+
+      # -------------------------------
+      # 🔥 DB TUNNEL SETUP (critical)
+      # -------------------------------
+      - name: Configure SSH for DB tunnel
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.FHEMB_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no -f -N \
+            -L 5433:${{ secrets.FHEMB_DB_HOST }}:${{ secrets.FHEMB_DB_PORT }} \
+            ${{ secrets.FHEMB_DB_USER }}@${{ secrets.FHEMB_DB_HOST }}
+
+      - name: Export DB env vars
+        run: |
+          echo "FHEMB_DB_HOST=localhost" >> $GITHUB_ENV
+          echo "FHEMB_DB_PORT=5433" >> $GITHUB_ENV
+          echo "FHEMB_DB_USER=${{ secrets.FHEMB_DB_USER }}" >> $GITHUB_ENV
+          echo "FHEMB_DB_PASS=${{ secrets.FHEMB_DB_PASS }}" >> $GITHUB_ENV
+
+      # -------------------------------
 
       - name: Test notebooks
         run: nbdev_test --flags ''
