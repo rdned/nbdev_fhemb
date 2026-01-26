@@ -19,3 +19,5 @@ jobs:
           pip install "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
 
       - uses: answerdotai/workflows/nbdev-ci@master
+        with:
+          nbdev_version: ">=2.3"
