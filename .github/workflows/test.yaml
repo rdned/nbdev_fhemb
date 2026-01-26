@@ -22,7 +22,7 @@ jobs:
         with:
           repository: rdned/fhemb
           path: dep
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.FHEMB_CI }}
 
       - name: Build and install external dependency
         run: |
