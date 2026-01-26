@@ -18,6 +18,7 @@ jobs:
         run: |
           pip install "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
 
+      - name: Force nbdev version
+        run: pip install "nbdev>=2.3"
+
       - uses: answerdotai/workflows/nbdev-ci@master
-        with:
-          nbdev_version: ">=2.3"
