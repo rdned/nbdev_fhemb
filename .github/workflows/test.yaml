@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set up Python 
+        uses: actions/setup-python@v5 
+        with: 
+          python-version: "3.11"
+
       - uses: actions/checkout@v4
 
       - name: Install private fhemb dependency
@@ -21,4 +26,19 @@ jobs:
       - name: Force nbdev version
         run: pip install "nbdev>=2.3"
 
-      - uses: answerdotai/workflows/nbdev-ci@master
+      - name: Clean notebooks
+        run: nbdev_clean
+
+      - name: Export library
+        run: nbdev_export
+
+      - name: Test notebooks
+        run: nbdev_test --flags ''
+
+      - name: Check sync
+        run: |
+          if [[ -n "$(git status --porcelain -uno)" ]]; then
+            echo "::error::Notebooks and library are not in sync."
+            git status -uno
+            exit 1
+          fi
