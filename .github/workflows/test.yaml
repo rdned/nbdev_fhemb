@@ -62,10 +62,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y netcat postgresql-client
 
-      - name: Debug: check Postgres TCP port
+      - name: "Debug: check Postgres TCP port"
         run: nc -zv localhost 5432
 
-      - name: Debug: check DB login
+      - name: "Debug: check DB login"
         run: |
           PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
           psql -h localhost -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "SELECT 1;"
