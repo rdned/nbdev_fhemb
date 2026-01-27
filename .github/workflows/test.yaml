@@ -21,7 +21,7 @@ jobs:
 
       - name: Install private fhemb dependency
         run: |
-          pip install "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
+          pip install --no-cache-dir --force-reinstall "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
 
       - name: Force nbdev version
         run: pip install "nbdev>=2.3"
