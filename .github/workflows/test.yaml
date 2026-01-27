@@ -36,8 +36,8 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           cat > ~/.ssh/id_rsa << 'EOF'
-${{ secrets.FHEMB_SSH_KEY }}
-EOF
+          ${{ secrets.FHEMB_SSH_KEY }}
+          EOF
 
           chmod 600 ~/.ssh/id_rsa
           ssh -o StrictHostKeyChecking=no -f -N \
