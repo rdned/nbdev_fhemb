@@ -32,22 +32,10 @@ jobs:
       - name: Export library
         run: nbdev_export
 
-      - name: Configure SSH for DB tunnel
-        run: |
-          mkdir -p ~/.ssh
-          cat > ~/.ssh/id_rsa << 'EOF'
-${{ secrets.FHEMB_SSH_KEY }}
-EOF
-
-          chmod 600 ~/.ssh/id_rsa
-          ssh -o StrictHostKeyChecking=no -f -N \
-            -L 5433:${{ secrets.FHEMB_DB_HOST }}:${{ secrets.FHEMB_DB_PORT }} \
-            ${{ secrets.FHEMB_DB_USER }}@${{ secrets.FHEMB_DB_HOST }}
-
       - name: Export DB env vars
         run: |
           echo "FHEMB_DB_HOST=localhost" >> $GITHUB_ENV
-          echo "FHEMB_DB_PORT=5433" >> $GITHUB_ENV
+          echo "FHEMB_DB_PORT=5432" >> $GITHUB_ENV
           echo "FHEMB_DB_USER=${{ secrets.FHEMB_DB_USER }}" >> $GITHUB_ENV
           echo "FHEMB_DB_PASS=${{ secrets.FHEMB_DB_PASS }}" >> $GITHUB_ENV
 
