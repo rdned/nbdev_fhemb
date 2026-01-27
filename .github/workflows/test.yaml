@@ -19,6 +19,13 @@ jobs:
           apt-get update
           apt-get install -y postgresql-client
 
+      - name: "Debug: test DB host candidates"
+        run: |
+          echo "Testing 10.96.1.70..."
+          nc -zv 10.96.1.70 5432 || true
+          echo "Testing 10.96.1.71..."
+          nc -zv 10.96.1.71 5432 || true
+
       - uses: actions/checkout@v4
 
       - name: Install private fhemb dependency
