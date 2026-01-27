@@ -45,6 +45,12 @@ jobs:
           echo "FHEMB_SSH_USER=none" >> $GITHUB_ENV
           echo "FHEMB_SSH_KEY=none" >> $GITHUB_ENV
 
+      - name: Set search_path
+        run: |
+          PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
+          psql -h localhost -U $FHEMB_DB_USER -d $FHEMB_DB_NAME \
+          -c "SET search_path TO dg, public;"
+
       - name: "Debug: show DB user env"
         run: |
           echo "FHEMB_DB_USER=$FHEMB_DB_USER"
