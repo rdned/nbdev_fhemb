@@ -17,7 +17,7 @@ jobs:
       - name: Install PostgreSQL client + netcat
         run: |
           apt-get update
-          apt-get install -y postgresql-client netcat
+          apt-get install -y postgresql-client netcat-openbsd
 
       - name: "Debug: test DB host candidates"
         run: |
