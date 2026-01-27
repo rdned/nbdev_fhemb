@@ -39,6 +39,7 @@ jobs:
           echo "FHEMB_DB_PORT=5432" >> $GITHUB_ENV
           echo "FHEMB_DB_USER=${{ secrets.FHEMB_DB_USER }}" >> $GITHUB_ENV
           echo "FHEMB_DB_PASS=${{ secrets.FHEMB_DB_PASS }}" >> $GITHUB_ENV
+          echo "FHEMB_DB_NAME=fhemb" >> $GITHUB_ENV
 
       - name: Test notebooks
         run: nbdev_test --flags ''
