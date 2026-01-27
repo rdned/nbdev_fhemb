@@ -49,6 +49,13 @@ jobs:
         run: |
           echo "FHEMB_DB_USER=$FHEMB_DB_USER"
 
+      - name: "Debug: show DB name env"
+        run: |
+          echo "FHEMB_DB_NAME=$FHEMB_DB_NAME"
+
+      - name: Debug: show env | grep DB
+        run: env | grep -i db
+
       - name: "Debug: whoami and dg tables"
         run: |
           PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
