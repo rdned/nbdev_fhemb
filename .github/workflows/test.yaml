@@ -14,6 +14,11 @@ jobs:
       image: python:3.12
 
     steps:
+      - name: Install PostgreSQL client
+        run: |
+          apt-get update
+          apt-get install -y postgresql-client
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
