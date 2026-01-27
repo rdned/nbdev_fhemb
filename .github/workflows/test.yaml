@@ -11,7 +11,7 @@ jobs:
   test:
     runs-on: scienziatiello
     container:
-      image: Python:3.12
+      image: python:3.12
 
     steps:
       - name: Set up Python
