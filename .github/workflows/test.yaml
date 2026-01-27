@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: scienziatiello
 
     steps:
       - name: Set up Python
