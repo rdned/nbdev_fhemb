@@ -19,13 +19,6 @@ jobs:
           apt-get update
           apt-get install -y postgresql-client netcat-openbsd
 
-      - name: "Debug: test DB host candidates"
-        run: |
-          echo "Testing 10.96.1.70..."
-          nc -zv 10.96.1.70 5432 || true
-          echo "Testing 10.96.1.71..."
-          nc -zv 10.96.1.71 5432 || true
-
       - uses: actions/checkout@v4
 
       - name: Install private fhemb dependency
@@ -44,46 +37,37 @@ jobs:
 
       - name: Export DB env vars
         run: |
-          echo "FHEMB_DB_SSH=0" >> $GITHUB_ENV
-          echo "FHEMB_DB_HOST=host.docker.internal" >> $GITHUB_ENV
+          echo "FHEMB_DB_SSH=1" >> $GITHUB_ENV
+          echo "FHEMB_DB_HOST=localhost" >> $GITHUB_ENV
           echo "FHEMB_DB_PORT=5432" >> $GITHUB_ENV
           echo "FHEMB_DB_USER=${{ secrets.FHEMB_DB_USER }}" >> $GITHUB_ENV
           echo "FHEMB_DB_PASS=${{ secrets.FHEMB_DB_PASS }}" >> $GITHUB_ENV
           echo "FHEMB_DB_NAME=${{ secrets.FHEMB_DB_NAME }}" >> $GITHUB_ENV
-          echo "FHEMB_SSH_HOST=none" >> $GITHUB_ENV
-          echo "FHEMB_SSH_USER=none" >> $GITHUB_ENV
-          echo "FHEMB_SSH_KEY=none" >> $GITHUB_ENV
 
-      - name: Set search_path
+      - name: Start SSH tunnel
         run: |
-          PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
-          psql -h host.docker.internal -U $FHEMB_DB_USER -d $FHEMB_DB_NAME \
-          -c "SET search_path TO dg, public;"
+          mkdir -p ~/.ssh
+          echo "${{ secrets.FHEMB_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-      - name: "Debug: show DB user env"
-        run: |
-          echo "FHEMB_DB_USER=$FHEMB_DB_USER"
-
-      - name: "Debug: show DB name env"
-        run: |
-          echo "FHEMB_DB_NAME=$FHEMB_DB_NAME"
-
-      - name: "Debug: show env | grep DB"
-        run: env | grep -i db
+          ssh -o StrictHostKeyChecking=no \
+              -i ~/.ssh/id_rsa \
+              -N -L 5432:localhost:5432 \
+              ${{ secrets.FHEMB_SSH_USER }}@${{ secrets.FHEMB_SSH_HOST }} &
 
       - name: "Debug: whoami and dg tables"
         run: |
           PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
-          psql -h host.docker.internal -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "SELECT current_user, session_user;"
+          psql -h localhost -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "SELECT current_user, session_user;"
           PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
-          psql -h host.docker.internal -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "\dn"
+          psql -h localhost -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "\dn"
           PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
-          psql -h host.docker.internal -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "\dt dg.*"
+          psql -h localhost -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "\dt dg.*"
 
       - name: "Debug: list tables"
         run: |
           PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
-          psql -h host.docker.internal -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "\dt"
+          psql -h localhost -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "\dt"
 
       - name: Test notebooks
         run: nbdev_test --flags ''
@@ -95,17 +79,3 @@ jobs:
             git status -uno
             exit 1
           fi
-
-      # --- TEMPORARY DEBUGGING STEPS ---
-      - name: Install debug tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y netcat postgresql-client
-
-      - name: "Debug: check Postgres TCP port"
-        run: nc -zv host.docker.internal 5432
-
-      - name: "Debug: check DB login"
-        run: |
-          PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
-          psql -h host.docker.internal -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "SELECT 1;"
