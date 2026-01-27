@@ -55,6 +55,11 @@ jobs:
               -N -L 5432:localhost:5432 \
               ${{ secrets.FHEMB_SSH_USER }}@${{ secrets.FHEMB_SSH_HOST }} &
 
+      - name: Debug SSH secrets
+        run: |
+          echo "USER='${{ secrets.FHEMB_SSH_USER }}'"
+          echo "HOST='${{ secrets.FHEMB_SSH_HOST }}'"
+
       - name: "Debug: whoami and dg tables"
         run: |
           PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
