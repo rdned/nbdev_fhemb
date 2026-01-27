@@ -11,7 +11,7 @@ jobs:
   test:
     runs-on: scienziatiello
     container:
-      image: ubuntu:22.04
+      image: Python:3.12
 
     steps:
       - name: Set up Python
