@@ -32,13 +32,13 @@ jobs:
       - name: Export library
         run: nbdev_export
 
-      # -------------------------------
-      # 🔥 DB TUNNEL SETUP (critical)
-      # -------------------------------
       - name: Configure SSH for DB tunnel
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.FHEMB_SSH_KEY }}" > ~/.ssh/id_rsa
+          cat > ~/.ssh/id_rsa << 'EOF'
+${{ secrets.FHEMB_SSH_KEY }}
+EOF
+
           chmod 600 ~/.ssh/id_rsa
           ssh -o StrictHostKeyChecking=no -f -N \
             -L 5433:${{ secrets.FHEMB_DB_HOST }}:${{ secrets.FHEMB_DB_PORT }} \
