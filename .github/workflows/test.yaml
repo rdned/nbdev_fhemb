@@ -34,6 +34,7 @@ jobs:
 
       - name: Export DB env vars
         run: |
+          echo "FHEMB_DB_SSH=0" >> $GITHUB_ENV
           echo "FHEMB_DB_HOST=localhost" >> $GITHUB_ENV
           echo "FHEMB_DB_PORT=5432" >> $GITHUB_ENV
           echo "FHEMB_DB_USER=${{ secrets.FHEMB_DB_USER }}" >> $GITHUB_ENV
