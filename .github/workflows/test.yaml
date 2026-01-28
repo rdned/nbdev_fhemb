@@ -78,12 +78,15 @@ jobs:
           chmod 600 ~/.config/fhemb/.env.db
           chmod 600 ~/.config/fhemb/.env.paths
 
+
       - name: "Debug: whoami and dg tables"
         run: |
           PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
           psql -h localhost -U ${{ secrets.FHEMB_DB_USER }} -d ${{ secrets.FHEMB_DB_NAME }} -c "SELECT current_user, session_user;"
+
           PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
           psql -h localhost -U ${{ secrets.FHEMB_DB_USER }} -d ${{ secrets.FHEMB_DB_NAME }} -c "\dn"
+
           PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
           psql -h localhost -U ${{ secrets.FHEMB_DB_USER }} -d ${{ secrets.FHEMB_DB_NAME }} -c "\dt dg.*"
 
