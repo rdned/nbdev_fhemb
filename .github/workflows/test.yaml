@@ -38,16 +38,11 @@ jobs:
       - name: Export library
         run: nbdev_export
 
-      - name: Start SSH tunnel
+      - name: Install SSH key for fhemb
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.FHEMB_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-          ssh -o StrictHostKeyChecking=no \
-          -i ~/.ssh/id_rsa \
-          -N -L ${{ vars.FHEMB_CI_PORT }}:${{ vars.FHEMB_DB_HOST }}:${{ vars.FHEMB_DB_PORT }} \
-          ${{ secrets.FHEMB_SSH_USER }}@${{ vars.FHEMB_SSH_HOST }} &
+          mkdir -p /root/.ssh
+          echo "${{ secrets.FHEMB_SSH_KEY }}" > /root/.ssh/id_rsa
+          chmod 600 /root/.ssh/id_rsa
 
       - name: Create fhemb config
         run: |
