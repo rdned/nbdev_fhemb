@@ -92,6 +92,9 @@ jobs:
           dpkg -i quarto-linux-amd64.deb || apt-get -f install -y
           quarto --version
 
+      - name: Run nbdev_test to catch notebook errors
+        run: nbdev_test
+
       - name: Build nbdev docs
         run: |
           nbdev_docs
