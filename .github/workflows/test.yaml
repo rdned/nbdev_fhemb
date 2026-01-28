@@ -63,7 +63,7 @@ jobs:
           REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
           REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
           SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
-          SSH_PKEY=/home/runner/.ssh/id_rsa
+          SSH_PKEY=/root/.ssh/id_rsa
           REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
           REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
           EOF
