@@ -45,31 +45,31 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
 
           ssh -o StrictHostKeyChecking=no \
-              -i ~/.ssh/id_rsa \
-              -N -L 5432:localhost:5432 \
-              ${{ secrets.FHEMB_SSH_USER }}@${{ secrets.FHEMB_SSH_HOST }} &
+          -i ~/.ssh/id_rsa \
+          -N -L ${{ vars.FHEMB_CI_PORT }}:${{ vars.FHEMB_DB_HOST }}:${{ vars.FHEMB_DB_PORT }} \
+          ${{ secrets.FHEMB_SSH_USER }}@${{ vars.FHEMB_SSH_HOST }} &
 
       - name: Create fhemb config
         run: |
           mkdir -p ~/.config/fhemb
 
           cat <<EOF > ~/.config/fhemb/.env.db
-          DB_NAME=${{ secrets.FHEMB_DB_NAME }}
-          DB_USERNAME=${{ secrets.FHEMB_DB_USER }}
+          DB_NAME=${{ vars.FHEMB_DB_NAME }}
+          DB_USERNAME=${{ vars.FHEMB_DB_USER }}
           DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
-          DB_HOST=localhost
-          DB_PORT=5432
+          DB_HOST=${{ vars.FHEMB_DB_HOST }}
+          DB_PORT=${{ vars.FHEMB_DB_PORT }}
 
-          REMOTE_HOST=${{ secrets.FHEMB_SSH_HOST }}
-          REMOTE_PORT=22
+          REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
+          REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
           SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
           SSH_PKEY=/home/runner/.ssh/id_rsa
-          REMOTE_BIND_HOST=localhost
-          REMOTE_BIND_PORT=5432
+          REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
+          REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
           EOF
 
           cat <<EOF > ~/.config/fhemb/.env.paths
-          NODENAME='CI'
+          NODENAME=${{ vars.NODENAME }}
           LOCALROOT='/mnt/NASstorage'
           MOUNT='/mnt/NASstorage'
           AUDIOFILES='/mnt/NASstorage/thermal_data'
@@ -81,8 +81,8 @@ jobs:
 
       - name: "Debug: whoami and dg tables"
         run: |
-          DB="${{ secrets.FHEMB_DB_NAME }}"
-          USER="${{ secrets.FHEMB_DB_USER }}"
+          DB="${{ vars.FHEMB_DB_NAME }}"
+          USER="${{ vars.FHEMB_DB_USER }}"
           PASS="${{ secrets.FHEMB_DB_PASS }}"
 
           PGPASSWORD="$PASS" psql -h localhost -U "$USER" -d "$DB" -c "SELECT current_user, session_user;"
