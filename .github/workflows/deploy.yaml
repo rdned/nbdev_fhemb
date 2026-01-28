@@ -89,6 +89,9 @@ jobs:
           dpkg -i quarto-linux-amd64.deb || apt-get -f install -y
           quarto --version
 
+      - name: Add Quarto to PATH
+        run: echo "/usr/local/bin" >> $GITHUB_PATH
+
       - name: Run nbdev_test
         working-directory: ${{ github.workspace }}
         run: nbdev_test
