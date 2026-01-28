@@ -15,7 +15,9 @@ jobs:
     runs-on: scienziatiello
     container:
       image: python:3.12
+      options: --workdir /__w/${{ github.repository }}/nbdev_fhemb
       volumes:
+        - ${{ github.workspace }}:/__w/${{ github.repository }}/nbdev_fhemb
         - /NASstorage/radned:/mnt/NASstorage
         - /share/CACHEDEV1_DATA/Data:/mnt/NAS2
 
