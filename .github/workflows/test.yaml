@@ -30,13 +30,13 @@ jobs:
             "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
 
       - name: Force nbdev version
-        run: pip install "nbdev>=2.3"
+        run: pip install "nbdev==2.3.15"
 
       - name: Clean notebooks
         run: nbdev_clean
 
-      - name: Export library (disabled in CI)
-        run: echo "Skipping nbdev_export in CI"
+      - name: Export library
+        run: nbdev_export
 
       - name: Install SSH key for fhemb
         run: |
