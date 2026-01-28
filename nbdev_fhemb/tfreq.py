@@ -6,7 +6,7 @@
 __all__ = ['dg0', 'pca1', 'pca2', 'pca3', 'pca4', 'pca5', 'pca6', 'pca7', 'pca8', 'pca9', 'pca10', 'pca11', 'pca12', 'pca13']
 
 # %% ../nbs/tfreq.ipynb #b297927a
-dg0 = Piece(title='Don Giovanni', time_interval=(0,500), subjs=[(60,61)])
+dg0 = Piece(title='Don Giovanni', time_interval=(14200,15200), subjs=[(60,61)])
 
 # %% ../nbs/tfreq.ipynb #69d4aea8
 pca1 = pca_factory(
