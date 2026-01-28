@@ -14,10 +14,10 @@ jobs:
       image: python:3.12
 
     steps:
-      - name: Install PostgreSQL client + netcat
+      - name: Install PostgreSQL client + netcat + OpenCV deps
         run: |
           apt-get update
-          apt-get install -y postgresql-client netcat-openbsd
+          apt-get install -y postgresql-client netcat-openbsd libgl1 libglib2.0-0
 
       - uses: actions/checkout@v4
 
