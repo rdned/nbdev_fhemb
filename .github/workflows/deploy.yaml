@@ -100,6 +100,18 @@ jobs:
         working-directory: ${{ github.workspace }}/nbs
         run: nbdev_docs
 
+      - name: "Debug: list nbs directory"
+        working-directory: ${{ github.workspace }}/nbs
+        run: |
+          echo "--- nbs ---"
+          ls -R .
+
+      - name: "Debug: list proc directory"
+        working-directory: ${{ github.workspace }}/nbs
+        run: |
+          echo "--- _proc ---"
+          ls -R _proc || echo "_proc missing"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
