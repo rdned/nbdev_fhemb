@@ -11,9 +11,9 @@ on:
 
 jobs:
   deploy:
-    runs-on: scienziatiello        # ← same machine as DBMS
+    runs-on: scienziatiello
     container:
-      image: python:3.12           # ← identical to CI
+      image: python:3.12
       volumes:
         - /NASstorage/radned:/mnt/NASstorage
         - /share/CACHEDEV1_DATA/Data:/mnt/NAS2
@@ -80,15 +80,15 @@ jobs:
             sleep 0.5
           done
 
-      - name: Build Quarto site
+      - name: Build nbdev docs
         run: |
-          pip install quarto-cli
-          quarto render .
+          nbdev_docs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: docs
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
+
