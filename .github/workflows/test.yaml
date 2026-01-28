@@ -78,15 +78,16 @@ jobs:
           chmod 600 ~/.config/fhemb/.env.db
           chmod 600 ~/.config/fhemb/.env.paths
 
+
       - name: "Debug: whoami and dg tables"
         run: |
-          cat > debug.sh <<'EOF'
-      PGPASSWORD="${{ secrets.FHEMB_DB_PASS }}" psql -h localhost -U "${{ secrets.FHEMB_DB_USER }}" -d "${{ secrets.FHEMB_DB_NAME }}" -c "SELECT current_user, session_user;"
-      PGPASSWORD="${{ secrets.FHEMB_DB_PASS }}" psql -h localhost -U "${{ secrets.FHEMB_DB_USER }}" -d "${{ secrets.FHEMB_DB_NAME }}" -c "\dn"
-      PGPASSWORD="${{ secrets.FHEMB_DB_PASS }}" psql -h localhost -U "${{ secrets.FHEMB_DB_USER }}" -d "${{ secrets.FHEMB_DB_NAME }}" -c "\dt dg.*"
-      EOF
+          DB="${{ secrets.FHEMB_DB_NAME }}"
+          USER="${{ secrets.FHEMB_DB_USER }}"
+          PASS="${{ secrets.FHEMB_DB_PASS }}"
 
-          bash debug.sh
+          PGPASSWORD="$PASS" psql -h localhost -U "$USER" -d "$DB" -c "SELECT current_user, session_user;"
+          PGPASSWORD="$PASS" psql -h localhost -U "$USER" -d "$DB" -c "\dn"
+          PGPASSWORD="$PASS" psql -h localhost -U "$USER" -d "$DB" -c "\dt dg.*"
 
       - name: Test notebooks
         run: nbdev_test --flags ''
