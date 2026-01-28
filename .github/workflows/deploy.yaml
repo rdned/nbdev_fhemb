@@ -11,6 +11,10 @@ on:
 
 jobs:
   deploy:
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
+
     runs-on: scienziatiello
     container:
       image: python:3.12
