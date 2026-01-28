@@ -109,7 +109,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-         path: nbs/_docs
+          path: ${{ github.workspace }}/nbs/_docs
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
