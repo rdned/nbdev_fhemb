@@ -12,6 +12,9 @@ jobs:
     runs-on: scienziatiello
     container:
       image: python:3.12
+      volumes:
+        - /NASstorage/radned:/mnt/NASstorage
+        - /share/CACHEDEV1_DATA/Data:/mnt/NAS2
 
     steps:
       - name: Install PostgreSQL client + netcat + OpenCV deps
@@ -35,15 +38,6 @@ jobs:
       - name: Export library
         run: nbdev_export
 
-      - name: Export DB env vars
-        run: |
-          echo "FHEMB_DB_SSH=0" >> $GITHUB_ENV
-          echo "FHEMB_DB_HOST=localhost" >> $GITHUB_ENV
-          echo "FHEMB_DB_PORT=5432" >> $GITHUB_ENV
-          echo "FHEMB_DB_USER=${{ secrets.FHEMB_DB_USER }}" >> $GITHUB_ENV
-          echo "FHEMB_DB_PASS=${{ secrets.FHEMB_DB_PASS }}" >> $GITHUB_ENV
-          echo "FHEMB_DB_NAME=${{ secrets.FHEMB_DB_NAME }}" >> $GITHUB_ENV
-
       - name: Start SSH tunnel
         run: |
           mkdir -p ~/.ssh
@@ -55,24 +49,43 @@ jobs:
               -N -L 5432:localhost:5432 \
               ${{ secrets.FHEMB_SSH_USER }}@${{ secrets.FHEMB_SSH_HOST }} &
 
-      - name: Debug SSH secrets
+      - name: Create fhemb config
         run: |
-          echo "USER='${{ secrets.FHEMB_SSH_USER }}'"
-          echo "HOST='${{ secrets.FHEMB_SSH_HOST }}'"
+          mkdir -p ~/.config/fhemb
+
+          cat <<EOF > ~/.config/fhemb/.env.db
+DB_NAME=${{ secrets.FHEMB_DB_NAME }}
+DB_USERNAME=${{ secrets.FHEMB_DB_USER }}
+DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
+DB_HOST=localhost
+DB_PORT=5432
+
+REMOTE_HOST=${{ secrets.FHEMB_SSH_HOST }}
+REMOTE_PORT=22
+SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
+SSH_PKEY=/home/runner/.ssh/id_rsa
+REMOTE_BIND_HOST=localhost
+REMOTE_BIND_PORT=5432
+EOF
+
+          cat <<EOF > ~/.config/fhemb/.env.paths
+NODENAME='CI'
+LOCALROOT='/mnt/NASstorage'
+MOUNT='/mnt/NASstorage'
+AUDIOFILES='/mnt/NASstorage/thermal_data'
+EOF
+
+          chmod 600 ~/.config/fhemb/.env.db
+          chmod 600 ~/.config/fhemb/.env.paths
 
       - name: "Debug: whoami and dg tables"
         run: |
           PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
-          psql -h localhost -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "SELECT current_user, session_user;"
+          psql -h localhost -U ${{ secrets.FHEMB_DB_USER }} -d ${{ secrets.FHEMB_DB_NAME }} -c "SELECT current_user, session_user;"
           PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
-          psql -h localhost -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "\dn"
+          psql -h localhost -U ${{ secrets.FHEMB_DB_USER }} -d ${{ secrets.FHEMB_DB_NAME }} -c "\dn"
           PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
-          psql -h localhost -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "\dt dg.*"
-
-      - name: "Debug: list tables"
-        run: |
-          PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} \
-          psql -h localhost -U $FHEMB_DB_USER -d $FHEMB_DB_NAME -c "\dt"
+          psql -h localhost -U ${{ secrets.FHEMB_DB_USER }} -d ${{ secrets.FHEMB_DB_NAME }} -c "\dt dg.*"
 
       - name: Test notebooks
         run: nbdev_test --flags ''
@@ -84,3 +97,4 @@ jobs:
             git status -uno
             exit 1
           fi
+
