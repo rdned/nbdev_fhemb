@@ -30,7 +30,7 @@ jobs:
             "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
 
       - name: Force nbdev version
-        run: pip install "nbdev==2.4.1"
+        run: pip install "nbdev==2.4.14"
 
       - name: Clean notebooks
         run: nbdev_clean
