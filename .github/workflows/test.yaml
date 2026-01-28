@@ -81,9 +81,13 @@ jobs:
 
       - name: "Debug: whoami and dg tables"
         run: |
-          PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} psql -h localhost -U ${{ secrets.FHEMB_DB_USER }} -d ${{ secrets.FHEMB_DB_NAME }} -c "SELECT current_user, session_user;";
-          PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} psql -h localhost -U ${{ secrets.FHEMB_DB_USER }} -d ${{ secrets.FHEMB_DB_NAME }} -c "\dn";
-          PGPASSWORD=${{ secrets.FHEMB_DB_PASS }} psql -h localhost -U ${{ secrets.FHEMB_DB_USER }} -d ${{ secrets.FHEMB_DB_NAME }} -c "\dt dg.*";
+          cat > debug.sh <<'EOF'
+          PGPASSWORD="${FHEMB_DB_PASS}" psql -h localhost -U "${FHEMB_DB_USER}" -d "${FHEMB_DB_NAME}" -c "SELECT current_user, session_user;"
+          PGPASSWORD="${FHEMB_DB_PASS}" psql -h localhost -U "${FHEMB_DB_USER}" -d "${FHEMB_DB_NAME}" -c "\dn"
+          PGPASSWORD="${FHEMB_DB_PASS}" psql -h localhost -U "${FHEMB_DB_USER}" -d "${FHEMB_DB_NAME}" -c "\dt dg.*"
+          EOF
+
+          bash debug.sh
       
       - name: Test notebooks
         run: nbdev_test --flags ''
@@ -95,4 +99,3 @@ jobs:
             git status -uno
             exit 1
           fi
-
