@@ -35,8 +35,8 @@ jobs:
       - name: Clean notebooks
         run: nbdev_clean
 
-      - name: Export library
-        run: nbdev_export
+      - name: Export library (disabled in CI)
+        run: echo "Skipping nbdev_export in CI"
 
       - name: Install SSH key for fhemb
         run: |
