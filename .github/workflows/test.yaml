@@ -54,26 +54,26 @@ jobs:
           mkdir -p ~/.config/fhemb
 
           cat <<EOF > ~/.config/fhemb/.env.db
-DB_NAME=${{ secrets.FHEMB_DB_NAME }}
-DB_USERNAME=${{ secrets.FHEMB_DB_USER }}
-DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
-DB_HOST=localhost
-DB_PORT=5432
+          DB_NAME=${{ secrets.FHEMB_DB_NAME }}
+          DB_USERNAME=${{ secrets.FHEMB_DB_USER }}
+          DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
+          DB_HOST=localhost
+          DB_PORT=5432
 
-REMOTE_HOST=${{ secrets.FHEMB_SSH_HOST }}
-REMOTE_PORT=22
-SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
-SSH_PKEY=/home/runner/.ssh/id_rsa
-REMOTE_BIND_HOST=localhost
-REMOTE_BIND_PORT=5432
-EOF
+          REMOTE_HOST=${{ secrets.FHEMB_SSH_HOST }}
+          REMOTE_PORT=22
+          SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
+          SSH_PKEY=/home/runner/.ssh/id_rsa
+          REMOTE_BIND_HOST=localhost
+          REMOTE_BIND_PORT=5432
+          EOF
 
           cat <<EOF > ~/.config/fhemb/.env.paths
-NODENAME='CI'
-LOCALROOT='/mnt/NASstorage'
-MOUNT='/mnt/NASstorage'
-AUDIOFILES='/mnt/NASstorage/thermal_data'
-EOF
+          NODENAME='CI'
+          LOCALROOT='/mnt/NASstorage'
+          MOUNT='/mnt/NASstorage'
+          AUDIOFILES='/mnt/NASstorage/thermal_data'
+          EOF
 
           chmod 600 ~/.config/fhemb/.env.db
           chmod 600 ~/.config/fhemb/.env.paths
