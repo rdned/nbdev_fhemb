@@ -19,10 +19,6 @@ jobs:
 
     container:
       image: python:3.12
-      volumes:
-        - ${{ github.workspace }}:${{ github.workspace }}
-        - /NASstorage/radned:/mnt/NASstorage
-        - /share/CACHEDEV1_DATA/Data:/mnt/NAS2
 
     steps:
       - uses: actions/checkout@v4
@@ -104,6 +100,11 @@ jobs:
       - name: Build nbdev docs
         working-directory: ${{ github.workspace }}/nbs
         run: nbdev_docs
+
+      - name: "Debug: list built docs"
+        run: |
+          echo "--- listing nbs/_docs ---"
+          ls -R ${{ github.workspace }}/nbs/_docs || echo "NO _docs FOUND"
 
       - name: Upload built docs as artifact
         uses: actions/upload-artifact@v4
