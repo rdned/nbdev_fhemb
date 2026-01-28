@@ -83,7 +83,12 @@ jobs:
             -L 6543:localhost:5432 \
             ${{ secrets.FHEMB_SSH_USER }}@${{ vars.FHEMB_SSH_HOST }} \
             -N &
-          sleep 2
+          
+          # Wait until port 6543 is actually open
+          for i in {1..20}; do 
+            nc -z localhost 6543 && break 
+            sleep 0.5 
+          done
 
           PGPASSWORD="$PASS" psql -h localhost -p 6543 -U "$USER" -d "$DB" -c "SELECT current_user, session_user;"
           PGPASSWORD="$PASS" psql -h localhost -p 6543 -U "$USER" -d "$DB" -c "\dn"
