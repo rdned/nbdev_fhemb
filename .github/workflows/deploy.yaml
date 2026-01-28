@@ -90,6 +90,11 @@ jobs:
           dpkg -i quarto-linux-amd64.deb || apt-get -f install -y
           quarto --version
 
+      - name: "Debug: check Quarto availability"
+        run: |
+          which quarto || echo "QUARTO NOT FOUND"
+          quarto --version || echo "QUARTO FAILED"
+
       - name: Add Quarto to PATH
         run: echo "/usr/local/bin" >> $GITHUB_PATH
 
@@ -97,9 +102,20 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: nbdev_test
 
+      - name: "Debug: verify nbs directory exists"
+        run: |
+          echo "--- listing nbs directory ---"
+          ls -R ${{ github.workspace }}/nbs || echo "NO nbs DIRECTORY FOUND"
+
       - name: Build nbdev docs
         working-directory: ${{ github.workspace }}/nbs
         run: nbdev_docs
+
+      - name: "Debug: show nbdev_docs output"
+        working-directory: ${{ github.workspace }}/nbs
+        run: |
+          echo "--- nbdev_docs output ---"
+          nbdev_docs --verbose || echo "nbdev_docs FAILED"
 
       - name: "Debug: list built docs"
         run: |
