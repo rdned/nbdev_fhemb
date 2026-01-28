@@ -92,9 +92,12 @@ jobs:
       - name: Test notebooks
         run: nbdev_test --flags ''
 
+      - name: Mark workspace as safe
+        run: git config --global --add safe.directory /__w/nbdev_fhemb/nbdev_fhemb
+
       - name: Check sync
         run: |
-          if [[ -n "$(git status --porcelain -uno)" ]]; then
+          if [ -n "$(git status --porcelain -uno)" ]; then
             echo "::error::Notebooks and library are not in sync."
             git status -uno
             exit 1
