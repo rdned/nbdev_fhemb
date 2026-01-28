@@ -83,9 +83,10 @@ jobs:
       - name: Install Quarto
         run: |
           apt-get update
-          apt-get install -y wget gdebi-core
+          apt-get install -y wget
           wget https://quarto.org/download/latest/quarto-linux-amd64.deb
-          gdebi -n quarto-linux-amd64.deb
+          dpkg -i quarto-linux-amd64.deb || apt-get -f install -y
+          quarto --version
 
       - name: Build nbdev docs
         run: |
