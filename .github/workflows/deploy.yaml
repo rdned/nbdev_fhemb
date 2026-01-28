@@ -80,6 +80,13 @@ jobs:
             sleep 0.5
           done
 
+      - name: Install Quarto
+        run: |
+          apt-get update
+          apt-get install -y wget gdebi-core
+          wget https://quarto.org/download/latest/quarto-linux-amd64.deb
+          gdebi -n quarto-linux-amd64.deb
+
       - name: Build nbdev docs
         run: |
           nbdev_docs
