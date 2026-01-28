@@ -3,21 +3,24 @@ name: Deploy to GitHub Pages
 permissions:
   contents: write
   pages: write
+  id-token: write
 
 on:
   push:
     branches: [ "main", "master" ]
   workflow_dispatch:
 
+# -------------------------------
+# JOB 1: BUILD DOCS (IN CONTAINER)
+# -------------------------------
 jobs:
-  deploy:
-
+  build:
     runs-on: scienziatiello
+
     container:
       image: python:3.12
-      options: --workdir /__w/${{ github.repository }}/nbdev_fhemb
       volumes:
-        - ${{ github.workspace }}:/__w/${{ github.repository }}/nbdev_fhemb
+        - ${{ github.workspace }}:${{ github.workspace }}
         - /NASstorage/radned:/mnt/NASstorage
         - /share/CACHEDEV1_DATA/Data:/mnt/NAS2
 
@@ -102,16 +105,31 @@ jobs:
         working-directory: ${{ github.workspace }}/nbs
         run: nbdev_docs
 
-      - name: "Debug: list nbs directory"
-        working-directory: ${{ github.workspace }}/nbs
-        run: |
-          echo "--- nbs ---"
-          ls -R .
+      - name: Upload built docs as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-docs
+          path: ${{ github.workspace }}/nbs/_docs
 
-      - name: Upload artifact
+# -----------------------------------------
+# JOB 2: DEPLOY DOCS (NO CONTAINER, HOST FS)
+# -----------------------------------------
+  deploy:
+    runs-on: scienziatiello
+    needs: build
+
+    steps:
+      - name: Download built docs
+        uses: actions/download-artifact@v4
+        with:
+          name: built-docs
+          path: ./_docs
+
+      - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ github.workspace }}/nbs/_docs
+          path: ./_docs
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
+
