@@ -96,8 +96,8 @@ jobs:
         run: nbdev_test
 
       - name: Build nbdev docs
-        run: |
-          nbdev_docs
+        working-directory: ${{ github.workspace }}/nbs
+        run: nbdev_docs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
