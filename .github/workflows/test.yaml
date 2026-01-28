@@ -29,6 +29,7 @@ jobs:
           pip install --no-cache-dir --force-reinstall \
             "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
 
+      # nbdev vesrion must be identical with that on the local machine!!!        
       - name: Force nbdev version
         run: pip install "nbdev==2.4.14"
 

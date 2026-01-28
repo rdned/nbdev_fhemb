@@ -8,7 +8,87 @@ on:
   push:
     branches: [ "main", "master" ]
   workflow_dispatch:
+
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-    steps: [uses: answerdotai/workflows/quarto-ghp@master]
+    runs-on: scienziatiello        # ← same machine as DBMS
+    container:
+      image: python:3.12           # ← identical to CI
+      volumes:
+        - /NASstorage/radned:/mnt/NASstorage
+        - /share/CACHEDEV1_DATA/Data:/mnt/NAS2
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client + netcat + OpenCV deps
+        run: |
+          apt-get update
+          apt-get install -y postgresql-client netcat-openbsd libgl1 libglib2.0-0
+
+      - name: Install private fhemb dependency
+        run: |
+          pip install --no-cache-dir --force-reinstall \
+            "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
+
+      - name: Force nbdev version
+        run: pip install "nbdev==2.4.14"
+
+      - name: Install SSH key for fhemb
+        run: |
+          mkdir -p /root/.ssh
+          echo "${{ secrets.FHEMB_SSH_KEY }}" > /root/.ssh/id_rsa
+          chmod 600 /root/.ssh/id_rsa
+
+      - name: Create fhemb config
+        run: |
+          mkdir -p ~/.config/fhemb
+
+          cat <<EOF > ~/.config/fhemb/.env.db
+          DB_NAME=${{ vars.FHEMB_DB_NAME }}
+          DB_USERNAME=${{ vars.FHEMB_DB_USER }}
+          DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
+          DB_HOST=${{ vars.FHEMB_DB_HOST }}
+          DB_PORT=${{ vars.FHEMB_DB_PORT }}
+
+          REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
+          REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
+          SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
+          SSH_PKEY=/root/.ssh/id_rsa
+          REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
+          REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
+          EOF
+
+          cat <<EOF > ~/.config/fhemb/.env.paths
+          NODENAME=${{ vars.NODENAME }}
+          LOCALROOT='/mnt/NASstorage'
+          MOUNT='/mnt/NASstorage'
+          AUDIOFILES='/mnt/NASstorage/thermal_data'
+          EOF
+
+          chmod 600 ~/.config/fhemb/.env.db
+          chmod 600 ~/.config/fhemb/.env.paths
+
+      - name: Establish SSH tunnel
+        run: |
+          ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no \
+            -L 6543:localhost:5432 \
+            ${{ secrets.FHEMB_SSH_USER }}@${{ vars.FHEMB_SSH_HOST }} \
+            -N &
+          for i in {1..20}; do
+            nc -z localhost 6543 && break
+            sleep 0.5
+          done
+
+      - name: Build Quarto site
+        run: |
+          pip install quarto-cli
+          quarto render .
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
