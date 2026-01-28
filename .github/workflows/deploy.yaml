@@ -106,16 +106,10 @@ jobs:
           echo "--- nbs ---"
           ls -R .
 
-      - name: "Debug: list proc directory"
-        working-directory: ${{ github.workspace }}/nbs
-        run: |
-          echo "--- _proc ---"
-          ls -R _proc || echo "_proc missing"
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: nbs/_proc/_docs
+         path: nbs/_docs
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
