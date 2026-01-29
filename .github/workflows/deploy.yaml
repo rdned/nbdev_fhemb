@@ -25,7 +25,9 @@ jobs:
     steps:
       # HOST-SIDE FIX — runs BEFORE checkout
       - name: Pre-clean workspace (host-side)
+        shell: bash
         run: chown -R 1000:1000 $GITHUB_WORKSPACE || true
+        container: false
 
       - uses: actions/checkout@v4
 
