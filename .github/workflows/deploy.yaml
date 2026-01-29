@@ -39,22 +39,22 @@ jobs:
             python:3.12 \
             bash -c '
               set -e
-              
+
               apt-get update -qq
               apt-get install -y -qq postgresql-client netcat-openbsd libgl1 libglib2.0-0 wget git openssh-client
-              
-              pip install --no-cache-dir -q nbdev==2.4.14
+
+              pip install --no-cache-dir -q nbdev
               pip install --no-cache-dir -q --force-reinstall \
                 "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
-              
+
               wget -q https://quarto.org/download/latest/quarto-linux-amd64.deb -O /tmp/quarto.deb
               dpkg -i /tmp/quarto.deb || apt-get -f install -y -qq
-              
+
               mkdir -p /root/.ssh
               echo "${{ secrets.FHEMB_SSH_KEY }}" > /root/.ssh/id_rsa
               chmod 600 /root/.ssh/id_rsa
               ssh-keyscan -H ${{ vars.FHEMB_SSH_HOST }} 2>/dev/null >> /root/.ssh/known_hosts
-              
+
               mkdir -p /root/.config/fhemb
               cat > /root/.config/fhemb/.env.db << "ENVEOF"
           DB_NAME=${{ vars.FHEMB_DB_NAME }}
@@ -69,35 +69,35 @@ jobs:
           REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
           REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
           ENVEOF
-              
+
               cat > /root/.config/fhemb/.env.paths << "ENVEOF"
           NODENAME=${{ vars.NODENAME }}
           LOCALROOT=/mnt/NASstorage
           MOUNT=/mnt/NASstorage
           AUDIOFILES=/mnt/NASstorage/thermal_data
           ENVEOF
-              
+
               ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no \
                 -L 6543:localhost:5432 \
                 ${{ secrets.FHEMB_SSH_USER }}@${{ vars.FHEMB_SSH_HOST }} \
                 -N &
               SSH_PID=$!
               sleep 2
-              
+
               for i in {1..30}; do
                 nc -z localhost 6543 && break
                 sleep 0.5
               done
-              
-              nbdev_test
+
+              nbdev_prepare
               nbdev_docs
-              nbdev_ghp_docs
-              
+              nbdev_ghp_pages
+
               kill $SSH_PID 2>/dev/null || true
               wait $SSH_PID 2>/dev/null || true
             '
 
-      - name: Fix host permissions
+      - name: Fix final permissions
         if: always()
         run: |
           sudo chown -R $USER:$USER "$GITHUB_WORKSPACE" 2>/dev/null || true
