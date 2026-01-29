@@ -13,9 +13,20 @@ jobs:
     runs-on: scienziatiello
 
     steps:
+      - name: Clean workspace
+        run: |
+          set +e
+          cd $GITHUB_WORKSPACE
+          sudo git clean -ffdx 2>/dev/null
+          sudo git reset --hard 2>/dev/null
+          sudo rm -rf .git 2>/dev/null
+          cd ..
+          sudo rm -rf "$GITHUB_WORKSPACE" 2>/dev/null
+          mkdir -p "$GITHUB_WORKSPACE"
+          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
+          set -e
+
       - uses: actions/checkout@v4
-        with:
-          clean: true
 
       - name: Run nbdev build
         env:
@@ -42,10 +53,10 @@ jobs:
             LOCALROOT=/mnt/NASstorage
             MOUNT=/mnt/NASstorage
             AUDIOFILES=/mnt/NASstorage/thermal_data
-
         run: |
           docker run --rm \
             --network host \
+            -v "$GITHUB_WORKSPACE:/workspace" \
             -e GITHUB_REPOSITORY \
             -e GITHUB_TOKEN \
             -e FHEMB_CI \
@@ -55,4 +66,10 @@ jobs:
             -e FHEMB_ENV_DB \
             -e FHEMB_ENV_PATHS \
             rdned/nbdev-fhemb:2.4.14
+
+      - name: Cleanup
+        if: always()
+        run: |
+          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE" 2>/dev/null || true
+          docker image prune -f --filter "until=1h" 2>/dev/null || true
 
