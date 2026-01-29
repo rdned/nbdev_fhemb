@@ -137,41 +137,41 @@ jobs:
 # -----------------------------------------
 # JOB 2: DEPLOY DOCS TO GH-PAGES BRANCH
 # -----------------------------------------
-  deploy:
-    runs-on: scienziatiello
-    needs: build
-    environment:
-      name: github-pages
-      url: https://rdned.github.io/nbdev_fhemb/
+deploy:
+  runs-on: scienziatiello
+  needs: build
 
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  steps:
+    - name: DEBUG — deploy job reached
+      run: echo "DEPLOY JOB STARTED"
 
-      - name: Download built docs
-        uses: actions/download-artifact@v4
-        with:
-          name: built-docs
-          path: ./_docs
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+    - name: Download built docs
+      uses: actions/download-artifact@v4
+      with:
+        name: built-docs
+        path: ./_docs
 
-      - name: Switch to gh-pages
-        run: |
-          git checkout gh-pages || git checkout --orphan gh-pages
-          git rm -rf . || true
+    - name: Configure Git
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
 
-      - name: Copy docs into branch
-        run: |
-          cp -r ./_docs/* .
-          rm -rf _docs
+    - name: Switch to gh-pages
+      run: |
+        git checkout gh-pages || git checkout --orphan gh-pages
+        git rm -rf . || true
 
-      - name: Commit and push
-        run: |
-          git add .
-          git commit -m "Update docs" || echo "No changes to commit"
-          git push origin gh-pages
+    - name: Copy docs into branch
+      run: |
+        cp -r ./_docs/* .
+        rm -rf _docs
+
+    - name: Commit and push
+      run: |
+        git add .
+        git commit -m "Update docs" || echo "No changes to commit"
+        git push origin gh-pages
