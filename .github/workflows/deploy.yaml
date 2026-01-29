@@ -13,13 +13,20 @@ jobs:
     runs-on: scienziatiello
 
     steps:
-      - name: Clean workspace completely
+      # Nuclear cleanup BEFORE checkout
+      - name: Obliterate workspace
         run: |
+          set +e
           cd $GITHUB_WORKSPACE
-          git clean -ffdx || true
-          git reset --hard || true
+          sudo git clean -ffdx 2>/dev/null
+          sudo git reset --hard 2>/dev/null
+          sudo rm -rf .git 2>/dev/null
           cd ..
-          rm -rf "$GITHUB_WORKSPACE/.git" || true
+          sudo rm -rf "$GITHUB_WORKSPACE" 2>/dev/null
+          mkdir -p "$GITHUB_WORKSPACE"
+          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
+          sudo chmod -R 755 "$GITHUB_WORKSPACE"
+          set -e
 
       - uses: actions/checkout@v4
 
@@ -94,5 +101,5 @@ jobs:
         if: always()
         run: |
           sudo chown -R $USER:$USER "$GITHUB_WORKSPACE" 2>/dev/null || true
-          sudo chmod -R u+rwX "$GITHUB_WORKSPACE" 2>/dev/null || true
+          sudo chmod -R 755 "$GITHUB_WORKSPACE" 2>/dev/null || true
 
