@@ -137,41 +137,41 @@ jobs:
 # -----------------------------------------
 # JOB 2: DEPLOY DOCS TO GH-PAGES BRANCH
 # -----------------------------------------
-deploy:
-  runs-on: scienziatiello
-  needs: build
+  deploy:
+    runs-on: scienziatiello
+    needs: build
 
-  steps:
-    - name: DEBUG — deploy job reached
-      run: echo "DEPLOY JOB STARTED"
+    steps:
+      - name: DEBUG — deploy job reached
+        run: echo "DEPLOY JOB STARTED"
 
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Download built docs
-      uses: actions/download-artifact@v4
-      with:
-        name: built-docs
-        path: ./_docs
+      - name: Download built docs
+        uses: actions/download-artifact@v4
+        with:
+          name: built-docs
+          path: ./_docs
 
-    - name: Configure Git
-      run: |
-        git config user.name "github-actions"
-        git config user.email "github-actions@github.com"
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
 
-    - name: Switch to gh-pages
-      run: |
-        git checkout gh-pages || git checkout --orphan gh-pages
-        git rm -rf . || true
+      - name: Switch to gh-pages
+        run: |
+          git checkout gh-pages || git checkout --orphan gh-pages
+          git rm -rf . || true
 
-    - name: Copy docs into branch
-      run: |
-        cp -r ./_docs/* .
-        rm -rf _docs
+      - name: Copy docs into branch
+        run: |
+          cp -r ./_docs/* .
+          rm -rf _docs
 
-    - name: Commit and push
-      run: |
-        git add .
-        git commit -m "Update docs" || echo "No changes to commit"
-        git push origin gh-pages
+      - name: Commit and push
+        run: |
+          git add .
+          git commit -m "Update docs" || echo "No changes to commit"
+          git push origin gh-pages
