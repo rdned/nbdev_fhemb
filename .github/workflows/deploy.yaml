@@ -113,7 +113,7 @@ jobs:
           ls -R ${{ github.workspace }}/nbs || echo "NO nbs DIRECTORY FOUND"
 
       - name: Build nbdev docs
-        working-directory: ${{ github.workspace }}/nbs
+        working-directory: ${{ github.workspace }}
         run: nbdev_docs
 
       - name: "Debug: show nbdev_docs output"
