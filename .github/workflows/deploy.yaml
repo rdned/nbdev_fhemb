@@ -15,21 +15,16 @@ jobs:
   build:
     runs-on: scienziatiello
 
-    # ----------------------------------------------------
-    # JOB-LEVEL CONTAINER DECLARATION
-    # ----------------------------------------------------
+    # Container declared here — but host steps still run before container starts
     container:
       image: python:3.12
       options: --user 1000:1000
 
-    # ----------------------------------------------------
-    # SINGLE STEPS BLOCK (host steps run BEFORE container)
-    # ----------------------------------------------------
     steps:
 
-      # -------------------------------
-      # HOST-SIDE CLEANUP
-      # -------------------------------
+      # -----------------------------------
+      # HOST-SIDE CLEANUP (runs before container)
+      # -----------------------------------
       - name: Pre-clean workspace on host
         shell: bash
         run: |
@@ -38,14 +33,14 @@ jobs:
           sudo rm -rf "$GITHUB_WORKSPACE"/* || true
           sudo rm -rf "$GITHUB_WORKSPACE"/.[!.]* || true
 
-      # -------------------------------
-      # HOST-SIDE CHECKOUT
-      # -------------------------------
+      # -----------------------------------
+      # HOST-SIDE CHECKOUT (still before container)
+      # -----------------------------------
       - uses: actions/checkout@v4
 
-      # -------------------------------
+      # -----------------------------------
       # CONTAINER STEPS START HERE
-      # -------------------------------
+      # -----------------------------------
       - name: Ensure neurolab user exists inside container
         run: |
           if ! id -u 1000 >/dev/null 2>&1; then
