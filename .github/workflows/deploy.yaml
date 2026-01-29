@@ -50,9 +50,9 @@ jobs:
             REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
           FHEMB_ENV_PATHS: |
             NODENAME=${{ vars.NODENAME }}
-            LOCALROOT=/mnt/NASstorage
-            MOUNT=/mnt/NASstorage
-            AUDIOFILES=/mnt/NASstorage/thermal_data
+            LOCALROOT=${{ vars.FHEMB_LOCALRROT }}
+            MOUNT=${{ vars.FHEMB_MOUNT }}
+            AUDIOFILES=${{ vars.FHEMB_AUDIOFILES }}
         run: |
           docker run --rm \
             --network host \
