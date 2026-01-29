@@ -141,9 +141,17 @@ jobs:
     runs-on: scienziatiello
     needs: build
 
+    container:
+      image: ubuntu:22.04
+
     steps:
+      - name: Install git + dependencies
+        run: |
+          apt-get update
+          apt-get install -y git ca-certificates
+
       - name: DEBUG — deploy job reached
-        run: echo "DEPLOY JOB STARTED"
+        run: echo "DEPLOY JOB STARTED (container)"
 
       - uses: actions/checkout@v4
         with:
