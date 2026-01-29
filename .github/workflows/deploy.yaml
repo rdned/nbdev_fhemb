@@ -91,7 +91,18 @@ jobs:
 
               nbdev_test
               nbdev_docs
-              nbdev_ghp_docs
+
+              # Configure git and push to gh-pages
+              git config --global user.email "github-actions@github.com"
+              git config --global user.name "github-actions"
+
+              git checkout --orphan gh-pages
+              git rm -rf .
+              cp -r _docs/* .
+              rm -rf _docs
+              git add .
+              git commit -m "docs: update documentation" || true
+              git push origin gh-pages -f
 
               kill $SSH_PID 2>/dev/null || true
               wait $SSH_PID 2>/dev/null || true
