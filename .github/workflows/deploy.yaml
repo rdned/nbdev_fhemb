@@ -20,23 +20,25 @@ jobs:
 
     container:
       image: python:3.12
+      options: --user 1000:1000
 
     steps:
       - uses: actions/checkout@v4
 
-      # THE FIX — prevents root-owned files in workspace
-      - name: Fix workspace permissions
-        run: chown -R $(id -u):$(id -g) $GITHUB_WORKSPACE
-
-      - name: "Debug: show workspace path"
+      - name: Ensure neurolab user exists inside container
         run: |
-          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-          ls -R $GITHUB_WORKSPACE
+          if ! id -u 1000 >/dev/null 2>&1; then
+            groupadd -g 1000 neurolab || true
+            useradd -m -u 1000 -g 1000 neurolab || true
+          fi
+
+      - name: Fix workspace permissions
+        run: chown -R 1000:1000 $GITHUB_WORKSPACE
 
       - name: Install PostgreSQL client + netcat + OpenCV deps
         run: |
-          apt-get update
-          apt-get install -y postgresql-client netcat-openbsd libgl1 libglib2.0-0
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client netcat-openbsd libgl1 libglib2.0-0
 
       - name: Install private fhemb dependency
         run: |
@@ -48,15 +50,15 @@ jobs:
 
       - name: Install SSH key for fhemb
         run: |
-          mkdir -p /root/.ssh
-          echo "${{ secrets.FHEMB_SSH_KEY }}" > /root/.ssh/id_rsa
-          chmod 600 /root/.ssh/id_rsa
+          mkdir -p /home/neurolab/.ssh
+          echo "${{ secrets.FHEMB_SSH_KEY }}" > /home/neurolab/.ssh/id_rsa
+          chmod 600 /home/neurolab/.ssh/id_rsa
 
       - name: Create fhemb config
         run: |
-          mkdir -p ~/.config/fhemb
+          mkdir -p /home/neurolab/.config/fhemb
 
-          cat <<EOF > ~/.config/fhemb/.env.db
+          cat <<EOF > /home/neurolab/.config/fhemb/.env.db
           DB_NAME=${{ vars.FHEMB_DB_NAME }}
           DB_USERNAME=${{ vars.FHEMB_DB_USER }}
           DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
@@ -66,24 +68,24 @@ jobs:
           REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
           REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
           SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
-          SSH_PKEY=/root/.ssh/id_rsa
+          SSH_PKEY=/home/neurolab/.ssh/id_rsa
           REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
           REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
           EOF
 
-          cat <<EOF > ~/.config/fhemb/.env.paths
+          cat <<EOF > /home/neurolab/.config/fhemb/.env.paths
           NODENAME=${{ vars.NODENAME }}
           LOCALROOT='/mnt/NASstorage'
           MOUNT='/mnt/NASstorage'
           AUDIOFILES='/mnt/NASstorage/thermal_data'
           EOF
 
-          chmod 600 ~/.config/fhemb/.env.db
-          chmod 600 ~/.config/fhemb/.env.paths
+          chmod 600 /home/neurolab/.config/fhemb/.env.db
+          chmod 600 /home/neurolab/.config/fhemb/.env.paths
 
       - name: Establish SSH tunnel
         run: |
-          ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no \
+          ssh -i /home/neurolab/.ssh/id_rsa -o StrictHostKeyChecking=no \
             -L 6543:localhost:5432 \
             ${{ secrets.FHEMB_SSH_USER }}@${{ vars.FHEMB_SSH_HOST }} \
             -N &
@@ -94,16 +96,11 @@ jobs:
 
       - name: Install Quarto
         run: |
-          apt-get update
-          apt-get install -y wget
+          sudo apt-get update
+          sudo apt-get install -y wget
           wget https://quarto.org/download/latest/quarto-linux-amd64.deb
-          dpkg -i quarto-linux-amd64.deb || apt-get -f install -y
+          sudo dpkg -i quarto-linux-amd64.deb || sudo apt-get -f install -y
           quarto --version
-
-      - name: "Debug: check Quarto availability"
-        run: |
-          which quarto || echo "QUARTO NOT FOUND"
-          quarto --version || echo "QUARTO FAILED"
 
       - name: Add Quarto to PATH
         run: echo "/usr/local/bin" >> $GITHUB_PATH
@@ -112,25 +109,9 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: nbdev_test
 
-      - name: "Debug: verify nbs directory exists"
-        run: |
-          echo "--- listing nbs directory ---"
-          ls -R $GITHUB_WORKSPACE/nbs || echo "NO nbs DIRECTORY FOUND"
-
       - name: Build nbdev docs
         working-directory: ${{ github.workspace }}
         run: nbdev_docs
-
-      - name: "Debug: show nbdev_docs output"
-        working-directory: ${{ github.workspace }}
-        run: |
-          echo "--- nbdev_docs output ---"
-          nbdev_docs --verbose || echo "nbdev_docs FAILED"
-
-      - name: "Debug: list built docs"
-        run: |
-          echo "--- listing _docs ---"
-          ls -R $GITHUB_WORKSPACE/_docs || echo "NO _docs FOUND"
 
       - name: Upload built docs as artifact
         uses: actions/upload-artifact@v4
@@ -147,16 +128,11 @@ jobs:
     needs: build
 
     steps:
-      - name: DEBUG — deploy job reached
-        run: echo "DEPLOY JOB STARTED (Fix C)"
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Download built docs
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: built-docs
           path: ./_docs
