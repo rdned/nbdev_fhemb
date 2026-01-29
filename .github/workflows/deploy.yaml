@@ -104,20 +104,20 @@ jobs:
         run: echo "/usr/local/bin" >> $GITHUB_PATH
 
       - name: Run nbdev_test
-        working-directory: ${{ github.workspace }}
+        working-directory: $GITHUB_WORKSPACE
         run: nbdev_test
 
       - name: "Debug: verify nbs directory exists"
         run: |
           echo "--- listing nbs directory ---"
-          ls -R ${{ github.workspace }}/nbs || echo "NO nbs DIRECTORY FOUND"
+          ls -R $GITHUB_WORKSPACE/nbs || echo "NO nbs DIRECTORY FOUND"
 
       - name: Build nbdev docs
-        working-directory: ${{ github.workspace }}
+        working-directory: $GITHUB_WORKSPACE
         run: nbdev_docs
 
       - name: "Debug: show nbdev_docs output"
-        working-directory: ${{ github.workspace }}/nbs
+        working-directory: $GITHUB_WORKSPACE
         run: |
           echo "--- nbdev_docs output ---"
           nbdev_docs --verbose || echo "nbdev_docs FAILED"
@@ -125,13 +125,13 @@ jobs:
       - name: "Debug: list built docs"
         run: |
           echo "--- listing nbs/_docs ---"
-          ls -R ${{ github.workspace }}/nbs/_docs || echo "NO _docs FOUND"
+          ls -R $GITHUB_WORKSPACE/nbs/_docs || echo "NO _docs FOUND"
 
       - name: Upload built docs as artifact
         uses: actions/upload-artifact@v4
         with:
           name: built-docs
-          path: ${{ github.workspace }}/nbs/_docs
+          path: $GITHUB_WORKSPACE/nbs/_docs
 
 # -----------------------------------------
 # JOB 2: DEPLOY DOCS (NO CONTAINER, HOST FS)
