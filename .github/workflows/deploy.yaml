@@ -25,7 +25,7 @@ jobs:
     steps:
       # HOST-SIDE FIX — runs BEFORE checkout
       - name: Pre-clean workspace (host-side)
-        run: chown -R neurolab:neurolab $GITHUB_WORKSPACE || true
+        run: chown -R 1000:1000 $GITHUB_WORKSPACE || true
 
       - uses: actions/checkout@v4
 
