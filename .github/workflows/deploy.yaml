@@ -125,13 +125,13 @@ jobs:
       - name: "Debug: list built docs"
         run: |
           echo "--- listing nbs/_docs ---"
-          ls -R $GITHUB_WORKSPACE/nbs/_docs || echo "NO _docs FOUND"
+          ls -R $GITHUB_WORKSPACE/_docs || echo "NO _docs FOUND"
 
       - name: Upload built docs as artifact
         uses: actions/upload-artifact@v4
         with:
           name: built-docs
-          path: $GITHUB_WORKSPACE/nbs/_docs
+          path: $GITHUB_WORKSPACE/_docs
 
 # -----------------------------------------
 # JOB 2: DEPLOY DOCS (NO CONTAINER, HOST FS)
