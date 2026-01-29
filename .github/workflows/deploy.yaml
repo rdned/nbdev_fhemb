@@ -23,7 +23,7 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: Build and deploy in container
+      - name: Build and deploy
         run: |
           docker run --rm \
             --user root \
@@ -32,26 +32,12 @@ jobs:
             -v /tmp/nbdev-pip:/root/.local \
             -w /workspace \
             --network host \
-            python:3.12 \
+            rdned/nbdev-fhemb:2.4.14 \
             bash -c '
               set -e
-              
-              # Minimize apt cache
-              apt-get update -qq
-              apt-get install -y -qq --no-install-recommends \
-                postgresql-client netcat-openbsd libgl1 libglib2.0-0 wget git openssh-client
-              apt-get clean
-              rm -rf /var/lib/apt/lists/*
 
-              # Use pip cache to minimize reinstalls
-              pip install --no-cache-dir -q nbdev==2.4.14
               pip install --no-cache-dir -q --force-reinstall \
                 "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
-
-              # Download quarto to temp location
-              wget -q https://quarto.org/download/latest/quarto-linux-amd64.deb -O /tmp/quarto.deb
-              dpkg -i /tmp/quarto.deb || apt-get -f install -y -qq
-              rm /tmp/quarto.deb
 
               mkdir -p /root/.ssh
               echo "${{ secrets.FHEMB_SSH_KEY }}" > /root/.ssh/id_rsa
@@ -111,18 +97,13 @@ jobs:
               kill $SSH_PID 2>/dev/null || true
               wait $SSH_PID 2>/dev/null || true
               
-              # Cleanup before exit
               rm -rf /root/.ssh /root/.config
             '
 
       - name: Cleanup host
         if: always()
         run: |
-          # Clean docker images and dangling volumes
           docker image prune -f --filter "until=1h" 2>/dev/null || true
           docker volume prune -f 2>/dev/null || true
-          
-          # Final workspace permission fix
           sudo chown -R $USER:$USER "$GITHUB_WORKSPACE" 2>/dev/null || true
-          sudo chmod -R 755 "$GITHUB_WORKSPACE" 2>/dev/null || true
 
