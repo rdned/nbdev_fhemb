@@ -16,13 +16,10 @@ RUN wget -q https://quarto.org/download/latest/quarto-linux-amd64.deb -O /tmp/qu
 # Install Python dependencies
 RUN pip install --no-cache-dir nbdev==2.4.14
 
-# Workspace inside container
 WORKDIR /workspace
 
-# Copy workflow script
 COPY build.sh /usr/local/bin/build.sh
 RUN chmod +x /usr/local/bin/build.sh
 
-# Run workflow automatically
 ENTRYPOINT ["/usr/local/bin/build.sh"]
 

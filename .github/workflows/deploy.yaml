@@ -14,17 +14,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          clean: true
 
-      - name: Run build inside container
+      - name: Run nbdev build
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FHEMB_CI: ${{ secrets.FHEMB_CI }}
           FHEMB_SSH_KEY: ${{ secrets.FHEMB_SSH_KEY }}
           FHEMB_SSH_USER: ${{ secrets.FHEMB_SSH_USER }}
           FHEMB_SSH_HOST: ${{ vars.FHEMB_SSH_HOST }}
-
           FHEMB_ENV_DB: |
             DB_NAME=${{ vars.FHEMB_DB_NAME }}
             DB_USERNAME=${{ vars.FHEMB_DB_USER }}
@@ -37,15 +35,22 @@ jobs:
             SSH_PKEY=/root/.ssh/id_rsa
             REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
             REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
-
           FHEMB_ENV_PATHS: |
             NODENAME=${{ vars.NODENAME }}
             LOCALROOT=/mnt/NASstorage
             MOUNT=/mnt/NASstorage
             AUDIOFILES=/mnt/NASstorage/thermal_data
-
         run: |
           docker run --rm \
             --network host \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            -e GITHUB_REPOSITORY \
+            -e GITHUB_TOKEN \
+            -e FHEMB_CI \
+            -e FHEMB_SSH_KEY \
+            -e FHEMB_SSH_USER \
+            -e FHEMB_SSH_HOST \
+            -e FHEMB_ENV_DB \
+            -e FHEMB_ENV_PATHS \
             rdned/nbdev-fhemb:2.4.14
 
