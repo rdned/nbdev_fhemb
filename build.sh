@@ -35,6 +35,20 @@ nbdev_test
 echo "=== NBDEV DOCS ==="
 nbdev_docs
 
+echo "=== DEPLOY TO GH-PAGES ==="
+git config --global user.email "github-actions@github.com"
+git config --global user.name "github-actions"
+git config --global --add safe.directory /workspace
+git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+
+git checkout --orphan gh-pages
+git rm -rf .
+cp -r _docs/* .
+rm -rf _docs
+git add .
+git commit -m "docs: update documentation" || true
+git push origin gh-pages -f
+
 echo "=== CLEANUP ==="
 kill $SSH_PID || true
 rm -rf ~/.ssh ~/.config
