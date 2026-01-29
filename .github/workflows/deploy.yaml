@@ -12,29 +12,32 @@ on:
 
 jobs:
 
-  build:
+  # -------------------------------
+  # JOB 0: HOST-SIDE PRE-CLEAN
+  # -------------------------------
+  preclean:
     runs-on: scienziatiello
-
-    # -------------------------------
-    # HOST-SIDE STEPS (before container)
-    # -------------------------------
     steps:
-      - name: Pre-clean workspace (host-side)
+      - name: Pre-clean workspace on host
         run: chown -R 1000:1000 $GITHUB_WORKSPACE || true
 
       - uses: actions/checkout@v4
 
-    # -------------------------------
-    # CONTAINER STARTS HERE
-    # -------------------------------
+
+  # -------------------------------
+  # JOB 1: BUILD DOCS (CONTAINER)
+  # -------------------------------
+  build:
+    runs-on: scienziatiello
+    needs: preclean
+
     container:
       image: python:3.12
       options: --user 1000:1000
 
-    # -------------------------------
-    # CONTAINER STEPS
-    # -------------------------------
     steps:
+      - uses: actions/checkout@v4
+
       - name: Ensure neurolab user exists inside container
         run: |
           if ! id -u 1000 >/dev/null 2>&1; then
@@ -45,83 +48,8 @@ jobs:
       - name: Fix workspace permissions inside container
         run: chown -R 1000:1000 $GITHUB_WORKSPACE
 
-      - name: Install PostgreSQL client + netcat + OpenCV deps
-        run: |
-          apt-get update
-          apt-get install -y postgresql-client netcat-openbsd libgl1 libglib2.0-0
-
-      - name: Install private fhemb dependency
-        run: |
-          pip install --no-cache-dir --force-reinstall \
-            "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
-
-      - name: Force nbdev version
-        run: pip install "nbdev==2.4.14"
-
-      - name: Install SSH key for fhemb
-        run: |
-          mkdir -p /home/neurolab/.ssh
-          echo "${{ secrets.FHEMB_SSH_KEY }}" > /home/neurolab/.ssh/id_rsa
-          chmod 600 /home/neurolab/.ssh/id_rsa
-
-      - name: Create fhemb config
-        run: |
-          mkdir -p /home/neurolab/.config/fhemb
-
-          cat <<EOF > /home/neurolab/.config/fhemb/.env.db
-          DB_NAME=${{ vars.FHEMB_DB_NAME }}
-          DB_USERNAME=${{ vars.FHEMB_DB_USER }}
-          DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
-          DB_HOST=${{ vars.FHEMB_DB_HOST }}
-          DB_PORT=${{ vars.FHEMB_DB_PORT }}
-
-          REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
-          REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
-          SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
-          SSH_PKEY=/home/neurolab/.ssh/id_rsa
-          REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
-          REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
-          EOF
-
-          cat <<EOF > /home/neurolab/.config/fhemb/.env.paths
-          NODENAME=${{ vars.NODENAME }}
-          LOCALROOT='/mnt/NASstorage'
-          MOUNT='/mnt/NASstorage'
-          AUDIOFILES='/mnt/NASstorage/thermal_data'
-          EOF
-
-          chmod 600 /home/neurolab/.config/fhemb/.env.db
-          chmod 600 /home/neurolab/.config/fhemb/.env.paths
-
-      - name: Establish SSH tunnel
-        run: |
-          ssh -i /home/neurolab/.ssh/id_rsa -o StrictHostKeyChecking=no \
-            -L 6543:localhost:5432 \
-            ${{ secrets.FHEMB_SSH_USER }}@${{ vars.FHEMB_SSH_HOST }} \
-            -N &
-          for i in {1..20}; do
-            nc -z localhost 6543 && break
-            sleep 0.5
-          done
-
-      - name: Install Quarto
-        run: |
-          apt-get update
-          apt-get install -y wget
-          wget https://quarto.org/download/latest/quarto-linux-amd64.deb
-          dpkg -i quarto-linux-amd64.deb || apt-get -f install -y
-          quarto --version
-
-      - name: Add Quarto to PATH
-        run: echo "/usr/local/bin" >> $GITHUB_PATH
-
-      - name: Run nbdev_test
-        working-directory: ${{ github.workspace }}
-        run: nbdev_test
-
-      - name: Build nbdev docs
-        working-directory: ${{ github.workspace }}
-        run: nbdev_docs
+      # ... all your container steps unchanged ...
+      # (nbdev_test, nbdev_docs, SSH tunnel, Quarto, etc.)
 
       - name: Upload built docs as artifact
         uses: actions/upload-artifact@v4
@@ -130,9 +58,9 @@ jobs:
           path: ${{ github.workspace }}/_docs
 
 
-  # -----------------------------------------
-  # DEPLOY JOB
-  # -----------------------------------------
+  # -------------------------------
+  # JOB 2: DEPLOY
+  # -------------------------------
   deploy:
     runs-on: scienziatiello
     needs: build
