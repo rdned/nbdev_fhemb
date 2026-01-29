@@ -13,7 +13,6 @@ jobs:
     runs-on: scienziatiello
 
     steps:
-      # Nuclear cleanup BEFORE checkout
       - name: Obliterate workspace
         run: |
           set +e
@@ -92,9 +91,10 @@ jobs:
               nbdev_test
               nbdev_docs
 
-              # Configure git and push to gh-pages
               git config --global user.email "github-actions@github.com"
               git config --global user.name "github-actions"
+              git config --global --add safe.directory /workspace
+              git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
               git checkout --orphan gh-pages
               git rm -rf .
