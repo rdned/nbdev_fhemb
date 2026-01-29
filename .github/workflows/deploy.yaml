@@ -12,35 +12,46 @@ on:
 
 jobs:
 
-  build:
+  # ----------------------------------------------------
+  # JOB 1: HOST-SIDE CLEANUP + CHECKOUT
+  # ----------------------------------------------------
+  host_prepare:
     runs-on: scienziatiello
 
-    # Container declared here — but host steps still run before container starts
+    steps:
+      - name: Clean workspace on host
+        run: |
+          sudo chown -R neurolab:neurolab "$GITHUB_WORKSPACE" || true
+          sudo rm -rf "$GITHUB_WORKSPACE"/* || true
+          sudo rm -rf "$GITHUB_WORKSPACE"/.[!.]* || true
+
+      - uses: actions/checkout@v4
+
+      - name: Archive clean checkout
+        uses: actions/upload-artifact@v4
+        with:
+          name: clean-source
+          path: ${{ github.workspace }}
+
+
+  # ----------------------------------------------------
+  # JOB 2: CONTAINER BUILD + TEST + DOCS + DEPLOY
+  # ----------------------------------------------------
+  build_and_deploy:
+    runs-on: scienziatiello
+    needs: host_prepare
+
     container:
       image: python:3.12
       options: --user 1000:1000
 
     steps:
+      - name: Download clean source
+        uses: actions/download-artifact@v4
+        with:
+          name: clean-source
+          path: ${{ github.workspace }}
 
-      # -----------------------------------
-      # HOST-SIDE CLEANUP (runs before container)
-      # -----------------------------------
-      - name: Pre-clean workspace on host
-        shell: bash
-        run: |
-          echo "Cleaning workspace on host"
-          sudo chown -R neurolab:neurolab "$GITHUB_WORKSPACE" || true
-          sudo rm -rf "$GITHUB_WORKSPACE"/* || true
-          sudo rm -rf "$GITHUB_WORKSPACE"/.[!.]* || true
-
-      # -----------------------------------
-      # HOST-SIDE CHECKOUT (still before container)
-      # -----------------------------------
-      - uses: actions/checkout@v4
-
-      # -----------------------------------
-      # CONTAINER STEPS START HERE
-      # -----------------------------------
       - name: Ensure neurolab user exists inside container
         run: |
           if ! id -u 1000 >/dev/null 2>&1; then
@@ -129,9 +140,26 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: nbdev_docs
 
-      - name: Upload built docs as artifact
+      - name: Upload built docs
         uses: actions/upload-artifact@v4
         with:
           name: built-docs
           path: ${{ github.workspace }}/_docs
+
+      - name: Deploy to gh-pages
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+          rm -rf .git
+          git init
+          git checkout -b gh-pages
+
+          cp -r _docs/* .
+          rm -rf _docs
+
+          git add .
+          git commit -m "Update docs"
+          git remote add origin https://github.com/${{ github.repository }}.git
+          git push -f origin gh-pages
 
