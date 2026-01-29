@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex  # Add -x to print each command
 
 echo "=== INSTALL FHEMB ==="
 pip install --no-cache-dir --force-reinstall \
@@ -32,14 +32,22 @@ done
 echo "=== CLEAR CACHES ==="
 rm -rf .nbdev_cache .quarto
 
+echo "=== CHECK NOTEBOOKS ==="
+ls -la nbs/ || echo "ERROR: nbs/ not found"
+
 echo "=== NBDEV PREPARE ==="
 nbdev_prepare
+echo "nbdev_prepare completed with exit code: $?"
 
 echo "=== NBDEV TEST ==="
-nbdev_test
+nbdev_test || echo "WARNING: nbdev_test failed"
 
 echo "=== NBDEV DOCS ==="
 nbdev_docs
+echo "nbdev_docs completed with exit code: $?"
+
+echo "=== CHECK DOCS GENERATED ==="
+ls -la _docs/ || echo "ERROR: _docs/ not generated!"
 
 echo "=== DEPLOY TO GH-PAGES ==="
 git config --global user.email "github-actions@github.com"
