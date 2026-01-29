@@ -67,6 +67,16 @@ jobs:
             -e FHEMB_ENV_PATHS \
             rdned/nbdev-fhemb:2.4.14
 
+
+      - name: Check generated docs
+        run: |
+          echo "=== Notebooks ==="
+          ls -la nbs/
+          echo "=== Generated docs ==="
+          ls -la _docs/ || echo "No _docs directory"
+          echo "=== Index content ==="
+          head -20 _docs/index.html || echo "No index.html"
+
       - name: Cleanup
         if: always()
         run: |
