@@ -23,6 +23,10 @@ jobs:
       options: --user 1000:1000
 
     steps:
+      # HOST-SIDE FIX — runs BEFORE checkout
+      - name: Pre-clean workspace (host-side)
+        run: sudo chown -R neurolab:neurolab $GITHUB_WORKSPACE || true
+
       - uses: actions/checkout@v4
 
       - name: Ensure neurolab user exists inside container
@@ -32,7 +36,7 @@ jobs:
             useradd -m -u 1000 -g 1000 neurolab || true
           fi
 
-      - name: Fix workspace permissions
+      - name: Fix workspace permissions inside container
         run: chown -R 1000:1000 $GITHUB_WORKSPACE
 
       - name: Install PostgreSQL client + netcat + OpenCV deps
