@@ -163,9 +163,10 @@ jobs:
           cp -r _docs deploy-root/_docs
 
       - name: Deploy inside isolated container
-        uses: docker://ubuntu:22.04
-        with:
-          args: >
+        run: |
+          docker run --rm \
+            -v "$PWD/deploy-root":/workspace \
+            ubuntu:22.04 \
             bash -c "
               apt-get update &&
               apt-get install -y git ca-certificates &&
@@ -180,6 +181,3 @@ jobs:
               git commit -m 'Update docs' || echo 'No changes to commit' &&
               git push origin gh-pages
             "
-        env:
-          GIT_TERMINAL_PROMPT: "0"
-        working-directory: deploy-root
