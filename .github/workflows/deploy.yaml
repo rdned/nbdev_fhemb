@@ -145,6 +145,9 @@ jobs:
       - name: DEBUG — deploy job reached
         run: echo "DEPLOY JOB STARTED (Fix C)"
 
+      - name: Reset workspace permissions
+        run: sudo chown -R "$USER":"$USER" "$GITHUB_WORKSPACE"
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
