@@ -13,100 +13,94 @@ on:
 jobs:
 
   # -------------------------------
-  # JOB 1: BUILD DOCS (HERMETIC)
+  # JOB 1: BUILD DOCS (CONTAINER)
   # -------------------------------
   build:
     runs-on: scienziatiello
+
+    container:
+      image: python:3.12
+      options: --userns=keep-id
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Prepare isolated build output directory
-        run: mkdir -p build-out
-
-      - name: Run full hermetic build container (Fix B)
+      - name: Install system dependencies
         run: |
-          docker run --rm \
-            -v "$PWD/build-out":/out \
-            -v "$PWD":/src:ro \
-            python:3.12 \
-            bash -c "
-              set -e
+          apt-get update
+          apt-get install -y postgresql-client netcat-openbsd libgl1 libglib2.0-0 wget ssh ca-certificates
 
-              # Install system deps
-              apt-get update
-              apt-get install -y postgresql-client netcat-openbsd libgl1 libglib2.0-0 wget ssh ca-certificates
+      - name: Install Quarto
+        run: |
+          wget https://quarto.org/download/latest/quarto-linux-amd64.deb
+          dpkg -i quarto-linux-amd64.deb || apt-get -f install -y
 
-              # Install Quarto
-              wget https://quarto.org/download/latest/quarto-linux-amd64.deb
-              dpkg -i quarto-linux-amd64.deb || apt-get -f install -y
+      - name: Install private fhemb dependency
+        run: |
+          pip install --no-cache-dir --force-reinstall \
+            "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
 
-              # Install Python deps
-              pip install --no-cache-dir --force-reinstall \
-                'fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb'
+      - name: Install nbdev
+        run: pip install "nbdev==2.4.14"
 
-              pip install 'nbdev==2.4.14'
+      - name: Install SSH key for fhemb
+        run: |
+          mkdir -p /root/.ssh
+          echo "${{ secrets.FHEMB_SSH_KEY }}" > /root/.ssh/id_rsa
+          chmod 600 /root/.ssh/id_rsa
 
-              # SSH key for fhemb
-              mkdir -p /root/.ssh
-              echo '${{ secrets.FHEMB_SSH_KEY }}' > /root/.ssh/id_rsa
-              chmod 600 /root/.ssh/id_rsa
+      - name: Create fhemb config
+        run: |
+          mkdir -p ~/.config/fhemb
 
-              # Create fhemb config
-              mkdir -p /root/.config/fhemb
+          cat <<EOF > ~/.config/fhemb/.env.db
+          DB_NAME=${{ vars.FHEMB_DB_NAME }}
+          DB_USERNAME=${{ vars.FHEMB_DB_USER }}
+          DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
+          DB_HOST=${{ vars.FHEMB_DB_HOST }}
+          DB_PORT=${{ vars.FHEMB_DB_PORT }}
 
-              cat <<EOF > /root/.config/fhemb/.env.db
-              DB_NAME=${{ vars.FHEMB_DB_NAME }}
-              DB_USERNAME=${{ vars.FHEMB_DB_USER }}
-              DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
-              DB_HOST=${{ vars.FHEMB_DB_HOST }}
-              DB_PORT=${{ vars.FHEMB_DB_PORT }}
+          REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
+          REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
+          SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
+          SSH_PKEY=/root/.ssh/id_rsa
+          REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
+          REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
+          EOF
 
-              REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
-              REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
-              SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
-              SSH_PKEY=/root/.ssh/id_rsa
-              REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
-              REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
-              EOF
+          cat <<EOF > ~/.config/fhemb/.env.paths
+          NODENAME=${{ vars.NODENAME }}
+          LOCALROOT='/mnt/NASstorage'
+          MOUNT='/mnt/NASstorage'
+          AUDIOFILES='/mnt/NASstorage/thermal_data'
+          EOF
 
-              cat <<EOF > /root/.config/fhemb/.env.paths
-              NODENAME=${{ vars.NODENAME }}
-              LOCALROOT='/mnt/NASstorage'
-              MOUNT='/mnt/NASstorage'
-              AUDIOFILES='/mnt/NASstorage/thermal_data'
-              EOF
+          chmod 600 ~/.config/fhemb/.env.db
+          chmod 600 ~/.config/fhemb/.env.paths
 
-              chmod 600 /root/.config/fhemb/.env.db
-              chmod 600 /root/.config/fhemb/.env.paths
+      - name: Establish SSH tunnel
+        run: |
+          ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no \
+            -L 6543:localhost:5432 \
+            ${{ secrets.FHEMB_SSH_USER }}@${{ vars.FHEMB_SSH_HOST }} \
+            -N &
+          for i in {1..20}; do
+            nc -z localhost 6543 && break
+            sleep 0.5
+          done
 
-              # Establish SSH tunnel
-              ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no \
-                -L 6543:localhost:5432 \
-                ${{ secrets.FHEMB_SSH_USER }}@${{ vars.FHEMB_SSH_HOST }} \
-                -N &
-              for i in {1..20}; do
-                nc -z localhost 6543 && break
-                sleep 0.5
-              done
+      - name: Run nbdev tests
+        run: nbdev_test
 
-              # Run tests
-              cd /src
-              nbdev_test
-
-              # Build docs
-              nbdev_docs
-
-              # Export docs to /out
-              cp -r _docs/* /out/
-            "
+      - name: Build nbdev docs
+        run: nbdev_docs
 
       - name: Upload built docs
         uses: actions/upload-artifact@v4
         with:
           name: built-docs
-          path: build-out
+          path: _docs
 
 
   # -------------------------------
