@@ -104,7 +104,7 @@ jobs:
         run: echo "/usr/local/bin" >> $GITHUB_PATH
 
       - name: Run nbdev_test
-        working-directory: $GITHUB_WORKSPACE
+        working-directory: ${{ github.workspace }}
         run: nbdev_test
 
       - name: "Debug: verify nbs directory exists"
@@ -113,11 +113,11 @@ jobs:
           ls -R $GITHUB_WORKSPACE/nbs || echo "NO nbs DIRECTORY FOUND"
 
       - name: Build nbdev docs
-        working-directory: $GITHUB_WORKSPACE
+        working-directory: ${{ github.workspace }}
         run: nbdev_docs
 
       - name: "Debug: show nbdev_docs output"
-        working-directory: $GITHUB_WORKSPACE
+        working-directory: ${{ github.workspace }}
         run: |
           echo "--- nbdev_docs output ---"
           nbdev_docs --verbose || echo "nbdev_docs FAILED"
