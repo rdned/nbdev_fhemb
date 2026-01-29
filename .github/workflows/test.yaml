@@ -66,9 +66,9 @@ jobs:
 
           cat <<EOF > ~/.config/fhemb/.env.paths
           NODENAME=${{ vars.NODENAME }}
-          LOCALROOT='/mnt/NASstorage'
-          MOUNT='/mnt/NASstorage'
-          AUDIOFILES='/mnt/NASstorage/thermal_data'
+          LOCALROOT=${{ vars.FHEMB_LOCALROOT }}
+          MOUNT=${{ vars.FHEM_MOUNT }}
+          AUDIOFILES=${{ vars.FHEM_AUDIOFILES }}
           EOF
 
           chmod 600 ~/.config/fhemb/.env.db
