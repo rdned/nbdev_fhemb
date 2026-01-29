@@ -2,8 +2,6 @@ name: Deploy to GitHub Pages
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 on:
   push:
@@ -13,12 +11,8 @@ on:
 jobs:
   build_and_deploy:
     runs-on: scienziatiello
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      # Nuclear option: obliterate the old repo state
       - name: Clean workspace completely
         run: |
           cd $GITHUB_WORKSPACE
@@ -27,10 +21,8 @@ jobs:
           cd ..
           rm -rf "$GITHUB_WORKSPACE/.git" || true
 
-      # Fresh checkout
       - uses: actions/checkout@v4
 
-      # Everything in one container with proper mounts
       - name: Build and deploy
         run: |
           docker run --rm --user root \
@@ -41,26 +33,21 @@ jobs:
             bash -c '
               set -e
               
-              # Install system dependencies
               apt-get update -qq
               apt-get install -y -qq postgresql-client netcat-openbsd libgl1 libglib2.0-0 wget git openssh-client
               
-              # Install Python tools
               pip install --no-cache-dir -q nbdev==2.4.14
               pip install --no-cache-dir -q --force-reinstall \
                 "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
               
-              # Quarto
               wget -q https://quarto.org/download/latest/quarto-linux-amd64.deb -O /tmp/quarto.deb
               dpkg -i /tmp/quarto.deb || apt-get -f install -y -qq
               
-              # SSH setup
               mkdir -p /root/.ssh
               echo "${{ secrets.FHEMB_SSH_KEY }}" > /root/.ssh/id_rsa
               chmod 600 /root/.ssh/id_rsa
               ssh-keyscan -H ${{ vars.FHEMB_SSH_HOST }} 2>/dev/null >> /root/.ssh/known_hosts
               
-              # Config
               mkdir -p /root/.config/fhemb
               cat > /root/.config/fhemb/.env.db << "ENVEOF"
           DB_NAME=${{ vars.FHEMB_DB_NAME }}
@@ -83,7 +70,6 @@ jobs:
           AUDIOFILES=/mnt/NASstorage/thermal_data
           ENVEOF
               
-              # SSH tunnel
               ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no \
                 -L 6543:localhost:5432 \
                 ${{ secrets.FHEMB_SSH_USER }}@${{ vars.FHEMB_SSH_HOST }} \
@@ -96,27 +82,17 @@ jobs:
                 sleep 0.5
               done
               
-              # Build
               nbdev_test
               nbdev_docs
+              nbdev_ghp_docs
               
               kill $SSH_PID 2>/dev/null || true
               wait $SSH_PID 2>/dev/null || true
             '
 
-      # Ensure host has permissions back
       - name: Fix host permissions
         if: always()
         run: |
           sudo chown -R $USER:$USER "$GITHUB_WORKSPACE" 2>/dev/null || true
           sudo chmod -R u+rwX "$GITHUB_WORKSPACE" 2>/dev/null || true
-
-      - name: Upload pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: _docs
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
 
