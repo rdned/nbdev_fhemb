@@ -43,7 +43,7 @@ jobs:
               apt-get update -qq
               apt-get install -y -qq postgresql-client netcat-openbsd libgl1 libglib2.0-0 wget git openssh-client
 
-              pip install --no-cache-dir -q nbdev
+              pip install --no-cache-dir -q nbdev==2.4.14
               pip install --no-cache-dir -q --force-reinstall \
                 "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
 
@@ -89,9 +89,9 @@ jobs:
                 sleep 0.5
               done
 
-              nbdev_prepare
+              nbdev_test
               nbdev_docs
-              nbdev_ghp_pages
+              nbdev_ghp_docs
 
               kill $SSH_PID 2>/dev/null || true
               wait $SSH_PID 2>/dev/null || true
