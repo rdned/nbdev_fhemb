@@ -13,35 +13,37 @@ on:
 jobs:
 
   # -------------------------------
-  # JOB 1: BUILD DOCS (CONTAINER)
+  # JOB 1: BUILD DOCS (IN CONTAINER)
   # -------------------------------
   build:
     runs-on: scienziatiello
 
     container:
       image: python:3.12
-      options: --userns=keep-id
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install system dependencies
+      # THE FIX — prevents root-owned files in workspace
+      - name: Fix workspace permissions
+        run: chown -R $(id -u):$(id -g) $GITHUB_WORKSPACE
+
+      - name: "Debug: show workspace path"
+        run: |
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          ls -R $GITHUB_WORKSPACE
+
+      - name: Install PostgreSQL client + netcat + OpenCV deps
         run: |
           apt-get update
-          apt-get install -y postgresql-client netcat-openbsd libgl1 libglib2.0-0 wget ssh ca-certificates
-
-      - name: Install Quarto
-        run: |
-          wget https://quarto.org/download/latest/quarto-linux-amd64.deb
-          dpkg -i quarto-linux-amd64.deb || apt-get -f install -y
+          apt-get install -y postgresql-client netcat-openbsd libgl1 libglib2.0-0
 
       - name: Install private fhemb dependency
         run: |
           pip install --no-cache-dir --force-reinstall \
             "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
 
-      - name: Install nbdev
+      - name: Force nbdev version
         run: pip install "nbdev==2.4.14"
 
       - name: Install SSH key for fhemb
@@ -90,27 +92,64 @@ jobs:
             sleep 0.5
           done
 
-      - name: Run nbdev tests
+      - name: Install Quarto
+        run: |
+          apt-get update
+          apt-get install -y wget
+          wget https://quarto.org/download/latest/quarto-linux-amd64.deb
+          dpkg -i quarto-linux-amd64.deb || apt-get -f install -y
+          quarto --version
+
+      - name: "Debug: check Quarto availability"
+        run: |
+          which quarto || echo "QUARTO NOT FOUND"
+          quarto --version || echo "QUARTO FAILED"
+
+      - name: Add Quarto to PATH
+        run: echo "/usr/local/bin" >> $GITHUB_PATH
+
+      - name: Run nbdev_test
+        working-directory: ${{ github.workspace }}
         run: nbdev_test
 
+      - name: "Debug: verify nbs directory exists"
+        run: |
+          echo "--- listing nbs directory ---"
+          ls -R $GITHUB_WORKSPACE/nbs || echo "NO nbs DIRECTORY FOUND"
+
       - name: Build nbdev docs
+        working-directory: ${{ github.workspace }}
         run: nbdev_docs
 
-      - name: Upload built docs
+      - name: "Debug: show nbdev_docs output"
+        working-directory: ${{ github.workspace }}
+        run: |
+          echo "--- nbdev_docs output ---"
+          nbdev_docs --verbose || echo "nbdev_docs FAILED"
+
+      - name: "Debug: list built docs"
+        run: |
+          echo "--- listing _docs ---"
+          ls -R $GITHUB_WORKSPACE/_docs || echo "NO _docs FOUND"
+
+      - name: Upload built docs as artifact
         uses: actions/upload-artifact@v4
         with:
           name: built-docs
-          path: _docs
+          path: ${{ github.workspace }}/_docs
 
 
-  # -------------------------------
-  # JOB 2: DEPLOY DOCS (Fix C)
-  # -------------------------------
+  # -----------------------------------------
+  # JOB 2: DEPLOY DOCS TO GH-PAGES BRANCH
+  # -----------------------------------------
   deploy:
     runs-on: scienziatiello
     needs: build
 
     steps:
+      - name: DEBUG — deploy job reached
+        run: echo "DEPLOY JOB STARTED (Fix C)"
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -128,28 +167,23 @@ jobs:
           cp -r .git deploy-root/.git
           cp -r _docs deploy-root/_docs
 
-      - name: Deploy inside isolated container (Fix C)
+      - name: Deploy inside isolated container
         run: |
           docker run --rm \
             -v "$PWD/deploy-root":/workspace \
             ubuntu:22.04 \
             bash -c "
-              set -e
-              apt-get update
-              apt-get install -y git ca-certificates
-
-              cd /workspace
-              git config user.name 'github-actions'
-              git config user.email 'github-actions@github.com'
-
-              git checkout gh-pages || git checkout --orphan gh-pages
-              git rm -rf . || true
-
-              cp -r _docs/* .
-              rm -rf _docs
-
-              git add .
-              git commit -m 'Update docs' || echo 'No changes to commit'
+              apt-get update &&
+              apt-get install -y git ca-certificates &&
+              cd /workspace &&
+              git config user.name 'github-actions' &&
+              git config user.email 'github-actions@github.com' &&
+              git checkout gh-pages || git checkout --orphan gh-pages &&
+              git rm -rf . || true &&
+              cp -r _docs/* . &&
+              rm -rf _docs &&
+              git add . &&
+              git commit -m 'Update docs' || echo 'No changes to commit' &&
               git push origin gh-pages
             "
 
