@@ -12,25 +12,29 @@ on:
 
 jobs:
 
-  # -------------------------------
-  # JOB 1: BUILD DOCS (IN CONTAINER)
-  # -------------------------------
   build:
     runs-on: scienziatiello
 
+    # -------------------------------
+    # HOST-SIDE STEPS (before container)
+    # -------------------------------
+    steps:
+      - name: Pre-clean workspace (host-side)
+        run: chown -R 1000:1000 $GITHUB_WORKSPACE || true
+
+      - uses: actions/checkout@v4
+
+    # -------------------------------
+    # CONTAINER STARTS HERE
+    # -------------------------------
     container:
       image: python:3.12
       options: --user 1000:1000
 
+    # -------------------------------
+    # CONTAINER STEPS
+    # -------------------------------
     steps:
-      # HOST-SIDE FIX — runs BEFORE checkout
-      - name: Pre-clean workspace (host-side)
-        shell: bash
-        run: chown -R 1000:1000 $GITHUB_WORKSPACE || true
-        container: false
-
-      - uses: actions/checkout@v4
-
       - name: Ensure neurolab user exists inside container
         run: |
           if ! id -u 1000 >/dev/null 2>&1; then
@@ -43,8 +47,8 @@ jobs:
 
       - name: Install PostgreSQL client + netcat + OpenCV deps
         run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client netcat-openbsd libgl1 libglib2.0-0
+          apt-get update
+          apt-get install -y postgresql-client netcat-openbsd libgl1 libglib2.0-0
 
       - name: Install private fhemb dependency
         run: |
@@ -102,10 +106,10 @@ jobs:
 
       - name: Install Quarto
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget
+          apt-get update
+          apt-get install -y wget
           wget https://quarto.org/download/latest/quarto-linux-amd64.deb
-          sudo dpkg -i quarto-linux-amd64.deb || sudo apt-get -f install -y
+          dpkg -i quarto-linux-amd64.deb || apt-get -f install -y
           quarto --version
 
       - name: Add Quarto to PATH
@@ -127,7 +131,7 @@ jobs:
 
 
   # -----------------------------------------
-  # JOB 2: DEPLOY DOCS TO GH-PAGES BRANCH
+  # DEPLOY JOB
   # -----------------------------------------
   deploy:
     runs-on: scienziatiello
