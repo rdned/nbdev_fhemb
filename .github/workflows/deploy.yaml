@@ -131,7 +131,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: built-docs
-          path: $GITHUB_WORKSPACE/_docs
+          path: ${{ github.workspace }}/_docs
 
 # -----------------------------------------
 # JOB 2: DEPLOY DOCS (NO CONTAINER, HOST FS)
