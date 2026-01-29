@@ -13,6 +13,19 @@ jobs:
     runs-on: scienziatiello
 
     steps:
+      - name: Clean workspace
+        run: |
+          set +e
+          cd $GITHUB_WORKSPACE
+          sudo git clean -ffdx 2>/dev/null
+          sudo git reset --hard 2>/dev/null
+          sudo rm -rf .git 2>/dev/null
+          cd ..
+          sudo rm -rf "$GITHUB_WORKSPACE" 2>/dev/null
+          mkdir -p "$GITHUB_WORKSPACE"
+          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
+          set -e
+
       - uses: actions/checkout@v4
 
       - name: Run nbdev build
@@ -53,4 +66,10 @@ jobs:
             -e FHEMB_ENV_DB \
             -e FHEMB_ENV_PATHS \
             rdned/nbdev-fhemb:2.4.14
+
+      - name: Cleanup
+        if: always()
+        run: |
+          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE" 2>/dev/null || true
+          docker image prune -f --filter "until=1h" 2>/dev/null || true
 
