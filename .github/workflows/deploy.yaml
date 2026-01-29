@@ -13,97 +13,39 @@ jobs:
     runs-on: scienziatiello
 
     steps:
-      - name: Clean workspace
-        run: |
-          set +e
-          sudo rm -rf "$GITHUB_WORKSPACE"/* "$GITHUB_WORKSPACE"/.[!.]* 2>/dev/null
-          mkdir -p "$GITHUB_WORKSPACE"
-          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
-          set -e
-
       - uses: actions/checkout@v4
+        with:
+          clean: true
 
-      - name: Build and deploy
+      - name: Run build inside container
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          FHEMB_CI: ${{ secrets.FHEMB_CI }}
+          FHEMB_SSH_KEY: ${{ secrets.FHEMB_SSH_KEY }}
+          FHEMB_SSH_USER: ${{ secrets.FHEMB_SSH_USER }}
+          FHEMB_SSH_HOST: ${{ vars.FHEMB_SSH_HOST }}
+
+          FHEMB_ENV_DB: |
+            DB_NAME=${{ vars.FHEMB_DB_NAME }}
+            DB_USERNAME=${{ vars.FHEMB_DB_USER }}
+            DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
+            DB_HOST=${{ vars.FHEMB_DB_HOST }}
+            DB_PORT=${{ vars.FHEMB_DB_PORT }}
+            REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
+            REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
+            SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
+            SSH_PKEY=/root/.ssh/id_rsa
+            REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
+            REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
+
+          FHEMB_ENV_PATHS: |
+            NODENAME=${{ vars.NODENAME }}
+            LOCALROOT=/mnt/NASstorage
+            MOUNT=/mnt/NASstorage
+            AUDIOFILES=/mnt/NASstorage/thermal_data
+
         run: |
           docker run --rm \
-            --user root \
-            -v "$GITHUB_WORKSPACE:/workspace" \
-            -v /tmp/nbdev-cache:/root/.cache \
-            -v /tmp/nbdev-pip:/root/.local \
-            -w /workspace \
             --network host \
-            rdned/nbdev-fhemb:2.4.14 \
-            bash -c '
-              set -e
-
-              pip install --no-cache-dir -q --force-reinstall \
-                "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
-
-              mkdir -p /root/.ssh
-              echo "${{ secrets.FHEMB_SSH_KEY }}" > /root/.ssh/id_rsa
-              chmod 600 /root/.ssh/id_rsa
-              ssh-keyscan -H ${{ vars.FHEMB_SSH_HOST }} 2>/dev/null >> /root/.ssh/known_hosts
-
-              mkdir -p /root/.config/fhemb
-              cat > /root/.config/fhemb/.env.db << "ENVEOF"
-          DB_NAME=${{ vars.FHEMB_DB_NAME }}
-          DB_USERNAME=${{ vars.FHEMB_DB_USER }}
-          DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
-          DB_HOST=${{ vars.FHEMB_DB_HOST }}
-          DB_PORT=${{ vars.FHEMB_DB_PORT }}
-          REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
-          REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
-          SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
-          SSH_PKEY=/root/.ssh/id_rsa
-          REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
-          REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
-          ENVEOF
-
-              cat > /root/.config/fhemb/.env.paths << "ENVEOF"
-          NODENAME=${{ vars.NODENAME }}
-          LOCALROOT=/mnt/NASstorage
-          MOUNT=/mnt/NASstorage
-          AUDIOFILES=/mnt/NASstorage/thermal_data
-          ENVEOF
-
-              ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no \
-                -L 6543:localhost:5432 \
-                ${{ secrets.FHEMB_SSH_USER }}@${{ vars.FHEMB_SSH_HOST }} \
-                -N &
-              SSH_PID=$!
-              sleep 2
-
-              for i in {1..30}; do
-                nc -z localhost 6543 && break
-                sleep 0.5
-              done
-
-              nbdev_test
-              nbdev_docs
-
-              git config --global user.email "github-actions@github.com"
-              git config --global user.name "github-actions"
-              git config --global --add safe.directory /workspace
-              git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-
-              git checkout --orphan gh-pages
-              git rm -rf .
-              cp -r _docs/* .
-              rm -rf _docs
-              git add .
-              git commit -m "docs: update documentation" || true
-              git push origin gh-pages -f
-
-              kill $SSH_PID 2>/dev/null || true
-              wait $SSH_PID 2>/dev/null || true
-              
-              rm -rf /root/.ssh /root/.config
-            '
-
-      - name: Cleanup host
-        if: always()
-        run: |
-          docker image prune -f --filter "until=1h" 2>/dev/null || true
-          docker volume prune -f 2>/dev/null || true
-          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE" 2>/dev/null || true
+            rdned/nbdev-fhemb:2.4.14
 
