@@ -54,7 +54,7 @@ jobs:
             MOUNT=${{ vars.FHEMB_MOUNT }}
             AUDIOFILES=${{ vars.FHEMB_AUDIOFILES }}
         run: |
-          docker run --rm \
+          docker run \
             --network host \
             -v "$GITHUB_WORKSPACE:/workspace" \
             -e GITHUB_REPOSITORY \
@@ -65,17 +65,22 @@ jobs:
             -e FHEMB_SSH_HOST \
             -e FHEMB_ENV_DB \
             -e FHEMB_ENV_PATHS \
-            rdned/nbdev-fhemb:2.4.14
+            rdned/nbdev-fhemb:2.4.14 2>&1 | tee build.log
 
-
-      - name: Check generated docs
+      - name: Show build log
+        if: always()
         run: |
-          echo "=== Notebooks ==="
-          ls -la nbs/
-          echo "=== Generated docs ==="
-          ls -la _docs/ || echo "No _docs directory"
-          echo "=== Index content ==="
-          head -20 _docs/index.html || echo "No index.html"
+          if [ -f build.log ]; then
+            echo "=== Build Log ==="
+            cat build.log
+          fi
+
+      - name: Show workspace state
+        if: always()
+        run: |
+          echo "=== Workspace after build ==="
+          ls -la $GITHUB_WORKSPACE/
+          ls -la $GITHUB_WORKSPACE/_docs/ 2>/dev/null || echo "No _docs directory"
 
       - name: Cleanup
         if: always()
