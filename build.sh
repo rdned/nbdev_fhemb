@@ -29,6 +29,12 @@ for i in {1..30}; do
   sleep 0.5
 done
 
+echo "=== CLEAR CACHE ==="
+rm -rf .nbdev_cache
+
+echo "=== NBDEV PREPARE ==="
+nbdev_prepare
+
 echo "=== NBDEV TEST ==="
 nbdev_test
 
