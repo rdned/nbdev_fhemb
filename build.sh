@@ -1,22 +1,25 @@
 #!/bin/bash
-set -ex  # Add -x to print each command
+set -ex
 
-echo "=== INSTALL FHEMB ==="
+# Force unbuffered output
+export PYTHONUNBUFFERED=1
+
+echo "=== INSTALL FHEMB ===" >&2
 pip install --no-cache-dir --force-reinstall \
-  "fhemb @ git+https://${FHEMB_CI}@github.com/rdned/fhemb#egg=fhemb"
+  "fhemb @ git+https://${FHEMB_CI}@github.com/rdned/fhemb#egg=fhemb" >&2
 
-echo "=== CONFIGURE SSH ==="
+echo "=== CONFIGURE SSH ===" >&2
 mkdir -p ~/.ssh
 echo "${FHEMB_SSH_KEY}" > ~/.ssh/id_rsa
 chmod 600 ~/.ssh/id_rsa
 ssh-keyscan -H ${FHEMB_SSH_HOST} 2>/dev/null >> ~/.ssh/known_hosts
 
-echo "=== CONFIGURE FHEMB ==="
+echo "=== CONFIGURE FHEMB ===" >&2
 mkdir -p ~/.config/fhemb
 echo "$FHEMB_ENV_DB" > ~/.config/fhemb/.env.db
 echo "$FHEMB_ENV_PATHS" > ~/.config/fhemb/.env.paths
 
-echo "=== SSH TUNNEL ==="
+echo "=== SSH TUNNEL ===" >&2
 ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
   -L 6543:localhost:5432 \
   ${FHEMB_SSH_USER}@${FHEMB_SSH_HOST} \
@@ -29,27 +32,25 @@ for i in {1..30}; do
   sleep 0.5
 done
 
-echo "=== CLEAR CACHES ==="
+echo "=== CLEAR CACHES ===" >&2
 rm -rf .nbdev_cache .quarto
 
-echo "=== CHECK NOTEBOOKS ==="
-ls -la nbs/ || echo "ERROR: nbs/ not found"
+echo "=== CHECK NOTEBOOKS ===" >&2
+ls -la nbs/ >&2 || echo "ERROR: nbs/ not found" >&2
 
-echo "=== NBDEV PREPARE ==="
-nbdev_prepare
-echo "nbdev_prepare completed with exit code: $?"
+echo "=== NBDEV PREPARE ===" >&2
+nbdev_prepare 2>&1
 
-echo "=== NBDEV TEST ==="
-nbdev_test || echo "WARNING: nbdev_test failed"
+echo "=== NBDEV TEST ===" >&2
+nbdev_test 2>&1 || echo "WARNING: nbdev_test failed" >&2
 
-echo "=== NBDEV DOCS ==="
-nbdev_docs
-echo "nbdev_docs completed with exit code: $?"
+echo "=== NBDEV DOCS ===" >&2
+nbdev_docs 2>&1
 
-echo "=== CHECK DOCS GENERATED ==="
-ls -la _docs/ || echo "ERROR: _docs/ not generated!"
+echo "=== CHECK DOCS GENERATED ===" >&2
+ls -la _docs/ >&2 || echo "ERROR: _docs/ not generated!" >&2
 
-echo "=== DEPLOY TO GH-PAGES ==="
+echo "=== DEPLOY TO GH-PAGES ===" >&2
 git config --global user.email "github-actions@github.com"
 git config --global user.name "github-actions"
 git config --global --add safe.directory /workspace
@@ -60,10 +61,10 @@ git rm -rf .
 cp -r _docs/* .
 rm -rf _docs
 git add .
-git commit -m "docs: update documentation" || true
+git commit -m "docs: auto-generated documentation" || true
 git push origin gh-pages -f
 
-echo "=== CLEANUP ==="
+echo "=== CLEANUP ===" >&2
 kill $SSH_PID || true
 rm -rf ~/.ssh ~/.config
 
