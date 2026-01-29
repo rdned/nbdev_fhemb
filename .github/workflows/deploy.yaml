@@ -141,19 +141,12 @@ jobs:
     runs-on: scienziatiello
     needs: build
 
-    container:
-      image: ubuntu:22.04
-
     steps:
-      - name: Install git + dependencies
-        run: |
-          apt-get update
-          apt-get install -y git ca-certificates
-
       - name: DEBUG — deploy job reached
-        run: echo "DEPLOY JOB STARTED (container)"
+        run: echo "DEPLOY JOB STARTED (Fix C)"
 
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -163,23 +156,30 @@ jobs:
           name: built-docs
           path: ./_docs
 
-      - name: Configure Git
+      - name: Prepare isolated deploy directory
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          mkdir deploy-root
+          cp -r .git deploy-root/.git
+          cp -r _docs deploy-root/_docs
 
-      - name: Switch to gh-pages
-        run: |
-          git checkout gh-pages || git checkout --orphan gh-pages
-          git rm -rf . || true
-
-      - name: Copy docs into branch
-        run: |
-          cp -r ./_docs/* .
-          rm -rf _docs
-
-      - name: Commit and push
-        run: |
-          git add .
-          git commit -m "Update docs" || echo "No changes to commit"
-          git push origin gh-pages
+      - name: Deploy inside isolated container
+        uses: docker://ubuntu:22.04
+        with:
+          args: >
+            bash -c "
+              apt-get update &&
+              apt-get install -y git ca-certificates &&
+              cd /workspace &&
+              git config user.name 'github-actions' &&
+              git config user.email 'github-actions@github.com' &&
+              git checkout gh-pages || git checkout --orphan gh-pages &&
+              git rm -rf . || true &&
+              cp -r _docs/* . &&
+              rm -rf _docs &&
+              git add . &&
+              git commit -m 'Update docs' || echo 'No changes to commit' &&
+              git push origin gh-pages
+            "
+        env:
+          GIT_TERMINAL_PROMPT: "0"
+        working-directory: deploy-root
