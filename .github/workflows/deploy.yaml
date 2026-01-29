@@ -23,6 +23,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: "Debug: show workspace path"
+        run: |
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          ls -R $GITHUB_WORKSPACE
+
       - name: Install PostgreSQL client + netcat + OpenCV deps
         run: |
           apt-get update
