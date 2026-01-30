@@ -2,6 +2,11 @@ name: CI
 
 on:
   push:
+    branches:
+      - main
+      - dev
+    tags:
+      - '*'
   workflow_dispatch:
   pull_request:
     branches:
@@ -29,7 +34,6 @@ jobs:
           pip install --no-cache-dir --force-reinstall \
             "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
 
-      # nbdev vesrion must be identical with that on the local machine!!!        
       - name: Force nbdev version
         run: pip install "nbdev==2.4.14"
 
@@ -55,7 +59,6 @@ jobs:
           DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
           DB_HOST=${{ vars.FHEMB_DB_HOST }}
           DB_PORT=${{ vars.FHEMB_DB_PORT }}
-
           REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
           REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
           SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
@@ -84,8 +87,8 @@ jobs:
             -L 6543:localhost:5432 \
             ${{ secrets.FHEMB_SSH_USER }}@${{ vars.FHEMB_SSH_HOST }} \
             -N &
+          SSH_PID=$!
           
-          # Wait until port 6543 is actually open
           for i in {1..20}; do 
             nc -z localhost 6543 && break 
             sleep 0.5 
@@ -94,6 +97,8 @@ jobs:
           PGPASSWORD="$PASS" psql -h localhost -p 6543 -U "$USER" -d "$DB" -c "SELECT current_user, session_user;"
           PGPASSWORD="$PASS" psql -h localhost -p 6543 -U "$USER" -d "$DB" -c "\dn"
           PGPASSWORD="$PASS" psql -h localhost -p 6543 -U "$USER" -d "$DB" -c "\dt dg.*"
+          
+          kill $SSH_PID 2>/dev/null || true
 
       - name: Test notebooks
         run: nbdev_test --flags ''
@@ -108,3 +113,11 @@ jobs:
             git status -uno
             exit 1
           fi
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -rf /tmp/*
+          rm -rf ~/.cache/pip
+          pkill -9 ssh || true
+
