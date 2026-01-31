@@ -28,12 +28,11 @@ jobs:
         run: |
           docker run --rm \
             --user root \
-            --entrypoint bash \
             -v "$GITHUB_WORKSPACE:/workspace" \
             -w /workspace \
             --network host \
-            rdned/nbdev-fhemb:2.4.14 \
-            -c '
+            rdned/nbdev-fhemb:2.4.14.dev1 \
+            bash -c '
               set -e
 
               pip install --no-cache-dir -q --force-reinstall \
