@@ -33,7 +33,7 @@ jobs:
             -w /workspace \
             --network host \
             rdned/nbdev-fhemb:2.4.14 \
-            bash -c '
+            -c '
               set -e
 
               pip install --no-cache-dir -q --force-reinstall \
