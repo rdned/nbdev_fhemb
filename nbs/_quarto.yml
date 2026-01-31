@@ -1,6 +1,12 @@
 project:
   type: website
 
+execute:
+  echo: true
+  warning: false
+  error: false
+  freeze: auto
+
 format:
   html:
     theme: cosmo
