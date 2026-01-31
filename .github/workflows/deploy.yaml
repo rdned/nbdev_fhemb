@@ -49,6 +49,7 @@ jobs:
 
         run: |
           docker run --rm \
+            --user root \
             --network host \
             -e GITHUB_REPOSITORY \
             -e GITHUB_TOKEN \
@@ -59,4 +60,10 @@ jobs:
             -e FHEMB_ENV_DB \
             -e FHEMB_ENV_PATHS \
             rdned/nbdev-fhemb:2.4.14.D
+
+      - name: Fix permissions
+        if: always()
+        run: |
+          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE" 2>/dev/null || true
+          docker system prune -a -f 2>/dev/null || true
 
