@@ -14,10 +14,6 @@ jobs:
     runs-on: scienziatiello
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          clean: true
-
       - name: Build and deploy inside container
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
