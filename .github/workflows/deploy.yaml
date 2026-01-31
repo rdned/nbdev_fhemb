@@ -55,7 +55,15 @@ jobs:
             --network host \
             -v "$GITHUB_WORKSPACE:/workspace" \
             -w /workspace \
-            rdned/nbdev-fhemb:2.4.14
+            -e FHEMB_CI \
+            -e FHEMB_SSH_KEY \
+            -e FHEMB_SSH_USER \
+            -e FHEMB_SSH_HOST \
+            -e FHEMB_ENV_DB \
+            -e FHEMB_ENV_PATHS \
+            -e GITHUB_TOKEN \
+            -e GITHUB_REPOSITORY \
+            rdned/nbdev-fhemb:2.4.14.main
 
       - name: Cleanup
         if: always()
