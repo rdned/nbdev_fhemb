@@ -6,6 +6,7 @@ permissions:
 on:
   push:
     branches: ["main", "master"]
+    tags: ["*"]
   workflow_dispatch:
 
 jobs:
@@ -16,19 +17,14 @@ jobs:
       - name: Clean workspace
         run: |
           set +e
-          cd $GITHUB_WORKSPACE
-          sudo git clean -ffdx 2>/dev/null
-          sudo git reset --hard 2>/dev/null
-          sudo rm -rf .git 2>/dev/null
-          cd ..
-          sudo rm -rf "$GITHUB_WORKSPACE" 2>/dev/null
+          sudo rm -rf "$GITHUB_WORKSPACE"/* "$GITHUB_WORKSPACE"/.[!.]* 2>/dev/null
           mkdir -p "$GITHUB_WORKSPACE"
           sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
           set -e
 
       - uses: actions/checkout@v4
 
-      - name: Run nbdev build with explicit bash
+      - name: Build and deploy
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -50,57 +46,21 @@ jobs:
             REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
           FHEMB_ENV_PATHS: |
             NODENAME=${{ vars.NODENAME }}
-            LOCALROOT=${{ vars.FHEMB_LOCALRROT }}
+            LOCALROOT=${{ vars.FHEMB_LOCALROOT }}
             MOUNT=${{ vars.FHEMB_MOUNT }}
             AUDIOFILES=${{ vars.FHEMB_AUDIOFILES }}
         run: |
-          echo "=== Test 1: Simple echo ==="
           docker run --rm \
+            --user root \
             --network host \
             -v "$GITHUB_WORKSPACE:/workspace" \
-            rdned/nbdev-fhemb:2.4.14 \
-            /bin/bash -c "echo 'Container is running'" 2>&1 | tee build.log
-          
-          echo "=== Test 2: Check if build.sh exists ==="
-          docker run --rm \
-            --network host \
-            -v "$GITHUB_WORKSPACE:/workspace" \
-            rdned/nbdev-fhemb:2.4.14 \
-            /bin/bash -c "ls -la /usr/local/bin/build.sh" 2>&1 | tee -a build.log
-          
-          echo "=== Test 3: Run build.sh with explicit bash ==="
-          docker run --rm \
-            --network host \
-            -v "$GITHUB_WORKSPACE:/workspace" \
-            -e GITHUB_REPOSITORY \
-            -e GITHUB_TOKEN \
-            -e FHEMB_CI \
-            -e FHEMB_SSH_KEY \
-            -e FHEMB_SSH_USER \
-            -e FHEMB_SSH_HOST \
-            -e FHEMB_ENV_DB \
-            -e FHEMB_ENV_PATHS \
-            rdned/nbdev-fhemb:2.4.14 \
-            /bin/bash -x /usr/local/bin/build.sh 2>&1 | tee -a build.log
-      
-      - name: Show build log
-        if: always()
-        run: |
-          if [ -f build.log ]; then
-            echo "=== Build Log ==="
-            cat build.log
-          fi
-
-      - name: Show workspace state
-        if: always()
-        run: |
-          echo "=== Workspace after build ==="
-          ls -la $GITHUB_WORKSPACE/
-          ls -la $GITHUB_WORKSPACE/_docs/ 2>/dev/null || echo "No _docs directory"
+            -w /workspace \
+            rdned/nbdev-fhemb:2.4.14
 
       - name: Cleanup
         if: always()
         run: |
           sudo chown -R $USER:$USER "$GITHUB_WORKSPACE" 2>/dev/null || true
-          docker image prune -f --filter "until=1h" 2>/dev/null || true
+          docker system prune -a -f 2>/dev/null || true
+          docker volume prune -f 2>/dev/null || true
 

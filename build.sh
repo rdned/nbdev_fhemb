@@ -4,6 +4,14 @@ set -ex
 # Force unbuffered output
 export PYTHONUNBUFFERED=1
 
+# Cleanup function to run on exit
+cleanup() {
+  echo "=== CLEANUP ===" >&2
+  kill $SSH_PID 2>/dev/null || true
+  rm -rf ~/.ssh ~/.config
+}
+trap cleanup EXIT
+
 echo "=== INSTALL FHEMB ===" >&2
 pip install --no-cache-dir --force-reinstall \
   "fhemb @ git+https://${FHEMB_CI}@github.com/rdned/fhemb#egg=fhemb" >&2
@@ -63,8 +71,4 @@ rm -rf _docs
 git add .
 git commit -m "docs: auto-generated documentation" || true
 git push origin gh-pages -f
-
-echo "=== CLEANUP ===" >&2
-kill $SSH_PID || true
-rm -rf ~/.ssh ~/.config
 
