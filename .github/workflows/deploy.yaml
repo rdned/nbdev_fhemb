@@ -28,6 +28,7 @@ jobs:
         run: |
           docker run --rm \
             --user root \
+            --entrypoint bash \
             -v "$GITHUB_WORKSPACE:/workspace" \
             -w /workspace \
             --network host \
