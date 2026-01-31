@@ -1,16 +1,18 @@
 #!/bin/bash
 set -ex
 
-# Force unbuffered output
 export PYTHONUNBUFFERED=1
 
-# Cleanup function to run on exit
 cleanup() {
   echo "=== CLEANUP ===" >&2
   kill $SSH_PID 2>/dev/null || true
   rm -rf ~/.ssh ~/.config
 }
 trap cleanup EXIT
+
+echo "=== CLONE REPOSITORY ===" >&2
+git clone https://github.com/${GITHUB_REPOSITORY}.git repo
+cd repo
 
 echo "=== INSTALL FHEMB ===" >&2
 pip install --no-cache-dir --force-reinstall \
@@ -43,9 +45,6 @@ done
 echo "=== CLEAR CACHES ===" >&2
 rm -rf .nbdev_cache .quarto
 
-echo "=== CHECK NOTEBOOKS ===" >&2
-ls -la nbs/ >&2 || echo "ERROR: nbs/ not found" >&2
-
 echo "=== NBDEV PREPARE ===" >&2
 nbdev_prepare 2>&1
 
@@ -55,13 +54,10 @@ nbdev_test 2>&1 || echo "WARNING: nbdev_test failed" >&2
 echo "=== NBDEV DOCS ===" >&2
 nbdev_docs 2>&1
 
-echo "=== CHECK DOCS GENERATED ===" >&2
-ls -la _docs/ >&2 || echo "ERROR: _docs/ not generated!" >&2
-
 echo "=== DEPLOY TO GH-PAGES ===" >&2
 git config --global user.email "github-actions@github.com"
 git config --global user.name "github-actions"
-git config --global --add safe.directory /workspace
+git config --global --add safe.directory $(pwd)
 git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
 
 git checkout --orphan gh-pages

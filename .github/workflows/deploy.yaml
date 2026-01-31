@@ -14,24 +14,20 @@ jobs:
     runs-on: scienziatiello
 
     steps:
-      - name: Clean workspace
-        run: |
-          set +e
-          sudo rm -rf "$GITHUB_WORKSPACE"/* "$GITHUB_WORKSPACE"/.[!.]* 2>/dev/null
-          mkdir -p "$GITHUB_WORKSPACE"
-          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE"
-          set -e
-
       - uses: actions/checkout@v4
+        with:
+          clean: true
 
-      - name: Build and deploy
+      - name: Build and deploy inside container
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
           FHEMB_CI: ${{ secrets.FHEMB_CI }}
           FHEMB_SSH_KEY: ${{ secrets.FHEMB_SSH_KEY }}
           FHEMB_SSH_USER: ${{ secrets.FHEMB_SSH_USER }}
           FHEMB_SSH_HOST: ${{ vars.FHEMB_SSH_HOST }}
+
           FHEMB_ENV_DB: |
             DB_NAME=${{ vars.FHEMB_DB_NAME }}
             DB_USERNAME=${{ vars.FHEMB_DB_USER }}
@@ -44,31 +40,23 @@ jobs:
             SSH_PKEY=/root/.ssh/id_rsa
             REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
             REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
+
           FHEMB_ENV_PATHS: |
             NODENAME=${{ vars.NODENAME }}
             LOCALROOT=${{ vars.FHEMB_LOCALROOT }}
             MOUNT=${{ vars.FHEMB_MOUNT }}
             AUDIOFILES=${{ vars.FHEMB_AUDIOFILES }}
+
         run: |
           docker run --rm \
-            --user root \
             --network host \
-            -v "$GITHUB_WORKSPACE:/workspace" \
-            -w /workspace \
+            -e GITHUB_REPOSITORY \
+            -e GITHUB_TOKEN \
             -e FHEMB_CI \
             -e FHEMB_SSH_KEY \
             -e FHEMB_SSH_USER \
             -e FHEMB_SSH_HOST \
             -e FHEMB_ENV_DB \
             -e FHEMB_ENV_PATHS \
-            -e GITHUB_TOKEN \
-            -e GITHUB_REPOSITORY \
             rdned/nbdev-fhemb:2.4.14.main
-
-      - name: Cleanup
-        if: always()
-        run: |
-          sudo chown -R $USER:$USER "$GITHUB_WORKSPACE" 2>/dev/null || true
-          docker system prune -a -f 2>/dev/null || true
-          docker volume prune -f 2>/dev/null || true
 
