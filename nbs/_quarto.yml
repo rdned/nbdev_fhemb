@@ -2,6 +2,8 @@ project:
   type: website
 
 execute:
+  execute_before:
+    - "import plotly.io as pio; pio.renderers.default = 'png'"
   echo: true
   warning: false
   error: false
