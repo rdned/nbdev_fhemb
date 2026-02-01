@@ -2,109 +2,42 @@ name: CI
 
 on:
   push:
-  workflow_dispatch:
   pull_request:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: scienziatiello
+
     container:
-      image: python:3.12
+      image: rdned/nbdev-fhemb:2.4.14.D
+      options: --entrypoint ""     # override build.sh
       volumes:
         - /NASstorage/radned:/mnt/NASstorage
         - /share/CACHEDEV1_DATA/Data:/mnt/NAS2
 
     steps:
-      - name: Install PostgreSQL client + netcat + OpenCV deps
-        run: |
-          apt-get update
-          apt-get install -y postgresql-client netcat-openbsd libgl1 libglib2.0-0
-
       - uses: actions/checkout@v4
 
-      - name: Install private fhemb dependency
-        run: |
-          pip install --no-cache-dir --force-reinstall \
-            "fhemb @ git+https://${{ secrets.FHEMB_CI }}@github.com/rdned/fhemb#egg=fhemb"
+      - name: Run CI test script
+        env:
+          FHEMB_CI: ${{ secrets.FHEMB_CI }}
+          FHEMB_SSH_KEY: ${{ secrets.FHEMB_SSH_KEY }}
+          FHEMB_SSH_USER: ${{ secrets.FHEMB_SSH_USER }}
+          FHEMB_SSH_HOST: ${{ vars.FHEMB_SSH_HOST }}
 
-      # nbdev vesrion must be identical with that on the local machine!!!        
-      - name: Force nbdev version
-        run: pip install "nbdev==2.4.14"
+          FHEMB_DB_NAME: ${{ vars.FHEMB_DB_NAME }}
+          FHEMB_DB_USER: ${{ vars.FHEMB_DB_USER }}
+          FHEMB_DB_PASS: ${{ secrets.FHEMB_DB_PASS }}
+          FHEMB_DB_HOST: ${{ vars.FHEMB_DB_HOST }}
+          FHEMB_DB_PORT: ${{ vars.FHEMB_DB_PORT }}
+          FHEMB_REMOTE_PORT: ${{ vars.FHEMB_REMOTE_PORT }}
 
-      - name: Clean notebooks
-        run: nbdev_clean
+          NODENAME: ${{ vars.NODENAME }}
+          FHEMB_LOCALROOT: ${{ vars.FHEMB_LOCALROOT }}
+          FHEMB_MOUNT: ${{ vars.FHEMB_MOUNT }}
+          FHEMB_AUDIOFILES: ${{ vars.FHEMB_AUDIOFILES }}
 
-      - name: Export library
-        run: nbdev_export
+        run: /usr/local/bin/test.sh
 
-      - name: Install SSH key for fhemb
-        run: |
-          mkdir -p /root/.ssh
-          echo "${{ secrets.FHEMB_SSH_KEY }}" > /root/.ssh/id_rsa
-          chmod 600 /root/.ssh/id_rsa
-
-      - name: Create fhemb config
-        run: |
-          mkdir -p ~/.config/fhemb
-
-          cat <<EOF > ~/.config/fhemb/.env.db
-          DB_NAME=${{ vars.FHEMB_DB_NAME }}
-          DB_USERNAME=${{ vars.FHEMB_DB_USER }}
-          DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
-          DB_HOST=${{ vars.FHEMB_DB_HOST }}
-          DB_PORT=${{ vars.FHEMB_DB_PORT }}
-
-          REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
-          REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
-          SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
-          SSH_PKEY=/root/.ssh/id_rsa
-          REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
-          REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
-          EOF
-
-          cat <<EOF > ~/.config/fhemb/.env.paths
-          NODENAME=${{ vars.NODENAME }}
-          LOCALROOT=${{ vars.FHEMB_LOCALROOT }}
-          MOUNT=${{ vars.FHEM_MOUNT }}
-          AUDIOFILES=${{ vars.FHEM_AUDIOFILES }}
-          EOF
-
-          chmod 600 ~/.config/fhemb/.env.db
-          chmod 600 ~/.config/fhemb/.env.paths
-
-      - name: "Debug: whoami and dg tables"
-        run: |
-          DB="${{ vars.FHEMB_DB_NAME }}"
-          USER="${{ vars.FHEMB_DB_USER }}"
-          PASS="${{ secrets.FHEMB_DB_PASS }}"
-
-          ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no \
-            -L 6543:localhost:5432 \
-            ${{ secrets.FHEMB_SSH_USER }}@${{ vars.FHEMB_SSH_HOST }} \
-            -N &
-          
-          # Wait until port 6543 is actually open
-          for i in {1..20}; do 
-            nc -z localhost 6543 && break 
-            sleep 0.5 
-          done
-
-          PGPASSWORD="$PASS" psql -h localhost -p 6543 -U "$USER" -d "$DB" -c "SELECT current_user, session_user;"
-          PGPASSWORD="$PASS" psql -h localhost -p 6543 -U "$USER" -d "$DB" -c "\dn"
-          PGPASSWORD="$PASS" psql -h localhost -p 6543 -U "$USER" -d "$DB" -c "\dt dg.*"
-
-      - name: Test notebooks
-        run: nbdev_test --flags ''
-
-      - name: Mark workspace as safe
-        run: git config --global --add safe.directory /__w/nbdev_fhemb/nbdev_fhemb
-
-      - name: Check sync
-        run: |
-          if [ -n "$(git status --porcelain -uno)" ]; then
-            echo "::error::Notebooks and library are not in sync."
-            git status -uno
-            exit 1
-          fi
