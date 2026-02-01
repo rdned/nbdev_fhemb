@@ -1,0 +1,52 @@
+00:04:24 [INFO] piece._load_from_db: Loading face_t from the database tcamera as user tanalyst
+00:04:24 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.faceposition_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+00:04:25 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+00:04:25 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+00:04:25 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.face_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+00:04:26 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+00:04:27 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+00:04:27 [INFO] factories.fit_pipe: Pipeline cache key: StandardScaler(copy=True,with_mean=True,with_std=True) | KernelPCA(alpha=1.0,coef0=1,copy_X=True,degree=3,eigen_solver='auto',fit_inverse_transform=True,gamma=0.07,iterated_power='auto',kernel='sigmoid',kernel_params=None,max_iter=None,n_components=5,n_jobs=None,random_state=None,remove_zero_eig=False,tol=0)
+00:04:27 [INFO] factories.create_pca_embedding: Creating PCA embedding with cache key: StandardScaler(copy=True,with_mean=True,with_std=True) | KernelPCA(alpha=1.0,coef0=1,copy_X=True,degree=3,eigen_solver='auto',fit_inverse_transform=True,gamma=0.07,iterated_power='auto',kernel='sigmoid',kernel_params=None,max_iter=None,n_components=5,n_jobs=None,random_state=None,remove_zero_eig=False,tol=0)
+00:04:27 [INFO] piece._load_from_db: Loading facebbox from the database tcamera as user tanalyst
+00:04:27 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.faceposition_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+00:04:28 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+00:04:28 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+00:04:28 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.facebbox WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+00:04:30 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+00:04:30 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+00:04:30 [INFO] piece._derive_features: Deriving binheights_ts, binedges, percentiles_ts, and features_ts
+00:04:36 [INFO] piece._derive_tracked: Deriving rsfacebbox_t and facesizes_t
+00:04:36 [INFO] mixins.get_fbands: Empty set of bands: only the original time series will be caclculated and plotted!
+00:04:36 [WARNING] py.warnings._showwarnmsg: /usr/local/lib/python3.12/site-packages/fhemb/embedding.py:355: UserWarning: No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+  ax.legend()
+
+00:04:39 [INFO] piece._load_from_db: Loading face_t from the database tcamera as user tanalyst
+00:04:39 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.faceposition_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+00:04:39 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+00:04:39 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+00:04:39 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.face_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+00:04:41 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+00:04:41 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+00:04:41 [INFO] factories.fit_pipe: Pipeline cache key: StandardScaler(copy=True,with_mean=True,with_std=True) | KernelPCA(alpha=1.0,coef0=1,copy_X=True,degree=3,eigen_solver='auto',fit_inverse_transform=True,gamma=0.07,iterated_power='auto',kernel='sigmoid',kernel_params=None,max_iter=None,n_components=5,n_jobs=None,random_state=None,remove_zero_eig=False,tol=0)
+00:04:42 [INFO] factories.create_pca_embedding: Creating PCA embedding with cache key: StandardScaler(copy=True,with_mean=True,with_std=True) | KernelPCA(alpha=1.0,coef0=1,copy_X=True,degree=3,eigen_solver='auto',fit_inverse_transform=True,gamma=0.07,iterated_power='auto',kernel='sigmoid',kernel_params=None,max_iter=None,n_components=5,n_jobs=None,random_state=None,remove_zero_eig=False,tol=0)
+00:04:42 [INFO] piece._load_from_db: Loading facebbox from the database tcamera as user tanalyst
+00:04:42 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.faceposition_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+00:04:42 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+00:04:42 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+00:04:42 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.facebbox WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+00:04:44 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+00:04:45 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+00:04:45 [INFO] piece._derive_features: Deriving binheights_ts, binedges, percentiles_ts, and features_ts
+00:04:50 [INFO] piece._derive_tracked: Deriving rsfacebbox_t and facesizes_t
+00:04:51 [INFO] mixins.get_fbands: Empty set of bands: only the original time series will be caclculated and plotted!
+00:04:51 [WARNING] py.warnings._showwarnmsg: /usr/local/lib/python3.12/site-packages/fhemb/embedding.py:355: UserWarning: No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+  ax.legend()
+
