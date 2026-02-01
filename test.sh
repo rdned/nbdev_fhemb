@@ -21,6 +21,7 @@ cd repo
 echo "=== INSTALL FHEMB ===" >&2
 python3 -m pip install --no-cache-dir --force-reinstall \
   "fhemb @ git+https://${FHEMB_CI}@github.com/rdned/fhemb#egg=fhemb" >&2
+python3 -m pip install -U kaleido
 
 echo "=== CONFIGURE SSH ===" >&2
 mkdir -p ~/.ssh

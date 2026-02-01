@@ -1,5 +1,6 @@
 #!/bin/bash
 set -ex
+set -eE
 
 echo "=== RUNNING BUILD.SH ===" >&2
 echo "Script: $0" >&2
@@ -11,7 +12,7 @@ cleanup() {
   kill $SSH_PID 2>/dev/null || true
   rm -rf ~/.ssh ~/.config
 }
-trap cleanup EXIT
+trap cleanup ERR EXIT
 
 echo "=== CLONE REPOSITORY ===" >&2
 git clone https://github.com/${GITHUB_REPOSITORY}.git repo
