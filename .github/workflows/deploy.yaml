@@ -55,6 +55,6 @@ jobs:
             -e FHEMB_SSH_HOST \
             -e FHEMB_ENV_DB \
             -e FHEMB_ENV_PATHS \
-            rdned/nbdev-fhemb:2.4.14.symm \
+            rdned/nbdev-fhemb:2.4.14.kaleido \
             /usr/local/bin/build.sh
 
