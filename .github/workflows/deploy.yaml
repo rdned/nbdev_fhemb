@@ -46,6 +46,7 @@ jobs:
         run: |
           docker run --rm \
             --network host \
+            -e HOME=/root \
             -e GITHUB_REPOSITORY \
             -e GITHUB_TOKEN \
             -e FHEMB_CI \
@@ -54,6 +55,6 @@ jobs:
             -e FHEMB_SSH_HOST \
             -e FHEMB_ENV_DB \
             -e FHEMB_ENV_PATHS \
-            rdned/nbdev-fhemb:2.4.14.unified1 \
+            rdned/nbdev-fhemb:2.4.14.symmetric \
             /usr/local/bin/build.sh
 
