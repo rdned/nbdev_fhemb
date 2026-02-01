@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-export PYTHONUNBUFFIXED=1
+export PYTHONUNBUFFERED=1
 
 cleanup() {
   rm -rf ~/.ssh ~/.config
@@ -41,6 +41,17 @@ AUDIOFILES=${FHEMB_AUDIOFILES}
 EOF
 
 chmod 600 ~/.config/fhemb/.env.*
+
+echo "=== VERIFY SSH SETUP ===" >&2
+ls -la ~/.ssh/id_rsa
+cat ~/.config/fhemb/.env.db
+echo "SSH Key exists: $(test -f ~/.ssh/id_rsa && echo 'YES' || echo 'NO')"
+echo "Can read SSH Key: $(test -r ~/.ssh/id_rsa && echo 'YES' || echo 'NO')"
+
+echo "=== TEST SSH CONNECTION ===" >&2
+ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
+  ${FHEMB_SSH_USER}@${FHEMB_SSH_HOST} \
+  "echo 'SSH connection successful'" >&2
 
 echo "=== NBDEV CLEAN ===" >&2
 nbdev_clean
