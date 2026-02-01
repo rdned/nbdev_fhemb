@@ -48,6 +48,12 @@ done
 echo "=== CLEAR CACHES ===" >&2
 rm -rf .nbdev_cache .quarto
 
+echo "=== FORCE PLOTLY TO PNG (CI ONLY) ===" >&2
+python3 - <<'EOF'
+import os, plotly.io as pio
+pio.renderers.default = "png"
+EOF
+
 echo "=== NBDEV PREPARE ===" >&2
 nbdev_prepare 2>&1
 
