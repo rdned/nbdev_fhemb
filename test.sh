@@ -54,6 +54,9 @@ nbdev_export
 echo "=== NBDEV TEST ===" >&2
 nbdev_test --flags ""
 
+echo "=== CHECK GIT STATUS ===" >&2
+git status
+
 echo "=== ENFORCE SYNC ===" >&2
 git config --global --add safe.directory $(pwd)
 if [ -n "$(git status --porcelain -uno)" ]; then
