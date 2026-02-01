@@ -1,23 +1,22 @@
 #!/bin/bash
 set -euo pipefail
-export PYTHONUNBUFFERED=1
+export PYTHONUNBUFFIXED=1
 
 cleanup() {
-  kill $SSH_PID 2>/dev/null || true
+  rm -rf ~/.ssh ~/.config
 }
 trap cleanup EXIT
 
-echo "=== INSTALL FHEMB ==="
+echo "=== INSTALL FHEMB ===" >&2
 pip install --no-cache-dir --force-reinstall \
-  "fhemb @ git+https://${FHEMB_CI}@github.com/rdned/fhemb#egg=fhemb"
+  "fhemb @ git+https://${FHEMB_CI}@github.com/rdned/fhemb#egg=fhemb" >&2
 
-echo "=== CONFIGURE SSH ==="
+echo "=== CONFIGURE SSH ===" >&2
 mkdir -p ~/.ssh
 echo "${FHEMB_SSH_KEY}" > ~/.ssh/id_rsa
 chmod 600 ~/.ssh/id_rsa
-ssh-keyscan -H ${FHEMB_SSH_HOST} >> ~/.ssh/known_hosts 2>/dev/null
 
-echo "=== CONFIGURE FHEMB ENV ==="
+echo "=== CONFIGURE FHEMB ENV ===" >&2
 mkdir -p ~/.config/fhemb
 
 cat <<EOF > ~/.config/fhemb/.env.db
@@ -26,7 +25,6 @@ DB_USERNAME=${FHEMB_DB_USER}
 DB_PASSWORD=${FHEMB_DB_PASS}
 DB_HOST=${FHEMB_DB_HOST}
 DB_PORT=${FHEMB_DB_PORT}
-
 REMOTE_HOST=${FHEMB_SSH_HOST}
 REMOTE_PORT=${FHEMB_REMOTE_PORT}
 SSH_USERNAME=${FHEMB_SSH_USER}
@@ -44,32 +42,16 @@ EOF
 
 chmod 600 ~/.config/fhemb/.env.*
 
-echo "=== SSH TUNNEL ==="
-ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
-  -L 6543:localhost:5432 \
-  ${FHEMB_SSH_USER}@${FHEMB_SSH_HOST} \
-  -N &
-SSH_PID=$!
-
-for i in {1..30}; do
-  nc -z localhost 6543 && break
-  sleep 0.5
-done
-
-# Force fhemb to use the CI tunnel
-export FHEMB_DB_HOST=localhost
-export FHEMB_DB_PORT=6543
-
-echo "=== NBDEV CLEAN ==="
+echo "=== NBDEV CLEAN ===" >&2
 nbdev_clean
 
-echo "=== NBDEV EXPORT ==="
+echo "=== NBDEV EXPORT ===" >&2
 nbdev_export
 
-echo "=== NBDEV TEST ==="
+echo "=== NBDEV TEST ===" >&2
 nbdev_test --flags ""
 
-echo "=== ENFORCE SYNC ==="
+echo "=== ENFORCE SYNC ===" >&2
 git config --global --add safe.directory $(pwd)
 if [ -n "$(git status --porcelain -uno)" ]; then
   echo "::error::Notebooks and library are not in sync."
