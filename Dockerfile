@@ -17,5 +17,5 @@ COPY build.sh /usr/local/bin/build.sh
 COPY test.sh /usr/local/bin/test.sh
 RUN chmod +x /usr/local/bin/build.sh /usr/local/bin/test.sh
 
-ENTRYPOINT ["/usr/local/bin/build.sh"]
+# No ENTRYPOINT - scripts are called explicitly
 
