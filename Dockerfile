@@ -11,6 +11,9 @@ RUN wget -q https://quarto.org/download/latest/quarto-linux-amd64.deb -O /tmp/qu
 
 RUN pip install --no-cache-dir nbdev==2.4.14
 
+RUN apt-get update && apt-get install -y chromium \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /workspace
 
 COPY build.sh /usr/local/bin/build.sh
@@ -18,4 +21,3 @@ COPY test.sh /usr/local/bin/test.sh
 RUN chmod +x /usr/local/bin/build.sh /usr/local/bin/test.sh
 
 # No ENTRYPOINT - scripts are called explicitly
-
