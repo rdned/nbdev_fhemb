@@ -1,19 +1,20 @@
-name: CI
+name: Deploy to GitHub Pages
+
+permissions:
+  contents: write
 
 on:
   push:
     branches: ["main", "master"]
-  pull_request:
+    tags: ["*"]
+  workflow_dispatch:
 
 jobs:
-  test:
+  build_and_deploy:
     runs-on: scienziatiello
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Run CI tests inside container (Option 1)
+      - name: Build and deploy inside container
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -23,18 +24,24 @@ jobs:
           FHEMB_SSH_USER: ${{ secrets.FHEMB_SSH_USER }}
           FHEMB_SSH_HOST: ${{ vars.FHEMB_SSH_HOST }}
 
-          FHEMB_DB_NAME: ${{ vars.FHEMB_DB_NAME }}
-          FHEMB_DB_USER: ${{ vars.FHEMB_DB_USER }}
-          FHEMB_DB_PASS: ${{ secrets.FHEMB_DB_PASS }}
-          FHEMB_DB_HOST: ${{ vars.FHEMB_DB_HOST }}
-          FHEMB_DB_PORT: ${{ vars.FHEMB_DB_PORT }}
+          FHEMB_ENV_DB: |
+            DB_NAME=${{ vars.FHEMB_DB_NAME }}
+            DB_USERNAME=${{ vars.FHEMB_DB_USER }}
+            DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
+            DB_HOST=${{ vars.FHEMB_DB_HOST }}
+            DB_PORT=${{ vars.FHEMB_DB_PORT }}
+            REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
+            REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
+            SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
+            SSH_PKEY=/root/.ssh/id_rsa
+            REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
+            REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
 
-          FHEMB_REMOTE_PORT: ${{ vars.FHEMB_REMOTE_PORT }}
-
-          NODENAME: ${{ vars.NODENAME }}
-          FHEMB_LOCALROOT: ${{ vars.FHEMB_LOCALROOT }}
-          FHEMB_MOUNT: ${{ vars.FHEMB_MOUNT }}
-          FHEMB_AUDIOFILES: ${{ vars.FHEMB_AUDIOFILES }}
+          FHEMB_ENV_PATHS: |
+            NODENAME=${{ vars.NODENAME }}
+            LOCALROOT=${{ vars.FHEMB_LOCALROOT }}
+            MOUNT=${{ vars.FHEMB_MOUNT }}
+            AUDIOFILES=${{ vars.FHEMB_AUDIOFILES }}
 
         run: |
           docker run --rm \
@@ -45,19 +52,6 @@ jobs:
             -e FHEMB_SSH_KEY \
             -e FHEMB_SSH_USER \
             -e FHEMB_SSH_HOST \
-            -e FHEMB_DB_NAME \
-            -e FHEMB_DB_USER \
-            -e FHEMB_DB_PASS \
-            -e FHEMB_DB_HOST \
-            -e FHEMB_DB_PORT \
-            -e FHEMB_REMOTE_PORT \
-            -e NODENAME \
-            -e FHEMB_LOCALROOT \
-            -e FHEMB_MOUNT \
-            -e FHEMB_AUDIOFILES \
-            -e HOME=/root \
-            -v ${{ github.workspace }}:/workspace \
-            -w /workspace \
-            rdned/nbdev-fhemb:2.4.14.unified \
-            bash test.sh
-
+            -e FHEMB_ENV_DB \
+            -e FHEMB_ENV_PATHS \
+            rdned/nbdev-fhemb:2.4.14.unified
