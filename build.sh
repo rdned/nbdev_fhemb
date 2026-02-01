@@ -71,4 +71,3 @@ rm -rf _docs
 git add .
 git commit -m "docs: auto-generated documentation" || true
 git push origin gh-pages -f
-

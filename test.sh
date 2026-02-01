@@ -67,4 +67,3 @@ if [ -n "$(git status --porcelain -uno)" ]; then
   git status -uno
   exit 1
 fi
-
