@@ -1,63 +1,72 @@
-name: CI
+#!/bin/bash
+set -euo pipefail
+export PYTHONUNBUFFERED=1
 
-on:
-  push:
-    branches: ["main", "master"]
-  pull_request:
+cleanup() {
+  kill $SSH_PID 2>/dev/null || true
+  rm -rf ~/.ssh ~/.config
+}
+trap cleanup EXIT
 
-jobs:
-  test:
-    runs-on: scienziatiello
+echo "=== INSTALL FHEMB ===" >&2
+pip install --no-cache-dir --force-reinstall \
+  "fhemb @ git+https://${FHEMB_CI}@github.com/rdned/fhemb#egg=fhemb" >&2
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+echo "=== CONFIGURE SSH ===" >&2
+mkdir -p ~/.ssh
+echo "${FHEMB_SSH_KEY}" > ~/.ssh/id_rsa
+chmod 600 ~/.ssh/id_rsa
 
-      - name: Run CI tests inside container (Option 1)
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+echo "=== START SSH TUNNEL ===" >&2
+ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
+  -L 6543:localhost:5432 \
+  ${FHEMB_SSH_USER}@${FHEMB_SSH_HOST} \
+  -N &
+SSH_PID=$!
 
-          FHEMB_CI: ${{ secrets.FHEMB_CI }}
-          FHEMB_SSH_KEY: ${{ secrets.FHEMB_SSH_KEY }}
-          FHEMB_SSH_USER: ${{ secrets.FHEMB_SSH_USER }}
-          FHEMB_SSH_HOST: ${{ vars.FHEMB_SSH_HOST }}
+for i in {1..30}; do
+  nc -z localhost 6543 && break
+  sleep 0.5
+done
 
-          FHEMB_DB_NAME: ${{ vars.FHEMB_DB_NAME }}
-          FHEMB_DB_USER: ${{ vars.FHEMB_DB_USER }}
-          FHEMB_DB_PASS: ${{ secrets.FHEMB_DB_PASS }}
-          FHEMB_DB_HOST: ${{ vars.FHEMB_DB_HOST }}
-          FHEMB_DB_PORT: ${{ vars.FHEMB_DB_PORT }}
+echo "=== CONFIGURE FHEMB ENV (CI MODE) ===" >&2
+mkdir -p ~/.config/fhemb
 
-          FHEMB_REMOTE_PORT: ${{ vars.FHEMB_REMOTE_PORT }}
+cat <<EOF > ~/.config/fhemb/.env.db
+DB_NAME=${FHEMB_DB_NAME}
+DB_USERNAME=${FHEMB_DB_USER}
+DB_PASSWORD=${FHEMB_DB_PASS}
+DB_HOST=localhost
+DB_PORT=6543
+EOF
 
-          NODENAME: ${{ vars.NODENAME }}
-          FHEMB_LOCALROOT: ${{ vars.FHEMB_LOCALROOT }}
-          FHEMB_MOUNT: ${{ vars.FHEMB_MOUNT }}
-          FHEMB_AUDIOFILES: ${{ vars.FHEMB_AUDIOFILES }}
+cat <<EOF > ~/.config/fhemb/.env.paths
+NODENAME=${NODENAME}
+LOCALROOT=${FHEMB_LOCALROOT}
+MOUNT=${FHEMB_MOUNT}
+AUDIOFILES=${FHEMB_AUDIOFILES}
+EOF
 
-        run: |
-          docker run --rm \
-            --network host \
-            -e GITHUB_REPOSITORY \
-            -e GITHUB_TOKEN \
-            -e FHEMB_CI \
-            -e FHEMB_SSH_KEY \
-            -e FHEMB_SSH_USER \
-            -e FHEMB_SSH_HOST \
-            -e FHEMB_DB_NAME \
-            -e FHEMB_DB_USER \
-            -e FHEMB_DB_PASS \
-            -e FHEMB_DB_HOST \
-            -e FHEMB_DB_PORT \
-            -e FHEMB_REMOTE_PORT \
-            -e NODENAME \
-            -e FHEMB_LOCALROOT \
-            -e FHEMB_MOUNT \
-            -e FHEMB_AUDIOFILES \
-            -e HOME=/root \
-            -v ${{ github.workspace }}:/workspace \
-            -w /workspace \
-            rdned/nbdev-fhemb:2.4.14.unified \
-            bash test.sh
+chmod 600 ~/.config/fhemb/.env.*
+
+echo "=== CLONE REPOSITORY ===" >&2
+git clone https://github.com/${GITHUB_REPOSITORY}.git repo
+cd repo
+
+echo "=== NBDEV CLEAN ===" >&2
+nbdev_clean
+
+echo "=== NBDEV EXPORT ===" >&2
+nbdev_export
+
+echo "=== NBDEV TEST ===" >&2
+nbdev_test --flags ""
+
+echo "=== ENFORCE SYNC ===" >&2
+git config --global --add safe.directory $(pwd)
+if [ -n "$(git status --porcelain -uno)" ]; then
+  echo "::error::Notebooks and library are not in sync."
+  git status -uno
+  exit 1
+fi
 
