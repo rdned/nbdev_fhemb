@@ -1,6 +1,9 @@
 #!/bin/bash
 set -ex
 
+echo "=== RUNNING TEST.SH ===" >&2
+echo "Script: $0" >&2
+
 export PYTHONUNBUFFERED=1
 
 cleanup() {
