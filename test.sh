@@ -56,6 +56,10 @@ for i in {1..30}; do
   sleep 0.5
 done
 
+# Force fhemb to use the CI tunnel
+export FHEMB_DB_HOST=localhost
+export FHEMB_DB_PORT=6543
+
 echo "=== NBDEV CLEAN ==="
 nbdev_clean
 
