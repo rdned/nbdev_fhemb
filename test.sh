@@ -1,12 +1,18 @@
 #!/bin/bash
-set -euo pipefail
+set -ex
+
 export PYTHONUNBUFFERED=1
 
 cleanup() {
+  echo "=== CLEANUP ===" >&2
   kill $SSH_PID 2>/dev/null || true
   rm -rf ~/.ssh ~/.config
 }
 trap cleanup EXIT
+
+echo "=== CLONE REPOSITORY ===" >&2
+git clone https://github.com/${GITHUB_REPOSITORY}.git repo
+cd repo
 
 echo "=== INSTALL FHEMB ===" >&2
 pip install --no-cache-dir --force-reinstall \
@@ -16,42 +22,28 @@ echo "=== CONFIGURE SSH ===" >&2
 mkdir -p ~/.ssh
 echo "${FHEMB_SSH_KEY}" > ~/.ssh/id_rsa
 chmod 600 ~/.ssh/id_rsa
+ssh-keyscan -H ${FHEMB_SSH_HOST} 2>/dev/null >> ~/.ssh/known_hosts
 
-echo "=== START SSH TUNNEL ===" >&2
+echo "=== CONFIGURE FHEMB ===" >&2
+mkdir -p ~/.config/fhemb
+echo "$FHEMB_ENV_DB" > ~/.config/fhemb/.env.db
+echo "$FHEMB_ENV_PATHS" > ~/.config/fhemb/.env.paths
+
+echo "=== SSH TUNNEL ===" >&2
 ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
   -L 6543:localhost:5432 \
   ${FHEMB_SSH_USER}@${FHEMB_SSH_HOST} \
   -N &
 SSH_PID=$!
+sleep 2
 
 for i in {1..30}; do
   nc -z localhost 6543 && break
   sleep 0.5
 done
 
-echo "=== CONFIGURE FHEMB ENV (CI MODE) ===" >&2
-mkdir -p ~/.config/fhemb
-
-cat <<EOF > ~/.config/fhemb/.env.db
-DB_NAME=${FHEMB_DB_NAME}
-DB_USERNAME=${FHEMB_DB_USER}
-DB_PASSWORD=${FHEMB_DB_PASS}
-DB_HOST=localhost
-DB_PORT=6543
-EOF
-
-cat <<EOF > ~/.config/fhemb/.env.paths
-NODENAME=${NODENAME}
-LOCALROOT=${FHEMB_LOCALROOT}
-MOUNT=${FHEMB_MOUNT}
-AUDIOFILES=${FHEMB_AUDIOFILES}
-EOF
-
-chmod 600 ~/.config/fhemb/.env.*
-
-echo "=== CLONE REPOSITORY ===" >&2
-git clone https://github.com/${GITHUB_REPOSITORY}.git repo
-cd repo
+echo "=== CLEAR CACHES ===" >&2
+rm -rf .nbdev_cache .quarto
 
 echo "=== NBDEV CLEAN ===" >&2
 nbdev_clean
