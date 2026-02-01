@@ -1,5 +1,6 @@
 #!/bin/bash
 set -ex
+set -eE
 
 echo "=== RUNNING TEST.SH ===" >&2
 echo "Script: $0" >&2
@@ -11,14 +12,14 @@ cleanup() {
   kill $SSH_PID 2>/dev/null || true
   rm -rf ~/.ssh ~/.config
 }
-trap cleanup EXIT
+trap cleanup ERR EXIT
 
 echo "=== CLONE REPOSITORY ===" >&2
 git clone https://github.com/${GITHUB_REPOSITORY}.git repo
 cd repo
 
 echo "=== INSTALL FHEMB ===" >&2
-pip install --no-cache-dir --force-reinstall \
+python3 -m pip install --no-cache-dir --force-reinstall \
   "fhemb @ git+https://${FHEMB_CI}@github.com/rdned/fhemb#egg=fhemb" >&2
 
 echo "=== CONFIGURE SSH ===" >&2
