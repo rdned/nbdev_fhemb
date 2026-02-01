@@ -63,6 +63,7 @@ git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GI
 git checkout --orphan gh-pages
 git rm -rf .
 cp -r _docs/* .
+touch .nojekyll
 rm -rf _docs
 git add .
 git commit -m "docs: auto-generated documentation" || true
