@@ -11,7 +11,7 @@ jobs:
     runs-on: scienziatiello
 
     container:
-      image: rdned/nbdev-fhemb:2.4.14.D
+      image: rdned/nbdev-fhemb:2.4.14.unified
       options: --entrypoint ""     # override build.sh
       volumes:
         - /NASstorage/radned:/mnt/NASstorage

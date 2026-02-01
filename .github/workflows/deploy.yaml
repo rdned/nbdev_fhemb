@@ -54,4 +54,4 @@ jobs:
             -e FHEMB_SSH_HOST \
             -e FHEMB_ENV_DB \
             -e FHEMB_ENV_PATHS \
-            rdned/nbdev-fhemb:2.4.14.nojekyll
+            rdned/nbdev-fhemb:2.4.14.unified
