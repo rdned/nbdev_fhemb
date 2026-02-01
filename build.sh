@@ -18,9 +18,20 @@ git clone https://github.com/${GITHUB_REPOSITORY}.git repo
 cd repo
 
 echo "=== INSTALL FHEMB ===" >&2
-pip install --no-cache-dir --force-reinstall \
+python3 -m pip install --no-cache-dir --force-reinstall \
   "fhemb @ git+https://${FHEMB_CI}@github.com/rdned/fhemb#egg=fhemb" >&2
-pip install -U kaleido
+python3 -m pip install -U kaleido
+
+echo "=== VERIFY KALEIDO INSTALLATION ===" >&2
+python3 - <<'EOF'
+import sys
+print("Python:", sys.executable)
+try:
+    import kaleido
+    print("Kaleido OK:", kaleido.__file__)
+except Exception as e:
+    print("Kaleido import FAILED:", e)
+EOF
 
 echo "=== CONFIGURE SSH ===" >&2
 mkdir -p ~/.ssh
