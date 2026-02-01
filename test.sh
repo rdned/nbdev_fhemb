@@ -3,6 +3,7 @@ set -euo pipefail
 export PYTHONUNBUFFERED=1
 
 cleanup() {
+  kill $SSH_PID 2>/dev/null || true
   rm -rf ~/.ssh ~/.config
 }
 trap cleanup EXIT
@@ -16,21 +17,28 @@ mkdir -p ~/.ssh
 echo "${FHEMB_SSH_KEY}" > ~/.ssh/id_rsa
 chmod 600 ~/.ssh/id_rsa
 
-echo "=== CONFIGURE FHEMB ENV ===" >&2
+echo "=== START SSH TUNNEL ===" >&2
+ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
+  -L 6543:localhost:5432 \
+  ${FHEMB_SSH_USER}@${FHEMB_SSH_HOST} \
+  -N &
+SSH_PID=$!
+
+for i in {1..30}; do
+  nc -z localhost 6543 && break
+  sleep 0.5
+done
+
+echo "=== CONFIGURE FHEMB ENV (CI MODE) ===" >&2
 mkdir -p ~/.config/fhemb
 
+# CI uses the tunnel → NO SSH parameters here
 cat <<EOF > ~/.config/fhemb/.env.db
 DB_NAME=${FHEMB_DB_NAME}
 DB_USERNAME=${FHEMB_DB_USER}
 DB_PASSWORD=${FHEMB_DB_PASS}
-DB_HOST=${FHEMB_DB_HOST}
-DB_PORT=${FHEMB_DB_PORT}
-REMOTE_HOST=${FHEMB_SSH_HOST}
-REMOTE_PORT=${FHEMB_REMOTE_PORT}
-SSH_USERNAME=${FHEMB_SSH_USER}
-SSH_PKEY=/root/.ssh/id_rsa
-REMOTE_BIND_HOST=${FHEMB_DB_HOST}
-REMOTE_BIND_PORT=${FHEMB_DB_PORT}
+DB_HOST=localhost
+DB_PORT=6543
 EOF
 
 cat <<EOF > ~/.config/fhemb/.env.paths
@@ -41,17 +49,6 @@ AUDIOFILES=${FHEMB_AUDIOFILES}
 EOF
 
 chmod 600 ~/.config/fhemb/.env.*
-
-echo "=== VERIFY SSH SETUP ===" >&2
-ls -la ~/.ssh/id_rsa
-cat ~/.config/fhemb/.env.db
-echo "SSH Key exists: $(test -f ~/.ssh/id_rsa && echo 'YES' || echo 'NO')"
-echo "Can read SSH Key: $(test -r ~/.ssh/id_rsa && echo 'YES' || echo 'NO')"
-
-echo "=== TEST SSH CONNECTION ===" >&2
-ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
-  ${FHEMB_SSH_USER}@${FHEMB_SSH_HOST} \
-  "echo 'SSH connection successful'" >&2
 
 echo "=== NBDEV CLEAN ===" >&2
 nbdev_clean
