@@ -20,7 +20,7 @@ jobs:
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
 
-          FHEMB_CI: ${{ secrets.FHEMB_CI }}
+          FHEMB_CI: ${{ secrets.FHEMB_CI_CLASSIC }}
           FHEMB_SSH_KEY: ${{ secrets.FHEMB_SSH_KEY }}
           FHEMB_SSH_USER: ${{ secrets.FHEMB_SSH_USER }}
           FHEMB_SSH_HOST: ${{ vars.FHEMB_SSH_HOST }}

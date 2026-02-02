@@ -23,7 +23,7 @@ FHEMB_VERSION="0.1.0"
 FHEMB_WHEEL="fhemb-${FHEMB_VERSION}-py3-none-any.whl"
 FHEMB_URL="https://github.com/rdned/fhemb/releases/download/v${FHEMB_VERSION}/${FHEMB_WHEEL}"
 
-curl -L -H "Authorization: token ${FHEMB_CI_CLASSIC}" \
+curl -L -H "Authorization: token ${FHEMB_CI}" \
   -o /tmp/${FHEMB_WHEEL} \
   ${FHEMB_URL} >&2
 
