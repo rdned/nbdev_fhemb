@@ -19,8 +19,15 @@ git clone https://github.com/${GITHUB_REPOSITORY}.git repo
 cd repo
 
 echo "=== INSTALL FHEMB ===" >&2
-python3 -m pip install --no-cache-dir --force-reinstall \
-  "fhemb @ git+https://${FHEMB_CI}@github.com/rdned/fhemb#egg=fhemb" >&2
+FHEMB_VERSION="0.1.0"
+FHEMB_WHEEL="fhemb-${FHEMB_VERSION}-py3-none-any.whl"
+FHEMB_URL="https://github.com/rdned/fhemb/releases/download/v${FHEMB_VERSION}/${FHEMB_WHEEL}"
+
+curl -L -H "Authorization: token ${FHEMB_CI}" \
+  -o /tmp/${FHEMB_WHEEL} \
+  ${FHEMB_URL} >&2
+
+python3 -m pip install --no-cache-dir --force-reinstall /tmp/${FHEMB_WHEEL} >&2
 python3 -m pip install -U kaleido
 
 echo "=== VERIFY KALEIDO INSTALLATION ===" >&2
