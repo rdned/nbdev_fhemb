@@ -52,7 +52,6 @@ jobs:
             -e HOME=/root \
             -e GITHUB_REPOSITORY \
             -e GITHUB_TOKEN \
-            -e FHEMB_CI \
             -e FHEMB_CI_CLASSIC \
             -e FHEMB_SSH_KEY \
             -e FHEMB_SSH_USER \
