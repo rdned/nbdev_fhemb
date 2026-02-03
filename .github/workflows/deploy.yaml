@@ -22,7 +22,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-          FHEMB_CI: ${{ secrets.FHEMB_CI_CLASSIC }}
+          FHEMB_CI_CLASSIC: ${{ secrets.FHEMB_CI_CLASSIC }}
           FHEMB_SSH_KEY: ${{ secrets.FHEMB_SSH_KEY }}
           FHEMB_SSH_USER: ${{ secrets.FHEMB_SSH_USER }}
           FHEMB_SSH_HOST: ${{ vars.FHEMB_SSH_HOST }}
@@ -58,6 +58,6 @@ jobs:
             -e FHEMB_SSH_HOST \
             -e FHEMB_ENV_DB \
             -e FHEMB_ENV_PATHS \
-            rdned/nbdev-fhemb:0.1.0-2.4.14-1 \
+            rdned/nbdev-fhemb:0.1.0-2.4.14-2 \
             /usr/local/bin/build.sh
 
