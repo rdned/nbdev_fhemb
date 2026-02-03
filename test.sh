@@ -23,6 +23,8 @@ FHEMB_VERSION="0.1.0"
 FHEMB_WHEEL="fhemb-${FHEMB_VERSION}-py3-none-any.whl"
 FHEMB_URL="https://github.com/rdned/fhemb/releases/download/v${FHEMB_VERSION}/${FHEMB_WHEEL}"
 
+echo "Token length: ${#FHEMB_CI_CLASSIC}" >&2
+
 curl -L \
   -H "Authorization: token ${FHEMB_CI_CLASSIC}" \
   -H "Accept: application/octet-stream" \
