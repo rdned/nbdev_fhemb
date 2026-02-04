@@ -26,12 +26,6 @@ jobs:
           echo "FHEMB_VERSION=${FHEMB_TAG#v}" >> $GITHUB_ENV
           echo "FHEMB_WHEEL=fhemb-${FHEMB_TAG#v}-py3-none-any.whl" >> $GITHUB_ENV
 
-      - name: Checkout ci-utils
-        run: |
-          git clone --depth 1 https://github.com/rdned/ci-utils.git utils
-          cd utils
-          git checkout $CI_UTILS_COMMIT
-
       - name: Build and deploy inside container
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
