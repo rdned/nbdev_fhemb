@@ -36,8 +36,8 @@ utils/download_release_asset_ci.sh \
 
 ls -lh /tmp/${FHEMB_WHEEL}
 
-python3 -m pip install --no-cache-dir --force-reinstall /tmp/${FHEMB_WHEEL}
-python3 -m pip install -U kaleido
+/usr/bin/python3 -m pip install --no-cache-dir --force-reinstall /tmp/${FHEMB_WHEEL}
+/usr/bin/python3 -m pip install -U kaleido plotly
 
 echo "=== VERIFY KALEIDO INSTALLATION ===" >&2
 python3 - <<'EOF'
