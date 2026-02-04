@@ -79,6 +79,6 @@ jobs:
             -e FHEMB_VERSION \
             -e FHEMB_WHEEL \
             -e CI_UTILS_COMMIT \
-            rdned/nbdev-fhemb:0.1.1-2.4.14-0 \
+            rdned/nbdev-fhemb:0.1.1-2.4.14-1 \
             /usr/local/bin/build.sh
 

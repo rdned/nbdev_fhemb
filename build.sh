@@ -94,20 +94,28 @@ nbdev_test 2>&1 || echo "WARNING: nbdev_test failed" >&2
 echo "=== NBDEV DOCS ===" >&2
 nbdev_docs 2>&1
 
-echo "=== REMOVE _docs subfolder _proc ==="
-rm -rf _docs/_proc
-
 echo "=== DEPLOY TO GH-PAGES ===" >&2
 git config --global user.email "github-actions@github.com"
 git config --global user.name "github-actions"
 git config --global --add safe.directory $(pwd)
 git remote set-url origin https://x-access-token:${GH_PAGES_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
 
+# Detect where nbdev wrote the final site
+if [ -f "_docs/index.html" ]; then
+    SITE_DIR="_docs"
+elif [ -f "_proc/_docs/index.html" ]; then
+    SITE_DIR="_proc/_docs"
+else
+    echo "ERROR: No rendered site found in _docs or _proc/_docs" >&2
+    exit 1
+fi
+
+echo "SITE_DIR detected at ${SITE_DIR}"
+
 git checkout --orphan gh-pages
 git rm -rf .
-cp -r _docs/ .
+cp -a "${SITE_DIR}/." .
 touch .nojekyll
-rm -rf _docs
 git add .
 git commit -m "docs: auto-generated documentation" || true
 git push origin gh-pages -f
