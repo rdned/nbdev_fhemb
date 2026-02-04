@@ -73,7 +73,7 @@ echo "=== NBDEV EXPORT ===" >&2
 nbdev_export
 
 echo "=== NBDEV TEST ===" >&2
-python3 -m nbdev_test --flags ""
+nbdev_test --flags ""
 
 echo "=== CHECK GIT STATUS ===" >&2
 git status
