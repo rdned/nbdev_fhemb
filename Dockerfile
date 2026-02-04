@@ -1,8 +1,7 @@
 FROM python:3.12
 
-RUN apt-get update -qq && \
-    apt-get install -y -qq --no-install-recommends \
-    postgresql-client netcat-openbsd libgl1 libglib2.0-0 wget git openssh-client && \
+RUN apt-get update && \
+    apt-get install -y jq postgresql-client netcat-openbsd libgl1 libglib2.0-0 wget git openssh-client chromium && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN wget -q https://quarto.org/download/latest/quarto-linux-amd64.deb -O /tmp/quarto.deb && \
@@ -10,9 +9,6 @@ RUN wget -q https://quarto.org/download/latest/quarto-linux-amd64.deb -O /tmp/qu
     rm /tmp/quarto.deb && apt-get clean
 
 RUN pip install --no-cache-dir nbdev==2.4.14
-
-RUN apt-get update && apt-get install -y chromium \
-    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
 
