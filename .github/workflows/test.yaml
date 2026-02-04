@@ -10,7 +10,7 @@ on:
 env:
   CI_UTILS_COMMIT: "f28361f5457dfe7e0fa8053205267431609d99d5"
   FHEMB_TAG: "v0.1.0"
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  FHEMB_TOKEN: ${{ secrets.FHEMB_TOKEN }}
 jobs:
   test:
     runs-on: scienziatiello
@@ -24,7 +24,7 @@ jobs:
       - name: Run CI tests inside container
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FHEMB_TOKEN: ${{ secrets.FHEMB_TOKEN }}
           FHEMB_CI_CLASSIC: ${{ secrets.FHEMB_CI_CLASSIC }}
           FHEMB_SSH_KEY:     ${{ secrets.FHEMB_SSH_KEY }}
           FHEMB_SSH_USER:    ${{ secrets.FHEMB_SSH_USER }}
@@ -59,7 +59,7 @@ jobs:
             --network host \
             -e HOME=/root \
             -e GITHUB_REPOSITORY \
-            -e GITHUB_TOKEN \
+            -e FHEMB_TOKEN \
             -e FHEMB_CI_CLASSIC \
             -e FHEMB_SSH_KEY \
             -e FHEMB_SSH_USER \
@@ -72,4 +72,3 @@ jobs:
             -e CI_UTILS_COMMIT \
             rdned/nbdev-fhemb:0.1.0-2.4.14-7 \
             /usr/local/bin/test.sh
-
