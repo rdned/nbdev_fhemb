@@ -24,7 +24,7 @@ jobs:
       - name: Run CI tests inside container
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
-
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FHEMB_CI_CLASSIC: ${{ secrets.FHEMB_CI_CLASSIC }}
           FHEMB_SSH_KEY:     ${{ secrets.FHEMB_SSH_KEY }}
           FHEMB_SSH_USER:    ${{ secrets.FHEMB_SSH_USER }}
@@ -59,6 +59,7 @@ jobs:
             --network host \
             -e HOME=/root \
             -e GITHUB_REPOSITORY \
+            -e GITHUB_TOKEN \
             -e FHEMB_CI_CLASSIC \
             -e FHEMB_SSH_KEY \
             -e FHEMB_SSH_USER \
