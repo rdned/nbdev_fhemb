@@ -101,7 +101,7 @@ git remote set-url origin https://x-access-token:${GH_PAGES_TOKEN}@github.com/${
 
 git checkout --orphan gh-pages
 git rm -rf .
-cp -r _docs/* .
+cp -r _docs/ .
 touch .nojekyll
 rm -rf _docs
 git add .
