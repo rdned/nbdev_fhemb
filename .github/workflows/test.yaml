@@ -2,28 +2,39 @@ name: Test
 
 on:
   push:
-    branches:
-      - main
-      - master
-    tags:
-      - 'v*'
+    branches: [ main, master ]
+    tags: [ 'v*' ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
+
+env:
+  CI_UTILS_COMMIT: "f28361f5457dfe7e0fa8053205267431609d99d5"
+  FHEMB_TAG: "v0.1.0"
 
 jobs:
   test:
     runs-on: scienziatiello
 
     steps:
+      - name: Compute derived variables
+        run: |
+          echo "FHEMB_VERSION=${FHEMB_TAG#v}" >> $GITHUB_ENV
+          echo "FHEMB_WHEEL=fhemb-${FHEMB_TAG#v}-py3-none-any.whl" >> $GITHUB_ENV
+
+      - name: Checkout ci-utils
+        run: |
+          git clone --depth 1 https://github.com/rdned/ci-utils.git utils
+          cd utils
+          git checkout $CI_UTILS_COMMIT
+
       - name: Run CI tests inside container
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
 
           FHEMB_CI_CLASSIC: ${{ secrets.FHEMB_CI_CLASSIC }}
-          FHEMB_SSH_KEY: ${{ secrets.FHEMB_SSH_KEY }}
-          FHEMB_SSH_USER: ${{ secrets.FHEMB_SSH_USER }}
-          FHEMB_SSH_HOST: ${{ vars.FHEMB_SSH_HOST }}
+          FHEMB_SSH_KEY:     ${{ secrets.FHEMB_SSH_KEY }}
+          FHEMB_SSH_USER:    ${{ secrets.FHEMB_SSH_USER }}
+          FHEMB_SSH_HOST:    ${{ vars.FHEMB_SSH_HOST }}
 
           FHEMB_ENV_DB: |
             DB_NAME=${{ vars.FHEMB_DB_NAME }}
@@ -44,6 +55,11 @@ jobs:
             MOUNT=${{ vars.FHEMB_MOUNT }}
             AUDIOFILES=${{ vars.FHEMB_AUDIOFILES }}
 
+          FHEMB_TAG:       ${{ env.FHEMB_TAG }}
+          FHEMB_VERSION:   ${{ env.FHEMB_VERSION }}
+          FHEMB_WHEEL:     ${{ env.FHEMB_WHEEL }}
+          CI_UTILS_COMMIT: ${{ env.CI_UTILS_COMMIT }}
+
         run: |
           docker run --rm \
             --network host \
@@ -55,6 +71,10 @@ jobs:
             -e FHEMB_SSH_HOST \
             -e FHEMB_ENV_DB \
             -e FHEMB_ENV_PATHS \
-            rdned/nbdev-fhemb:0.1.0-2.4.14-4 \
+            -e FHEMB_TAG \
+            -e FHEMB_VERSION \
+            -e FHEMB_WHEEL \
+            -e CI_UTILS_COMMIT \
+            rdned/nbdev-fhemb:0.1.0-2.4.14-5 \
             /usr/local/bin/test.sh
 

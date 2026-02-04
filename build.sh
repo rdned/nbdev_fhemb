@@ -19,19 +19,24 @@ git clone https://github.com/${GITHUB_REPOSITORY}.git repo
 cd repo
 
 echo "=== INSTALL FHEMB ===" >&2
-FHEMB_VERSION="0.1.0"
-FHEMB_WHEEL="fhemb-${FHEMB_VERSION}-py3-none-any.whl"
-FHEMB_URL="https://github.com/rdned/fhemb/releases/download/v${FHEMB_VERSION}/${FHEMB_WHEEL}"
+echo "Using FHEMB_TAG=${FHEMB_TAG}" >&2
+echo "Using FHEMB_WHEEL=${FHEMB_WHEEL}" >&2
+# Clone ci-utils
+git clone --depth 1 https://github.com/rdned/ci-utils.git utils
+cd utils
+git checkout "${CI_UTILS_COMMIT}"
+cd ..
 
-curl -L \
-  -H "Authorization: token ${FHEMB_CI_CLASSIC}" \
-  -H "Accept: application/octet-stream" \
-  -o /tmp/${FHEMB_WHEEL} \
-  ${FHEMB_URL}
+# Download wheel using canonical script
+utils/download_release_asset_ci.sh \
+  rdned/fhemb \
+  "${FHEMB_TAG}" \
+  "${FHEMB_WHEEL}" \
+  "/tmp/${FHEMB_WHEEL}"
 
 ls -lh /tmp/${FHEMB_WHEEL}
 
-python3 -m pip install --no-cache-dir --force-reinstall /tmp/${FHEMB_WHEEL} >&2
+python3 -m pip install --no-cache-dir --force-reinstall /tmp/${FHEMB_WHEEL}
 python3 -m pip install -U kaleido
 
 echo "=== VERIFY KALEIDO INSTALLATION ===" >&2
