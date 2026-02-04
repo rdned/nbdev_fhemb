@@ -14,7 +14,7 @@ on:
 
 env:
   CI_UTILS_COMMIT: "f28361f5457dfe7e0fa8053205267431609d99d5"
-  FHEMB_TAG: "v0.1.0"
+  FHEMB_TAG: "v0.1.1"
   FHEMB_TOKEN: ${{ secrets.FHEMB_TOKEN }}
 jobs:
   build_and_deploy:

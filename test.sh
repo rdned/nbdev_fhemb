@@ -36,8 +36,8 @@ utils/download_release_asset_ci.sh \
 
 ls -lh /tmp/${FHEMB_WHEEL}
 
-/usr/bin/python3 -m pip install --no-cache-dir --force-reinstall /tmp/${FHEMB_WHEEL}
-/usr/bin/python3 -m pip install -U kaleido plotly
+python3 -m pip install --no-cache-dir --force-reinstall /tmp/${FHEMB_WHEEL}
+python3 -m pip install -U kaleido plotly
 
 echo "=== CONFIGURE SSH ===" >&2
 mkdir -p ~/.ssh
@@ -73,7 +73,7 @@ echo "=== NBDEV EXPORT ===" >&2
 nbdev_export
 
 echo "=== NBDEV TEST ===" >&2
-nbdev_test --flags ""
+python3 -m nbdev_test --flags ""
 
 echo "=== CHECK GIT STATUS ===" >&2
 git status
