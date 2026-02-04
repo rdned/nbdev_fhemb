@@ -34,6 +34,7 @@ utils/download_release_asset_ci.sh \
   "${FHEMB_WHEEL}" \
   "/tmp/${FHEMB_WHEEL}"
 
+rm -rf utils
 ls -lh /tmp/${FHEMB_WHEEL}
 
 python3 -m pip install --no-cache-dir --force-reinstall /tmp/${FHEMB_WHEEL}
