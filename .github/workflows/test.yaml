@@ -10,7 +10,7 @@ on:
 env:
   CI_UTILS_COMMIT: "f28361f5457dfe7e0fa8053205267431609d99d5"
   FHEMB_TAG: "v0.1.0"
-
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   test:
     runs-on: scienziatiello
