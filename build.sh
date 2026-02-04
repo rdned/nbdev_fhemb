@@ -8,8 +8,9 @@ echo "Script: $0" >&2
 export PYTHONUNBUFFERED=1
 
 cleanup() {
+  set +e
   echo "=== CLEANUP ===" >&2
-  kill $SSH_PID 2>/dev/null || true
+  kill $SSH_PID 2>/dev/null
   rm -rf ~/.ssh ~/.config
 }
 trap cleanup ERR EXIT
@@ -92,6 +93,9 @@ nbdev_test 2>&1 || echo "WARNING: nbdev_test failed" >&2
 
 echo "=== NBDEV DOCS ===" >&2
 nbdev_docs 2>&1
+
+echo "=== REMOVE _docs subfolder _proc ==="
+rm -rf _docs/_proc
 
 echo "=== DEPLOY TO GH-PAGES ===" >&2
 git config --global user.email "github-actions@github.com"
