@@ -29,6 +29,7 @@ jobs:
       - name: Build and deploy inside container
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FHEMB_TOKEN: ${{ secrets.FHEMB_TOKEN }}
 
           FHEMB_CI_CLASSIC: ${{ secrets.FHEMB_CI_CLASSIC }}
@@ -66,6 +67,7 @@ jobs:
             --network host \
             -e HOME=/root \
             -e GITHUB_REPOSITORY \
+            -e GITHUB_TOKEN \
             -e FHEMB_TOKEN \
             -e FHEMB_CI_CLASSIC \
             -e FHEMB_SSH_KEY \
