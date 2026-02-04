@@ -96,7 +96,7 @@ echo "=== DEPLOY TO GH-PAGES ===" >&2
 git config --global user.email "github-actions@github.com"
 git config --global user.name "github-actions"
 git config --global --add safe.directory $(pwd)
-git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+git remote set-url origin https://x-access-token:${GH_PAGES_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
 
 git checkout --orphan gh-pages
 git rm -rf .

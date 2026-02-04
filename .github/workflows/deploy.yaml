@@ -29,7 +29,7 @@ jobs:
       - name: Build and deploy inside container
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FHEMB_TOKEN: ${{ secrets.FHEMB_TOKEN }}
 
           FHEMB_CI_CLASSIC: ${{ secrets.FHEMB_CI_CLASSIC }}
@@ -67,7 +67,7 @@ jobs:
             --network host \
             -e HOME=/root \
             -e GITHUB_REPOSITORY \
-            -e GITHUB_TOKEN \
+            -e GH_PAGES_TOKEN \
             -e FHEMB_TOKEN \
             -e FHEMB_CI_CLASSIC \
             -e FHEMB_SSH_KEY \
@@ -79,6 +79,6 @@ jobs:
             -e FHEMB_VERSION \
             -e FHEMB_WHEEL \
             -e CI_UTILS_COMMIT \
-            rdned/nbdev-fhemb:0.1.0-2.4.14-10 \
+            rdned/nbdev-fhemb:0.1.0-2.4.14-11 \
             /usr/local/bin/build.sh
 
