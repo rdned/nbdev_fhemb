@@ -3,4 +3,6 @@ website:
     contents:
       - index.ipynb
       - 00_core.ipynb
+      - dtw_classification.ipynb
+      - lagged_ccorr.ipynb
       - tfreq.ipynb
