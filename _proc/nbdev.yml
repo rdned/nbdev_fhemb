@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "nbdev_fhemb"
+  site-url: "https://rdned.github.io/nbdev_fhemb"
+  description: "Demonstration of fhemb installed from a wheel using nbdev."
+  repo-branch: main
+  repo-url: "https://github.com/rdned/nbdev_fhemb"

@@ -1,0 +1,92 @@
+[
+  {
+    "objectID": "core.html",
+    "href": "core.html",
+    "title": "core",
+    "section": "",
+    "text": "foo\n\ndef foo(\n    \n):",
+    "crumbs": [
+      "core"
+    ]
+  },
+  {
+    "objectID": "lagged_ccorr.html",
+    "href": "lagged_ccorr.html",
+    "title": "Lagged Cross Correlations",
+    "section": "",
+    "text": "dg0.face_t.project(features=['skew'], subjs=[65], fbands=[0,1,2], wdfactory=wfactory('db4',8)).plot_signal(subjs=[65])\n\n\n\n\n\n\n\n\n(&lt;Figure size 1200x200 with 1 Axes&gt;,\n [&lt;Axes: title={'center': \"subj65: Frequency interval [(0, 0.2)] Hz, period interval [(5.12, 'inf')] s\"}&gt;])\n\n\n\ndg0.face_t.project(\n    subjs=[65],\n    features=['kurtosis', 'skew'],\n    fbands=[0,1,2,3],\n    wdfactory=wfactory('db4',8),\n    pcfactory=pca2,\n).plot_lagged_correlations(\n    twin=250,\n    step=25,\n    max_lag=250,\n    n_jobs=8\n)",
+    "crumbs": [
+      "Lagged Cross Correlations"
+    ]
+  },
+  {
+    "objectID": "tfreq.html",
+    "href": "tfreq.html",
+    "title": "Frequency Analysis of Temporal Series",
+    "section": "",
+    "text": "dg0.face_t.project(features=['skew'], subjs=[65], fbands=[0,1,2], wdfactory=wfactory('db4',8)).plot_signal(subjs=[65])\n\n\n\n\n\n\n\n\n(&lt;Figure size 1200x200 with 1 Axes&gt;,\n [&lt;Axes: title={'center': \"subj65: Frequency interval [(0, 0.2)] Hz, period interval [(5.12, 'inf')] s\"}&gt;])\n\n\n\ndg0.face_t.project(\n    subjs=[65],\n    features=['kurtosis', 'skew'],\n    fbands=[0,1,2,4],\n    wdfactory=wfactory('db4',8),\n    pcfactory=pca2,\n).plot_lagged_correlations(\n    twin=250,\n    step=25,\n    max_lag=250,\n    n_jobs=8\n)",
+    "crumbs": [
+      "Frequency Analysis of Temporal Series"
+    ]
+  },
+  {
+    "objectID": "tfreq.html#piece-instances-to-analyze",
+    "href": "tfreq.html#piece-instances-to-analyze",
+    "title": "Frequency Analysis of Temporal Series",
+    "section": "",
+    "text": "dg0.face_t.project(features=['skew'], subjs=[65], fbands=[0,1,2], wdfactory=wfactory('db4',8)).plot_signal(subjs=[65])\n\n\n\n\n\n\n\n\n(&lt;Figure size 1200x200 with 1 Axes&gt;,\n [&lt;Axes: title={'center': \"subj65: Frequency interval [(0, 0.2)] Hz, period interval [(5.12, 'inf')] s\"}&gt;])\n\n\n\ndg0.face_t.project(\n    subjs=[65],\n    features=['kurtosis', 'skew'],\n    fbands=[0,1,2,4],\n    wdfactory=wfactory('db4',8),\n    pcfactory=pca2,\n).plot_lagged_correlations(\n    twin=250,\n    step=25,\n    max_lag=250,\n    n_jobs=8\n)",
+    "crumbs": [
+      "Frequency Analysis of Temporal Series"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "nbdev_fhemb",
+    "section": "",
+    "text": "This file will become your README and also the index of your documentation.",
+    "crumbs": [
+      "nbdev_fhemb"
+    ]
+  },
+  {
+    "objectID": "index.html#developer-guide",
+    "href": "index.html#developer-guide",
+    "title": "nbdev_fhemb",
+    "section": "Developer Guide",
+    "text": "Developer Guide\nIf you are new to using nbdev here are some useful pointers to get you started.\n\nInstall nbdev_fhemb in Development mode\n# make sure nbdev_fhemb package is installed in development mode\n$ pip install -e .\n\n# make changes under nbs/ directory\n# ...\n\n# compile to have changes apply to nbdev_fhemb\n$ nbdev_prepare",
+    "crumbs": [
+      "nbdev_fhemb"
+    ]
+  },
+  {
+    "objectID": "index.html#usage",
+    "href": "index.html#usage",
+    "title": "nbdev_fhemb",
+    "section": "Usage",
+    "text": "Usage\n\nInstallation\nInstall latest from the GitHub repository:\n$ pip install git+https://github.com/rdned/nbdev_fhemb.git\nor from conda\n$ conda install -c rdned nbdev_fhemb\nor from pypi\n$ pip install nbdev_fhemb\n\n\nDocumentation\nDocumentation can be found hosted on this GitHub repository’s pages. Additionally you can find package manager specific guidelines on conda and pypi respectively.",
+    "crumbs": [
+      "nbdev_fhemb"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-use",
+    "href": "index.html#how-to-use",
+    "title": "nbdev_fhemb",
+    "section": "How to use",
+    "text": "How to use\nFill me in please! Don’t forget code examples:\n\n1+1\n\n2",
+    "crumbs": [
+      "nbdev_fhemb"
+    ]
+  },
+  {
+    "objectID": "dtw_classification.html",
+    "href": "dtw_classification.html",
+    "title": "DTW Classification",
+    "section": "",
+    "text": "dg0.face_t.project(features=['skew'], subjs=[65], fbands=[0,1,2], wdfactory=wfactory('db4',8)).plot_signal(subjs=[65])\n\n\n\n\n\n\n\n\n(&lt;Figure size 1200x200 with 1 Axes&gt;,\n [&lt;Axes: title={'center': \"subj65: Frequency interval [(0, 0.2)] Hz, period interval [(5.12, 'inf')] s\"}&gt;])",
+    "crumbs": [
+      "DTW Classification"
+    ]
+  }
+]
