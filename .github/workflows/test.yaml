@@ -7,15 +7,18 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  CI_UTILS_COMMIT: "f28361f5457dfe7e0fa8053205267431609d99d5"
-  FHEMB_TAG: "v0.1.1"
-  FHEMB_TOKEN: ${{ secrets.FHEMB_TOKEN }}
 jobs:
   test:
     runs-on: scienziatiello
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Load dependency pins
+        run: |
+          grep -E '^(CI_UTILS_COMMIT|FHEMB_TAG)=' .github/dependency-pins.env >> "$GITHUB_ENV"
+
       - name: Compute derived variables
         run: |
           echo "FHEMB_VERSION=${FHEMB_TAG#v}" >> $GITHUB_ENV

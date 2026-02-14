@@ -7,5 +7,6 @@ d = { 'settings': { 'branch': 'main',
                 'lib_path': 'nbdev_fhemb'},
   'syms': { 'nbdev_fhemb.core': {'nbdev_fhemb.core.foo': ('core.html#foo', 'nbdev_fhemb/core.py')},
             'nbdev_fhemb.dtw_classification': {},
+            'nbdev_fhemb.embeddings': {},
             'nbdev_fhemb.lagged_ccorr': {},
             'nbdev_fhemb.tfreq': {}}}

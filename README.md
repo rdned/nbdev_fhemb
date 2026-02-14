@@ -24,6 +24,21 @@ $ pip install -e .
 $ nbdev_prepare
 ```
 
+### CI dependency pins
+
+External CI dependencies are pinned explicitly in
+`.github/dependency-pins.env`:
+
+- `FHEMB_TAG`: version/tag of the external `fhemb` wheel.
+- `CI_UTILS_COMMIT`: pinned commit of external CI helper scripts.
+
+Both workflows (`.github/workflows/test.yaml` and
+`.github/workflows/deploy.yaml`) load these values from that file into
+`GITHUB_ENV` and then pass them to the container.
+
+To bump external dependencies, update only `.github/dependency-pins.env`
+and open a PR.
+
 ## Usage
 
 ### Installation
