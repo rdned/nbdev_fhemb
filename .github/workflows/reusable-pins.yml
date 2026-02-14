@@ -19,5 +19,5 @@ jobs:
     steps:
       - id: out
         run: |
-          echo "fhemb_tag=v0.1.1" >> "$GITHUB_OUTPUT"
+          echo "fhemb_tag=v0.2.1" >> "$GITHUB_OUTPUT"
           echo "ci_utils_commit=f28361f5457dfe7e0fa8053205267431609d99d5" >> "$GITHUB_OUTPUT"

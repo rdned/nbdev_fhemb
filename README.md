@@ -26,18 +26,18 @@ $ nbdev_prepare
 
 ### CI dependency pins
 
-External CI dependencies are pinned explicitly in both workflow files:
-
-- `.github/workflows/test.yaml`
-- `.github/workflows/deploy.yaml`
-
-Pinned values:
+External CI dependencies are pinned explicitly in
+`.github/workflows/reusable-pins.yml`:
 
 - `FHEMB_TAG`: version/tag of the external `fhemb` wheel.
 - `CI_UTILS_COMMIT`: pinned commit of external CI helper scripts.
 
-This project intentionally keeps these pins explicit in workflow `env`
-blocks on a self-hosted runner.
+Both workflows (`.github/workflows/test.yaml` and
+`.github/workflows/deploy.yaml`) consume these pins via a reusable
+workflow job (`pins`) and then pass them to the container.
+
+To bump external dependencies, update only
+`.github/workflows/reusable-pins.yml` and open a PR.
 
 ## Usage
 

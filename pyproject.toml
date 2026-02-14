@@ -1,11 +1,30 @@
 [build-system]
-requires = ["setuptools>=64.0"]
+requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name="nbdev_fhemb"
-requires-python=">=3.9"
-dynamic = [ "keywords", "description", "version", "dependencies", "optional-dependencies", "readme", "license", "authors", "classifiers", "entry-points", "scripts", "urls"]
+name = "nbdev_fhemb"
+dynamic = ["version"]
+description = "Demonstration of fhemb installed from a wheel using nbdev."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "Apache-2.0"}
+authors = [{name = "Radim Nedbal", email = "radned@gmail.com"}]
+keywords = ['nbdev', 'jupyter', 'notebook', 'python']
+classifiers = ["Natural Language :: English", "Intended Audience :: Data Scientists", "Development Status :: 3 - Alpha", "Programming Language :: Python :: 3", "Programming Language :: Python :: 3 :: Only"]
+dependencies = ['""']
 
-[tool.uv]
-cache-keys = [{ file = "pyproject.toml" }, { file = "settings.ini" }, { file = "setup.py" }]
+[project.urls]
+Repository = "https://github.com/rdned/nbdev_fhemb"
+Documentation = "https://rdned.github.io/nbdev_fhemb"
+
+[project.entry-points.nbdev]
+nbdev_fhemb = "nbdev_fhemb._modidx:d"
+
+[tool.setuptools.dynamic]
+version = {attr = "nbdev_fhemb.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["nbdev_fhemb"]
+
+[tool.nbdev]
