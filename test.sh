@@ -73,6 +73,9 @@ nbdev-clean
 echo "=== NBDEV EXPORT ===" >&2
 nbdev-export
 
+echo "=== NBDEV DOCS ===" >&2
+nbdev-docs
+
 echo "=== NBDEV TEST ===" >&2
 nbdev-test --flags ""
 
