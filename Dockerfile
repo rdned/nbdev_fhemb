@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.11
 
 RUN apt-get update && \
     apt-get install -y jq postgresql-client netcat-openbsd libgl1 libglib2.0-0 wget git openssh-client chromium && \
@@ -8,9 +8,10 @@ RUN wget -q https://quarto.org/download/latest/quarto-linux-amd64.deb -O /tmp/qu
     dpkg -i /tmp/quarto.deb || apt-get -f install -y -qq && \
     rm /tmp/quarto.deb && apt-get clean
 
-RUN pip install --no-cache-dir nbdev==2.4.14
+RUN pip install --no-cache-dir nbdev==3.0.10
 
 WORKDIR /workspace
+
 
 COPY build.sh /usr/local/bin/build.sh
 COPY test.sh /usr/local/bin/test.sh

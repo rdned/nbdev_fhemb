@@ -68,13 +68,13 @@ echo "=== CLEAR CACHES ===" >&2
 rm -rf .nbdev_cache .quarto
 
 echo "=== NBDEV CLEAN ===" >&2
-nbdev_clean
+nbdev-clean
 
 echo "=== NBDEV EXPORT ===" >&2
-nbdev_export
+nbdev-export
 
 echo "=== NBDEV TEST ===" >&2
-nbdev_test --flags ""
+nbdev-test --flags ""
 
 echo "=== CHECK GIT STATUS ===" >&2
 git status

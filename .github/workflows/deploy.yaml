@@ -23,6 +23,7 @@ jobs:
     env:
       CI_UTILS_COMMIT: ${{ needs.pins.outputs.ci_utils_commit }}
       FHEMB_TAG: ${{ needs.pins.outputs.fhemb_tag }}
+      NBDEV_FHEMB_IMAGE: ${{ needs.pins.outputs.nbdev_fhemb_image }}
 
     steps:
       - name: Compute derived variables
@@ -83,6 +84,6 @@ jobs:
             -e FHEMB_VERSION \
             -e FHEMB_WHEEL \
             -e CI_UTILS_COMMIT \
-            rdned/nbdev-fhemb:0.1.1-2.4.14-1 \
+            "$NBDEV_FHEMB_IMAGE" \
             /usr/local/bin/build.sh
 

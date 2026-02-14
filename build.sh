@@ -86,13 +86,13 @@ pio.renderers.default = "png"
 EOF
 
 echo "=== NBDEV PREPARE ===" >&2
-nbdev_prepare 2>&1
+nbdev-prepare 2>&1
 
 echo "=== NBDEV TEST ===" >&2
-nbdev_test 2>&1 || echo "WARNING: nbdev_test failed" >&2
+nbdev-test 2>&1 || echo "WARNING: nbdev_test failed" >&2
 
 echo "=== NBDEV DOCS ===" >&2
-nbdev_docs 2>&1
+nbdev-docs 2>&1
 
 echo "=== DEPLOY TO GH-PAGES ===" >&2
 git config --global user.email "github-actions@github.com"

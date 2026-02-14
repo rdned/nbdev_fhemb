@@ -9,6 +9,9 @@ on:
       ci_utils_commit:
         description: Pinned external CI utils commit
         value: ${{ jobs.pins.outputs.ci_utils_commit }}
+      nbdev_fhemb_image:
+        description: Pinned nbdev-fhemb CI container image
+        value: ${{ jobs.pins.outputs.nbdev_fhemb_image }}
 
 jobs:
   pins:
@@ -16,8 +19,10 @@ jobs:
     outputs:
       fhemb_tag: ${{ steps.out.outputs.fhemb_tag }}
       ci_utils_commit: ${{ steps.out.outputs.ci_utils_commit }}
+      nbdev_fhemb_image: ${{ steps.out.outputs.nbdev_fhemb_image }}
     steps:
       - id: out
         run: |
           echo "fhemb_tag=v0.2.1" >> "$GITHUB_OUTPUT"
           echo "ci_utils_commit=f28361f5457dfe7e0fa8053205267431609d99d5" >> "$GITHUB_OUTPUT"
+          echo "nbdev_fhemb_image=rdned/nbdev-fhemb:0.1.1-2.4.14-1" >> "$GITHUB_OUTPUT"
