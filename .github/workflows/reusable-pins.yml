@@ -1,0 +1,23 @@
+name: Reusable - External Pins
+
+on:
+  workflow_call:
+    outputs:
+      fhemb_tag:
+        description: Pinned external FHEMB tag
+        value: ${{ jobs.pins.outputs.fhemb_tag }}
+      ci_utils_commit:
+        description: Pinned external CI utils commit
+        value: ${{ jobs.pins.outputs.ci_utils_commit }}
+
+jobs:
+  pins:
+    runs-on: ubuntu-latest
+    outputs:
+      fhemb_tag: ${{ steps.out.outputs.fhemb_tag }}
+      ci_utils_commit: ${{ steps.out.outputs.ci_utils_commit }}
+    steps:
+      - id: out
+        run: |
+          echo "fhemb_tag=v0.1.1" >> "$GITHUB_OUTPUT"
+          echo "ci_utils_commit=f28361f5457dfe7e0fa8053205267431609d99d5" >> "$GITHUB_OUTPUT"
