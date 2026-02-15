@@ -8,72 +8,15 @@ on:
     branches: [ main ]
 
 jobs:
-  # Single source of truth for external dependency pins: .github/workflows/reusable-pins.yml
   pins:
     uses: ./.github/workflows/reusable-pins.yml
 
   test:
     needs: pins
-    runs-on: scienziatiello
-    env:
-      CI_UTILS_COMMIT: ${{ needs.pins.outputs.ci_utils_commit }}
-      FHEMB_TAG: ${{ needs.pins.outputs.fhemb_tag }}
-      NBDEV_FHEMB_IMAGE: ${{ needs.pins.outputs.nbdev_fhemb_image }}
-
-    steps:
-      - name: Compute derived variables
-        run: |
-          echo "FHEMB_VERSION=${FHEMB_TAG#v}" >> $GITHUB_ENV
-          echo "FHEMB_WHEEL=fhemb-${FHEMB_TAG#v}-py3-none-any.whl" >> $GITHUB_ENV
-
-      - name: Run CI tests inside container
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          FHEMB_TOKEN: ${{ secrets.FHEMB_TOKEN }}
-          FHEMB_CI_CLASSIC: ${{ secrets.FHEMB_CI_CLASSIC }}
-          FHEMB_SSH_KEY:     ${{ secrets.FHEMB_SSH_KEY }}
-          FHEMB_SSH_USER:    ${{ secrets.FHEMB_SSH_USER }}
-          FHEMB_SSH_HOST:    ${{ vars.FHEMB_SSH_HOST }}
-
-          FHEMB_ENV_DB: |
-            DB_NAME=${{ vars.FHEMB_DB_NAME }}
-            DB_USERNAME=${{ vars.FHEMB_DB_USER }}
-            DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
-            DB_HOST=${{ vars.FHEMB_DB_HOST }}
-            DB_PORT=${{ vars.FHEMB_DB_PORT }}
-            REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
-            REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
-            SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
-            SSH_PKEY=/root/.ssh/id_rsa
-            REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
-            REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
-
-          FHEMB_ENV_PATHS: |
-            NODENAME=${{ vars.NODENAME }}
-            LOCALROOT=${{ vars.FHEMB_LOCALROOT }}
-            MOUNT=${{ vars.FHEMB_MOUNT }}
-            AUDIOFILES=${{ vars.FHEMB_AUDIOFILES }}
-
-          FHEMB_TAG:       ${{ env.FHEMB_TAG }}
-          FHEMB_VERSION:   ${{ env.FHEMB_VERSION }}
-          FHEMB_WHEEL:     ${{ env.FHEMB_WHEEL }}
-          CI_UTILS_COMMIT: ${{ env.CI_UTILS_COMMIT }}
-
-        run: |
-          docker run --rm \
-            --network host \
-            -e HOME=/root \
-            -e GITHUB_REPOSITORY \
-            -e FHEMB_TOKEN \
-            -e FHEMB_CI_CLASSIC \
-            -e FHEMB_SSH_KEY \
-            -e FHEMB_SSH_USER \
-            -e FHEMB_SSH_HOST \
-            -e FHEMB_ENV_DB \
-            -e FHEMB_ENV_PATHS \
-            -e FHEMB_TAG \
-            -e FHEMB_VERSION \
-            -e FHEMB_WHEEL \
-            -e CI_UTILS_COMMIT \
-            "$NBDEV_FHEMB_IMAGE" \
-            /usr/local/bin/test.sh
+    uses: ./.github/workflows/reusable-container-run.yml
+    with:
+      fhemb_tag: ${{ needs.pins.outputs.fhemb_tag }}
+      ci_utils_commit: ${{ needs.pins.outputs.ci_utils_commit }}
+      nbdev_fhemb_image: ${{ needs.pins.outputs.nbdev_fhemb_image }}
+      entrypoint: /usr/local/bin/test.sh
+    secrets: inherit
