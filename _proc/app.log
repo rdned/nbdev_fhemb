@@ -1,0 +1,64 @@
+01:51:55 [INFO] piece._load_from_db: Loading face_t from the database tcamera as user tanalyst
+01:51:55 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.faceposition_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+01:51:56 [INFO] piece._load_from_db: Loading face_t from the database tcamera as user tanalyst
+01:51:56 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.faceposition_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+01:51:56 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+01:51:56 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+01:51:56 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.face_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+01:51:56 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+01:51:56 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+01:51:56 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.face_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+01:51:57 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+01:51:57 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+01:51:58 [ERROR] paramiko.transport._log: Socket exception: Bad file descriptor (9)
+01:51:58 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+01:51:58 [INFO] factories.fit_pipe: Pipeline cache key: StandardScaler(copy=True,with_mean=True,with_std=True) | KernelPCA(alpha=1.0,coef0=1,copy_X=True,degree=3,eigen_solver='auto',fit_inverse_transform=True,gamma=0.07,iterated_power='auto',kernel='sigmoid',kernel_params=None,max_iter=None,n_components=5,n_jobs=None,random_state=None,remove_zero_eig=False,tol=0)
+01:51:58 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+01:51:58 [INFO] factories.fit_pipe: Pipeline cache key: StandardScaler(copy=True,with_mean=True,with_std=True) | KernelPCA(alpha=1.0,coef0=1,copy_X=True,degree=3,eigen_solver='auto',fit_inverse_transform=True,gamma=0.07,iterated_power='auto',kernel='sigmoid',kernel_params=None,max_iter=None,n_components=5,n_jobs=None,random_state=None,remove_zero_eig=False,tol=0)
+01:51:59 [INFO] factories.create_pca_embedding: Creating PCA embedding with cache key: StandardScaler(copy=True,with_mean=True,with_std=True) | KernelPCA(alpha=1.0,coef0=1,copy_X=True,degree=3,eigen_solver='auto',fit_inverse_transform=True,gamma=0.07,iterated_power='auto',kernel='sigmoid',kernel_params=None,max_iter=None,n_components=5,n_jobs=None,random_state=None,remove_zero_eig=False,tol=0)
+01:51:59 [INFO] factories.create_pca_embedding: Creating PCA embedding with cache key: StandardScaler(copy=True,with_mean=True,with_std=True) | KernelPCA(alpha=1.0,coef0=1,copy_X=True,degree=3,eigen_solver='auto',fit_inverse_transform=True,gamma=0.07,iterated_power='auto',kernel='sigmoid',kernel_params=None,max_iter=None,n_components=5,n_jobs=None,random_state=None,remove_zero_eig=False,tol=0)
+01:51:59 [INFO] piece._load_from_db: Loading facebbox from the database tcamera as user tanalyst
+01:51:59 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.faceposition_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+01:52:00 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+01:52:00 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+01:52:00 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.facebbox WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+01:52:02 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+01:52:02 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+01:52:10 [INFO] piece._load_from_db: Loading face_t from the database tcamera as user tanalyst
+01:52:10 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.faceposition_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+01:52:11 [INFO] piece._load_from_db: Loading face_t from the database tcamera as user tanalyst
+01:52:11 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.faceposition_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+01:52:11 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+01:52:11 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+01:52:11 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.face_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+01:52:11 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+01:52:11 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+01:52:11 [ERROR] paramiko.transport._log: Socket exception: Bad file descriptor (9)
+01:52:11 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.face_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+01:52:12 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+01:52:12 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+01:52:13 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+01:52:13 [INFO] factories.fit_pipe: Pipeline cache key: StandardScaler(copy=True,with_mean=True,with_std=True) | KernelPCA(alpha=1.0,coef0=1,copy_X=True,degree=3,eigen_solver='auto',fit_inverse_transform=True,gamma=0.07,iterated_power='auto',kernel='sigmoid',kernel_params=None,max_iter=None,n_components=5,n_jobs=None,random_state=None,remove_zero_eig=False,tol=0)
+01:52:13 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+01:52:13 [INFO] factories.fit_pipe: Pipeline cache key: StandardScaler(copy=True,with_mean=True,with_std=True) | KernelPCA(alpha=1.0,coef0=1,copy_X=True,degree=3,eigen_solver='auto',fit_inverse_transform=True,gamma=0.07,iterated_power='auto',kernel='sigmoid',kernel_params=None,max_iter=None,n_components=5,n_jobs=None,random_state=None,remove_zero_eig=False,tol=0)
+01:52:14 [INFO] factories.create_pca_embedding: Creating PCA embedding with cache key: StandardScaler(copy=True,with_mean=True,with_std=True) | KernelPCA(alpha=1.0,coef0=1,copy_X=True,degree=3,eigen_solver='auto',fit_inverse_transform=True,gamma=0.07,iterated_power='auto',kernel='sigmoid',kernel_params=None,max_iter=None,n_components=5,n_jobs=None,random_state=None,remove_zero_eig=False,tol=0)
+01:52:15 [INFO] factories.create_pca_embedding: Creating PCA embedding with cache key: StandardScaler(copy=True,with_mean=True,with_std=True) | KernelPCA(alpha=1.0,coef0=1,copy_X=True,degree=3,eigen_solver='auto',fit_inverse_transform=True,gamma=0.07,iterated_power='auto',kernel='sigmoid',kernel_params=None,max_iter=None,n_components=5,n_jobs=None,random_state=None,remove_zero_eig=False,tol=0)
+01:52:15 [INFO] piece._load_from_db: Loading facebbox from the database tcamera as user tanalyst
+01:52:15 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.faceposition_t WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+01:52:15 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+01:52:15 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
+01:52:15 [INFO] piece._fetch_from_DB: Fetching data by query SELECT subj65, subj66, subj67, subj68 FROM dg.facebbox WHERE frame_number >= 14200 AND frame_number < 15200 ORDER BY frame_number
+ from the database  tcamera as user tanalyst
+01:52:17 [INFO] dbms.data_query: Fetching time series of ['subj65', 'subj66', 'subj67', 'subj68']
+01:52:17 [INFO] dbms.fetch_data_as_timeseries_dict: 1000 rows fetched successfully!
