@@ -67,27 +67,20 @@ done
 echo "=== CLEAR CACHES ===" >&2
 rm -rf .nbdev_cache .quarto
 
-echo "=== NBDEV CLEAN ===" >&2
-nbdev-clean
+echo "=== ENVIRONMENT DIAGNOSTICS ===" >&2
+pwd
+python3 --version
+pip show nbdev
+locale
 
-echo "=== NBDEV EXPORT ===" >&2
-nbdev-export
+echo "=== NBDEV PREPARE" >&2
+nbdev-prepare
 
-echo "=== NBDEV DOCS ===" >&2
-nbdev-docs
+echo "=== CHECK GIT STATUS ===" >&2
+git.status
 
 echo "=== NBDEV TEST ===" >&2
 nbdev-test --flags ""
-
-echo "=== COMMIT GENERATED FILES ===" >&2
-git config --global user.email "ci@example.com"
-git config --global user.name "CI"
-git config --global --add safe.directory $(pwd)
-git add -A
-git commit -m "chore: nbdev-generated files" || true
-
-echo "=== CHECK GIT STATUS ===" >&2
-git status
 
 echo "=== ENFORCE SYNC ===" >&2
 if [ -n "$(git status --porcelain -uno)" ]; then
@@ -95,3 +88,5 @@ if [ -n "$(git status --porcelain -uno)" ]; then
   git status -uno
   exit 1
 fi
+
+echo "=== SYNC OK ===" >&2
