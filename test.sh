@@ -77,7 +77,7 @@ echo "=== NBDEV PREPARE" >&2
 nbdev-prepare
 
 echo "=== CHECK GIT STATUS ===" >&2
-git.status
+git status
 
 echo "=== NBDEV TEST ===" >&2
 nbdev-test --flags ""
