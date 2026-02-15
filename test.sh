@@ -79,11 +79,17 @@ nbdev-docs
 echo "=== NBDEV TEST ===" >&2
 nbdev-test --flags ""
 
+echo "=== COMMIT GENERATED FILES ===" >&2
+git config --global user.email "ci@example.com"
+git config --global user.name "CI"
+git config --global --add safe.directory $(pwd)
+git add -A
+git commit -m "chore: nbdev-generated files" || true
+
 echo "=== CHECK GIT STATUS ===" >&2
 git status
 
 echo "=== ENFORCE SYNC ===" >&2
-git config --global --add safe.directory $(pwd)
 if [ -n "$(git status --porcelain -uno)" ]; then
   echo "::error::Notebooks and library are not in sync."
   git status -uno

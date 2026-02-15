@@ -91,6 +91,9 @@ nbdev-prepare 2>&1
 echo "=== NBDEV TEST ===" >&2
 nbdev-test 2>&1 || echo "WARNING: nbdev_test failed" >&2
 
+echo "=== QUARTO VERSION ===" >&2
+quarto --version 2>&1 || echo "Quarto not found" >&2
+
 echo "=== NBDEV DOCS ===" >&2
 nbdev-docs 2>&1
 
