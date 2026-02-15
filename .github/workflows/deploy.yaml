@@ -1,4 +1,4 @@
-me:eploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 permissions:
   contents: write
