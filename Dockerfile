@@ -12,9 +12,17 @@ RUN pip install --no-cache-dir nbdev==3.0.10
 
 WORKDIR /workspace
 
+# --- add helper scripts into the image ---
+COPY scripts/install-fhemb.sh /usr/local/bin/install-fhemb.sh
+COPY scripts/configure-ssh.sh /usr/local/bin/configure-ssh.sh
+COPY scripts/setup-env.sh /usr/local/bin/setup-env.sh
 
-COPY build.sh /usr/local/bin/build.sh
-COPY test.sh /usr/local/bin/test.sh
+RUN chmod +x /usr/local/bin/install-fhemb.sh \
+    /usr/local/bin/configure-ssh.sh \
+    /usr/local/bin/setup-env.sh
+
+COPY scripts/uild.sh /usr/local/bin/build.sh
+COPY scripts/test.sh /usr/local/bin/test.sh
 RUN chmod +x /usr/local/bin/build.sh /usr/local/bin/test.sh
 
 # No ENTRYPOINT - scripts are called explicitly
