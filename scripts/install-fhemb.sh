@@ -20,4 +20,3 @@ rm -rf utils
 ls -lh /tmp/${FHEMB_WHEEL}
 
 python3 -m pip install --no-cache-dir --force-reinstall /tmp/${FHEMB_WHEEL}
-python3 -m pip install -U kaleido plotly
