@@ -28,7 +28,7 @@ on:
       FHEMB_DB_PASS:
         required: true
       GH_PAGES_TOKEN:
-        required: true
+        required: false
 
 jobs:
   run:

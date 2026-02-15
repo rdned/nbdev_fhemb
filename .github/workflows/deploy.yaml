@@ -16,12 +16,18 @@ jobs:
   pins:
     uses: ./.github/workflows/reusable-pins.yml
 
-  build_and_deploy:
-    needs: pins
-    uses: ./.github/workflows/reusable-container-run.yml
-    with:
-      fhemb_tag: ${{ needs.pins.outputs.fhemb_tag }}
-      ci_utils_commit: ${{ needs.pins.outputs.ci_utils_commit }}
-      nbdev_fhemb_image: ${{ needs.pins.outputs.nbdev_fhemb_image }}
-      entrypoint: /usr/local/bin/build.sh
-    secrets: inherit
+build_and_deploy:
+  needs: pins
+  uses: ./.github/workflows/reusable-container-run.yml
+  with:
+    fhemb_tag: ${{ needs.pins.outputs.fhemb_tag }}
+    ci_utils_commit: ${{ needs.pins.outputs.ci_utils_commit }}
+    nbdev_fhemb_image: ${{ needs.pins.outputs.nbdev_fhemb_image }}
+    entrypoint: /usr/local/bin/build.sh
+  secrets:
+    GH_PAGES_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+    FHEMB_TOKEN: ${{ secrets.FHEMB_TOKEN }}
+    FHEMB_CI_CLASSIC: ${{ secrets.FHEMB_CI_CLASSIC }}
+    FHEMB_SSH_KEY: ${{ secrets.FHEMB_SSH_KEY }}
+    FHEMB_SSH_USER: ${{ secrets.FHEMB_SSH_USER }}
+    FHEMB_DB_PASS: ${{ secrets.FHEMB_DB_PASS }}
