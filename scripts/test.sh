@@ -14,6 +14,12 @@ source /usr/local/bin/install-fhemb.sh
 source /usr/local/bin/configure-ssh.sh
 source /usr/local/bin/setup-env.sh
 
+echo "=== ENVIRONMENT DIAGNOSTICS ===" >&2
+pwd
+python3 --version
+pip show nbdev
+locale
+
 nbdev-prepare
 nbdev-test --flags ""
 
