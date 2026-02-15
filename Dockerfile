@@ -21,7 +21,7 @@ RUN chmod +x /usr/local/bin/install-fhemb.sh \
     /usr/local/bin/configure-ssh.sh \
     /usr/local/bin/setup-env.sh
 
-COPY scripts/uild.sh /usr/local/bin/build.sh
+COPY scripts/build.sh /usr/local/bin/build.sh
 COPY scripts/test.sh /usr/local/bin/test.sh
 RUN chmod +x /usr/local/bin/build.sh /usr/local/bin/test.sh
 
