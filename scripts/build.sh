@@ -6,6 +6,10 @@ export PYTHONUNBUFFERED=1
 cleanup() { kill $SSH_PID 2>/dev/null; rm -rf ~/.ssh ~/.config; }
 trap cleanup ERR EXIT
 
+echo "=== CLONE REPOSITORY ===" >&2
+git clone https://github.com/${GITHUB_REPOSITORY}.git repo
+cd repo
+
 source /usr/local/bin/install-fhemb.sh
 source /usr/local/bin/configure-ssh.sh
 source /usr/local/bin/setup-env.sh
