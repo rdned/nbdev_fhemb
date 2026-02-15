@@ -15,7 +15,6 @@ on:
       entrypoint:
         required: true
         type: string
-        description: The script to run inside container (e.g., /usr/local/bin/build.sh)
     secrets:
       FHEMB_TOKEN:
         required: true
@@ -27,8 +26,6 @@ on:
         required: true
       FHEMB_DB_PASS:
         required: true
-      GH_PAGES_TOKEN:
-        required: false
 
 jobs:
   run:
@@ -45,7 +42,7 @@ jobs:
       - name: Run container
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
-          GH_PAGES_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+          GH_PAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FHEMB_TOKEN: ${{ secrets.FHEMB_TOKEN }}
           FHEMB_CI_CLASSIC: ${{ secrets.FHEMB_CI_CLASSIC }}
           FHEMB_SSH_KEY: ${{ secrets.FHEMB_SSH_KEY }}

@@ -25,7 +25,6 @@ jobs:
       nbdev_fhemb_image: ${{ needs.pins.outputs.nbdev_fhemb_image }}
       entrypoint: /usr/local/bin/build.sh
     secrets:
-      GH_PAGES_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
       FHEMB_TOKEN: ${{ secrets.FHEMB_TOKEN }}
       FHEMB_CI_CLASSIC: ${{ secrets.FHEMB_CI_CLASSIC }}
       FHEMB_SSH_KEY: ${{ secrets.FHEMB_SSH_KEY }}
