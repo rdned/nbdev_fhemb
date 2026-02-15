@@ -1,0 +1,94 @@
+name: Reusable - Container Run
+
+on:
+  workflow_call:
+    inputs:
+      fhemb_tag:
+        required: true
+        type: string
+      ci_utils_commit:
+        required: true
+        type: string
+      nbdev_fhemb_image:
+        required: true
+        type: string
+      entrypoint:
+        required: true
+        type: string
+        description: The script to run inside container (e.g., /usr/local/bin/build.sh)
+    secrets:
+      FHEMB_TOKEN:
+        required: true
+      FHEMB_CI_CLASSIC:
+        required: true
+      FHEMB_SSH_KEY:
+        required: true
+      FHEMB_SSH_USER:
+        required: true
+      FHEMB_DB_PASS:
+        required: true
+      GH_PAGES_TOKEN:
+        required: false
+
+jobs:
+  run:
+    runs-on: scienziatiello
+
+    steps:
+      - name: Compute derived variables
+        run: |
+          echo "FHEMB_VERSION=${FHEMB_TAG#v}" >> $GITHUB_ENV
+          echo "FHEMB_WHEEL=fhemb-${FHEMB_TAG#v}-py3-none-any.whl" >> $GITHUB_ENV
+        env:
+          FHEMB_TAG: ${{ inputs.fhemb_tag }}
+
+      - name: Run container
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_PAGES_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+          FHEMB_TOKEN: ${{ secrets.FHEMB_TOKEN }}
+          FHEMB_CI_CLASSIC: ${{ secrets.FHEMB_CI_CLASSIC }}
+          FHEMB_SSH_KEY: ${{ secrets.FHEMB_SSH_KEY }}
+          FHEMB_SSH_USER: ${{ secrets.FHEMB_SSH_USER }}
+          FHEMB_SSH_HOST: ${{ vars.FHEMB_SSH_HOST }}
+          FHEMB_ENV_DB: |
+            DB_NAME=${{ vars.FHEMB_DB_NAME }}
+            DB_USERNAME=${{ vars.FHEMB_DB_USER }}
+            DB_PASSWORD=${{ secrets.FHEMB_DB_PASS }}
+            DB_HOST=${{ vars.FHEMB_DB_HOST }}
+            DB_PORT=${{ vars.FHEMB_DB_PORT }}
+            REMOTE_HOST=${{ vars.FHEMB_SSH_HOST }}
+            REMOTE_PORT=${{ vars.FHEMB_REMOTE_PORT }}
+            SSH_USERNAME=${{ secrets.FHEMB_SSH_USER }}
+            SSH_PKEY=/root/.ssh/id_rsa
+            REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
+            REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
+          FHEMB_ENV_PATHS: |
+            NODENAME=${{ vars.NODENAME }}
+            LOCALROOT=${{ vars.FHEMB_LOCALROOT }}
+            MOUNT=${{ vars.FHEMB_MOUNT }}
+            AUDIOFILES=${{ vars.FHEMB_AUDIOFILES }}
+          FHEMB_TAG: ${{ inputs.fhemb_tag }}
+          FHEMB_VERSION: ${{ env.FHEMB_VERSION }}
+          FHEMB_WHEEL: ${{ env.FHEMB_WHEEL }}
+          CI_UTILS_COMMIT: ${{ inputs.ci_utils_commit }}
+          NBDEV_FHEMB_IMAGE: ${{ inputs.nbdev_fhemb_image }}
+        run: |
+          docker run --rm \
+            --network host \
+            -e HOME=/root \
+            -e GITHUB_REPOSITORY \
+            -e GH_PAGES_TOKEN \
+            -e FHEMB_TOKEN \
+            -e FHEMB_CI_CLASSIC \
+            -e FHEMB_SSH_KEY \
+            -e FHEMB_SSH_USER \
+            -e FHEMB_SSH_HOST \
+            -e FHEMB_ENV_DB \
+            -e FHEMB_ENV_PATHS \
+            -e FHEMB_TAG \
+            -e FHEMB_VERSION \
+            -e FHEMB_WHEEL \
+            -e CI_UTILS_COMMIT \
+            "$NBDEV_FHEMB_IMAGE" \
+            ${{ inputs.entrypoint }}
