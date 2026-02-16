@@ -150,3 +150,9 @@ checklink/cookies.txt
 
 # Quarto
 .quarto
+
+# Generated model artifacts
+nbs/saved_models/
+
+# Generated .py artifacts
+nbdev_fhemb/**/*.py
