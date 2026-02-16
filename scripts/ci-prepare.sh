@@ -19,6 +19,7 @@ source /usr/local/bin/install-fhemb.sh
 
 # --- setup rendering ---
 echo "=== INSTALL RENDERING STACK ===" >&2
+python3 -m pip install -U kaleido plotly
 python3 - <<'EOF'
 import plotly.io as pio
 pio.renderers.default = "png"
