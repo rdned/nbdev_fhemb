@@ -79,7 +79,6 @@ jobs:
             printf 'GH_PAGES_TOKEN=%q\n' "$GH_PAGES_TOKEN"
             printf 'FHEMB_TOKEN=%q\n' "$FHEMB_TOKEN"
             printf 'FHEMB_CI_CLASSIC=%q\n' "$FHEMB_CI_CLASSIC"
-            printf 'FHEMB_SSH_KEY=%q\n' "$FHEMB_SSH_KEY"
             printf 'FHEMB_SSH_USER=%q\n' "$FHEMB_SSH_USER"
             printf 'FHEMB_SSH_HOST=%q\n' "$FHEMB_SSH_HOST"
             printf 'FHEMB_TAG=%q\n' "$FHEMB_TAG"
@@ -91,6 +90,7 @@ jobs:
           docker run --rm \
             --network host \
             --env-file envfile \
+            -e FHEMB_SSH_KEY \
             -e FHEMB_ENV_DB \
             -e FHEMB_ENV_PATHS \
             "$NBDEV_FHEMB_IMAGE" \
