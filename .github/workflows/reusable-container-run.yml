@@ -75,16 +75,16 @@ jobs:
           # Create envfile for single-line variables
           {
             printf 'HOME=/root\n'
-            printf 'GITHUB_REPOSITORY=%s\n' "$GITHUB_REPOSITORY"
-            printf 'GH_PAGES_TOKEN=%s\n' "$GH_PAGES_TOKEN"
-            printf 'FHEMB_TOKEN=%s\n' "$FHEMB_TOKEN"
-            printf 'FHEMB_CI_CLASSIC=%s\n' "$FHEMB_CI_CLASSIC"
-            printf 'FHEMB_SSH_KEY=%s\n' "$FHEMB_SSH_KEY"
-            printf 'FHEMB_SSH_USER=%s\n' "$FHEMB_SSH_USER"
-            printf 'FHEMB_SSH_HOST=%s\n' "$FHEMB_SSH_HOST"
-            printf 'FHEMB_TAG=%s\n' "$FHEMB_TAG"
-            printf 'FHEMB_WHEEL=%s\n' "$FHEMB_WHEEL"
-            printf 'CI_UTILS_COMMIT=%s\n' "$CI_UTILS_COMMIT"
+            printf 'GITHUB_REPOSITORY=%q\n' "$GITHUB_REPOSITORY"
+            printf 'GH_PAGES_TOKEN=%q\n' "$GH_PAGES_TOKEN"
+            printf 'FHEMB_TOKEN=%q\n' "$FHEMB_TOKEN"
+            printf 'FHEMB_CI_CLASSIC=%q\n' "$FHEMB_CI_CLASSIC"
+            printf 'FHEMB_SSH_KEY=%q\n' "$FHEMB_SSH_KEY"
+            printf 'FHEMB_SSH_USER=%q\n' "$FHEMB_SSH_USER"
+            printf 'FHEMB_SSH_HOST=%q\n' "$FHEMB_SSH_HOST"
+            printf 'FHEMB_TAG=%q\n' "$FHEMB_TAG"
+            printf 'FHEMB_WHEEL=%q\n' "$FHEMB_WHEEL"
+            printf 'CI_UTILS_COMMIT=%q\n' "$CI_UTILS_COMMIT"
           } > envfile
 
           # Run container (pass multi-line vars explicitly)
