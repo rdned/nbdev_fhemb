@@ -32,15 +32,9 @@ jobs:
     runs-on: scienziatiello
 
     steps:
-      - name: Compute derived variables
-        run: |
-          echo "FHEMB_VERSION=${FHEMB_TAG#v}" >> $GITHUB_ENV
-          echo "FHEMB_WHEEL=fhemb-${FHEMB_TAG#v}-py3-none-any.whl" >> $GITHUB_ENV
-        env:
-          FHEMB_TAG: ${{ inputs.fhemb_tag }}
-
       - name: Run container
         env:
+          FHEMB_TAG: ${{ inputs.fhemb_tag }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GH_PAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FHEMB_TOKEN: ${{ secrets.FHEMB_TOKEN }}
@@ -48,6 +42,7 @@ jobs:
           FHEMB_SSH_KEY: ${{ secrets.FHEMB_SSH_KEY }}
           FHEMB_SSH_USER: ${{ secrets.FHEMB_SSH_USER }}
           FHEMB_SSH_HOST: ${{ vars.FHEMB_SSH_HOST }}
+
           FHEMB_ENV_DB: |
             DB_NAME=${{ vars.FHEMB_DB_NAME }}
             DB_USERNAME=${{ vars.FHEMB_DB_USER }}
@@ -60,32 +55,43 @@ jobs:
             SSH_PKEY=/root/.ssh/id_rsa
             REMOTE_BIND_HOST=${{ vars.FHEMB_DB_HOST }}
             REMOTE_BIND_PORT=${{ vars.FHEMB_DB_PORT }}
+
           FHEMB_ENV_PATHS: |
             NODENAME=${{ vars.NODENAME }}
             LOCALROOT=${{ vars.FHEMB_LOCALROOT }}
             MOUNT=${{ vars.FHEMB_MOUNT }}
             AUDIOFILES=${{ vars.FHEMB_AUDIOFILES }}
-          FHEMB_TAG: ${{ inputs.fhemb_tag }}
-          FHEMB_VERSION: ${{ env.FHEMB_VERSION }}
-          FHEMB_WHEEL: ${{ env.FHEMB_WHEEL }}
+
           CI_UTILS_COMMIT: ${{ inputs.ci_utils_commit }}
           NBDEV_FHEMB_IMAGE: ${{ inputs.nbdev_fhemb_image }}
+
         run: |
+          set -euo pipefail
+
+          # Compute derived variables
+          FHEMB_VERSION=${FHEMB_TAG#v}
+          FHEMB_WHEEL="fhemb-${FHEMB_VERSION}-py3-none-any.whl"
+
+          # Create envfile for single-line variables
+          {
+            printf 'HOME=/root\n'
+            printf 'GITHUB_REPOSITORY=%s\n' "$GITHUB_REPOSITORY"
+            printf 'GH_PAGES_TOKEN=%s\n' "$GH_PAGES_TOKEN"
+            printf 'FHEMB_TOKEN=%s\n' "$FHEMB_TOKEN"
+            printf 'FHEMB_CI_CLASSIC=%s\n' "$FHEMB_CI_CLASSIC"
+            printf 'FHEMB_SSH_KEY=%s\n' "$FHEMB_SSH_KEY"
+            printf 'FHEMB_SSH_USER=%s\n' "$FHEMB_SSH_USER"
+            printf 'FHEMB_SSH_HOST=%s\n' "$FHEMB_SSH_HOST"
+            printf 'FHEMB_TAG=%s\n' "$FHEMB_TAG"
+            printf 'FHEMB_WHEEL=%s\n' "$FHEMB_WHEEL"
+            printf 'CI_UTILS_COMMIT=%s\n' "$CI_UTILS_COMMIT"
+          } > envfile
+
+          # Run container (pass multi-line vars explicitly)
           docker run --rm \
             --network host \
-            -e HOME=/root \
-            -e GITHUB_REPOSITORY \
-            -e GH_PAGES_TOKEN \
-            -e FHEMB_TOKEN \
-            -e FHEMB_CI_CLASSIC \
-            -e FHEMB_SSH_KEY \
-            -e FHEMB_SSH_USER \
-            -e FHEMB_SSH_HOST \
+            --env-file envfile \
             -e FHEMB_ENV_DB \
             -e FHEMB_ENV_PATHS \
-            -e FHEMB_TAG \
-            -e FHEMB_VERSION \
-            -e FHEMB_WHEEL \
-            -e CI_UTILS_COMMIT \
             "$NBDEV_FHEMB_IMAGE" \
             ${{ inputs.entrypoint }}
