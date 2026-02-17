@@ -1,0 +1,122 @@
+[
+  {
+    "objectID": "core.html",
+    "href": "core.html",
+    "title": "core",
+    "section": "",
+    "text": "foo\n\ndef foo(\n    \n):",
+    "crumbs": [
+      "core"
+    ]
+  },
+  {
+    "objectID": "dtw_classification.html",
+    "href": "dtw_classification.html",
+    "title": "DTW Classification",
+    "section": "",
+    "text": "#from fhemb.utils.cutils import dtw_clustering\n\n\n#from fhemb.utils.cutils import depict_combined_accuracy\n\n\n#from fhemb.utils.cutils import depict_accuracy_by_percentile\n\n\ndepict_combined_accuracy(\n    FFTRIO_DIRNAME + 'accuracies_db4_kurtosis(1)',\n    statistics='median',\n    dtw_filter=['cosine', 'euclidean', 'canberra', 'sqeuclidean', 'jaccard', 'hamming', 'braycurtis'], #euclidean = 'cityblock'  'minkowski' 'chebushev',\n    columns_filter=COLUMNS_FILTER\n)\n\n\ndepict_accuracy_by_percentile(\n    FFTRIO0011_DIRNAME + 'face_db4_fast_minmax(2,3)',\n    statistics='median',\n    dtw_filter=['sqeuclidean'],\n    columns_filter=COLUMNS_FILTER,\n    verbose=True\n)\n\n\nfeatures=[90]\nclusters_subj_dg0, subj_clusters_dg0, labels_dg0, silhouette_dg0, centroids_dg0 = dtw_clustering(\n    dg0.percentiles_face(fbands=[1,2], features=features, factory=wfactory('db4', level=8)),\n    normalize=False, #'minmax',\n    metric = \"dtw\",\n    n_clusters=3,\n    max_iter=10,\n    random_state=0\n)\n\n\ndepict_clusters(clusters_subj_dg0, dg0.roi_t.position.features_tint)",
+    "crumbs": [
+      "DTW Classification"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "nbdev_fhemb",
+    "section": "",
+    "text": "This project uses nbdev 3. All development happens inside the nbs/ directory, and notebooks are exported into the Python package using nbdev-export.\n\n\npip install -e .\n\n# work inside nbs/\n# ...\n\n# export code and clean notebooks\nnbdev-export\nnbdev-clean\nIf you have pre-commit installed, these steps run automatically before each commit.\n\n\n\nThis repository enables the official nbdev hooks:\n\nnbdev-clean — strip outputs (except frozen cells) and normalize notebooks\nnbdev-export — export Python modules from notebooks\n\nTo activate them locally:\npip install pre-commit\npre-commit install\nNormalize the repository once:\npre-commit run --all-files\n\n\n\nAll Docker-related scripts now live under the docker/ directory:\ndocker/\n  build.sh\n  ci-prepare.sh\n  configure-ssh.sh\n  install-fhemb.sh\n  setup-env.sh\n  test.sh\nThe Dockerfile expects these paths, so keep all build scripts inside this directory.\n\n\n\nExternal CI dependencies are pinned explicitly in .github/workflows/reusable-pins.yml:\n\nFHEMB_TAG — version/tag of the external fhemb wheel.\nCI_UTILS_COMMIT — pinned commit of external CI helper scripts.\nNBDEV_FHEMB_IMAGE — pinned Docker image tag used to run CI build/test jobs.\n\nBoth workflows (.github/workflows/test.yaml and .github/workflows/deploy.yaml) consume these pins via a reusable workflow job (pins) and then pass them to the container.\nTo bump external dependencies, update only .github/workflows/reusable-pins.yml and open a PR.",
+    "crumbs": [
+      "nbdev_fhemb"
+    ]
+  },
+  {
+    "objectID": "index.html#developer-guide",
+    "href": "index.html#developer-guide",
+    "title": "nbdev_fhemb",
+    "section": "",
+    "text": "This project uses nbdev 3. All development happens inside the nbs/ directory, and notebooks are exported into the Python package using nbdev-export.\n\n\npip install -e .\n\n# work inside nbs/\n# ...\n\n# export code and clean notebooks\nnbdev-export\nnbdev-clean\nIf you have pre-commit installed, these steps run automatically before each commit.\n\n\n\nThis repository enables the official nbdev hooks:\n\nnbdev-clean — strip outputs (except frozen cells) and normalize notebooks\nnbdev-export — export Python modules from notebooks\n\nTo activate them locally:\npip install pre-commit\npre-commit install\nNormalize the repository once:\npre-commit run --all-files\n\n\n\nAll Docker-related scripts now live under the docker/ directory:\ndocker/\n  build.sh\n  ci-prepare.sh\n  configure-ssh.sh\n  install-fhemb.sh\n  setup-env.sh\n  test.sh\nThe Dockerfile expects these paths, so keep all build scripts inside this directory.\n\n\n\nExternal CI dependencies are pinned explicitly in .github/workflows/reusable-pins.yml:\n\nFHEMB_TAG — version/tag of the external fhemb wheel.\nCI_UTILS_COMMIT — pinned commit of external CI helper scripts.\nNBDEV_FHEMB_IMAGE — pinned Docker image tag used to run CI build/test jobs.\n\nBoth workflows (.github/workflows/test.yaml and .github/workflows/deploy.yaml) consume these pins via a reusable workflow job (pins) and then pass them to the container.\nTo bump external dependencies, update only .github/workflows/reusable-pins.yml and open a PR.",
+    "crumbs": [
+      "nbdev_fhemb"
+    ]
+  },
+  {
+    "objectID": "index.html#usage",
+    "href": "index.html#usage",
+    "title": "nbdev_fhemb",
+    "section": "Usage",
+    "text": "Usage\n\nInstallation\nInstall latest from the GitHub repository:\n$ pip install git+https://github.com/rdned/nbdev_fhemb.git\nor from conda\n$ conda install -c rdned nbdev_fhemb\nor from pypi\n$ pip install nbdev_fhemb\n\n\nDocumentation\nDocumentation can be found hosted on this GitHub repository’s pages. Additionally you can find package manager specific guidelines on conda and pypi respectively.",
+    "crumbs": [
+      "nbdev_fhemb"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-use",
+    "href": "index.html#how-to-use",
+    "title": "nbdev_fhemb",
+    "section": "How to use",
+    "text": "How to use\nThe public API is currently minimal. Example usage:",
+    "crumbs": [
+      "nbdev_fhemb"
+    ]
+  },
+  {
+    "objectID": "classify.html",
+    "href": "classify.html",
+    "title": "Classify",
+    "section": "",
+    "text": "nottegiornofaticar0 = Piece(\n    time_interval=nottegiornofaticar_segment0, \n    title=\"Don Giovanni\", subjs=(40,76))\nnottegiornofaticar1 = Piece(\n    time_interval=nottegiornofaticar_segment1, \n    title=\"Don Giovanni\", subjs=(40,76))\nfftrio00 = Piece(\n    time_interval=fftrio_segment00, \n    title=\"Don Giovanni\", subjs=(40,76))\nfftrio11 = Piece(\n    time_interval=fftrio_segment11,\n    title=\"Don Giovanni\", subjs=(40,76))\nfftrio2 = Piece(\n    time_interval=fftrio_segment2, \n    title=\"Don Giovanni\", subjs=(40,76))\nfftrio22 = Piece(\n    time_interval=fftrio_segment22, \n    title=\"Don Giovanni\", subjs=(40,76))",
+    "crumbs": [
+      "Classify"
+    ]
+  },
+  {
+    "objectID": "classify.html#heatmap-depicts-dwt-pairwise-distances",
+    "href": "classify.html#heatmap-depicts-dwt-pairwise-distances",
+    "title": "Classify",
+    "section": "Heatmap depicts DWT pairwise distances",
+    "text": "Heatmap depicts DWT pairwise distances\n\nXopera0 = np.stack([fftrio0.percentiles_face(fbands=[2], features=['p85'], factory=wfactories['db4']).features_tint[subj] for subj in fftrio0.percentiles_face(factory=wfactories['db4']).subjects])\nXopera1 = np.stack([fftrio1.percentiles_face(fbands=[2], features=['p85'], factory=wfactories['db4']).features_tint[subj] for subj in fftrio1.percentiles_face(factory=wfactories['db4']).subjects])\nXopera = np.concatenate([Xopera0, Xopera1])\nplot_dm_heatmap(Xopera, alignment_type='fastdtw', gamma=1, normalize='log', n_jobs=8)  # 'dcor', 'fastdtw'(euclidean), 'tslearn_dtw'(euclidean), 'soft_dtw'(sqeuclidean), 'soft_dtw_div'\n\nprint(f\"This is heatmap matrix {2}\")\n\nThis is heatmap matrix 2\n\n\n                                                    \n\n\n\nXopera0 = np.stack([dg0.percentiles_face(fbands=[1], features=['p85'], factory=wfactory('db4', level=8)).features_tint[subj] for subj in dg0.percentiles_face(factory=wfactory('db4', level=8)).subjects])\nXopera1 = np.stack([dg1.percentiles_face(fbands=[1], features=['p85'], factory=wfactory('db4', level=8)).features_tint[subj] for subj in dg1.percentiles_face(factory=wfactory('db4', level=8)).subjects])\n\n\ndepict_clusters(clusters_subj_dg0, dg0.roi_t.position.features_tint)\n\n\n\n\n\n\n\n\n\ndepict_DTW(Xopera_train[11], Xopera_train[30], dist=euclidean, radius=10)",
+    "crumbs": [
+      "Classify"
+    ]
+  },
+  {
+    "objectID": "tfreq.html",
+    "href": "tfreq.html",
+    "title": "Frequency Analysis of Temporal Series",
+    "section": "",
+    "text": "dg0.face_t.project(features=['skew'], subjs=[65], fbands=[1,2], wdfactory=wfactory('db4',8)).plot_signal(subjs=[65])\n\n\n\n\n\n\n\n\n(&lt;Figure size 1200x200 with 1 Axes&gt;,\n [&lt;Axes: title={'center': 'subj65: Frequency interval [(0.05, 0.2)] Hz, period interval [(5.12, 20.48)] s'}&gt;])\n\n\n\ndg0.face_t.project(\n    subjs=[65],\n    features=['kurtosis', 'skew'],\n    fbands=[1,2,4],\n    wdfactory=wfactory('db4',8),\n    pcfactory=pca2,\n).plot_lagged_correlations(\n    twin=250,\n    step=25,\n    max_lag=250,\n    n_jobs=8\n)",
+    "crumbs": [
+      "Frequency Analysis of Temporal Series"
+    ]
+  },
+  {
+    "objectID": "tfreq.html#piece-instances-to-analyze",
+    "href": "tfreq.html#piece-instances-to-analyze",
+    "title": "Frequency Analysis of Temporal Series",
+    "section": "",
+    "text": "dg0.face_t.project(features=['skew'], subjs=[65], fbands=[1,2], wdfactory=wfactory('db4',8)).plot_signal(subjs=[65])\n\n\n\n\n\n\n\n\n(&lt;Figure size 1200x200 with 1 Axes&gt;,\n [&lt;Axes: title={'center': 'subj65: Frequency interval [(0.05, 0.2)] Hz, period interval [(5.12, 20.48)] s'}&gt;])\n\n\n\ndg0.face_t.project(\n    subjs=[65],\n    features=['kurtosis', 'skew'],\n    fbands=[1,2,4],\n    wdfactory=wfactory('db4',8),\n    pcfactory=pca2,\n).plot_lagged_correlations(\n    twin=250,\n    step=25,\n    max_lag=250,\n    n_jobs=8\n)",
+    "crumbs": [
+      "Frequency Analysis of Temporal Series"
+    ]
+  },
+  {
+    "objectID": "lagged_ccorr.html",
+    "href": "lagged_ccorr.html",
+    "title": "Lagged Cross Correlations",
+    "section": "",
+    "text": "dg0.face_t.project(features=['skew'], subjs=[65], fbands=[0,1,2], wdfactory=wfactory('db4',8)).plot_signal(subjs=[65])\n\n\n\n\n\n\n\n\n(&lt;Figure size 1200x200 with 1 Axes&gt;,\n [&lt;Axes: title={'center': \"subj65: Frequency interval [(0, 0.2)] Hz, period interval [(5.12, 'inf')] s\"}&gt;])\n\n\n\ndg0.face_t.project(\n    subjs=[65],\n    features=['kurtosis', 'skew'],\n    fbands=[0,1,2,3],\n    wdfactory=wfactory('db4',8),\n    pcfactory=pca2,\n).plot_lagged_correlations(\n    twin=250,\n    step=25,\n    max_lag=250,\n    n_jobs=8\n)",
+    "crumbs": [
+      "Lagged Cross Correlations"
+    ]
+  },
+  {
+    "objectID": "embeddings.html",
+    "href": "embeddings.html",
+    "title": "nbdev_fhemb",
+    "section": "",
+    "text": "dg0.face_t.project(features=['skew'], subjs=[65], fbands=[0,1,2], wdfactory=wfactory('db4',8)).plot_signal(subjs=[65])\n\n\n\n\n\n\n\n\n(&lt;Figure size 1200x200 with 1 Axes&gt;,\n [&lt;Axes: title={'center': \"subj65: Frequency interval [(0, 0.2)] Hz, period interval [(5.12, 'inf')] s\"}&gt;])\n\n\n\ndg0.facebbox_t.plot_pdf(subj=65, secs=[568, 576], bw_method=0.1)\n\nUnable to display output for mime type(s): application/vnd.plotly.v1+json",
+    "crumbs": [
+      "embeddings.html"
+    ]
+  }
+]

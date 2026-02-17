@@ -1,0 +1,10 @@
+website:
+  sidebar:
+    contents:
+      - index.ipynb
+      - 00_core.ipynb
+      - classify.ipynb
+      - dtw_classification.ipynb
+      - embeddings.ipynb
+      - lagged_ccorr.ipynb
+      - tfreq.ipynb
