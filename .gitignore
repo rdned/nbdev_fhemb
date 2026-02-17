@@ -156,3 +156,7 @@ nbs/saved_models/
 
 # Generated .py artifacts
 nbdev_fhemb/**/*.py
+
+# Generated Quarto/Jupyter export artifacts
+README.html
+README_files/

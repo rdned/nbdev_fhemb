@@ -13,12 +13,12 @@ RUN pip install --no-cache-dir nbdev==3.0.10
 WORKDIR /workspace
 
 # --- core helper scripts ---
-COPY scripts/install-fhemb.sh /usr/local/bin/install-fhemb.sh
-COPY scripts/configure-ssh.sh /usr/local/bin/configure-ssh.sh
-COPY scripts/setup-env.sh /usr/local/bin/setup-env.sh
+COPY docker/install-fhemb.sh /usr/local/bin/install-fhemb.sh
+COPY docker/configure-ssh.sh /usr/local/bin/configure-ssh.sh
+COPY docker/setup-env.sh /usr/local/bin/setup-env.sh
 
 # --- merged CI script ---
-COPY scripts/ci-prepare.sh /usr/local/bin/ci-prepare.sh
+COPY docker/ci-prepare.sh /usr/local/bin/ci-prepare.sh
 
 RUN chmod +x \
     /usr/local/bin/install-fhemb.sh \
@@ -27,8 +27,8 @@ RUN chmod +x \
     /usr/local/bin/ci-prepare.sh
 
 # --- build/test entry scripts ---
-COPY scripts/build.sh /usr/local/bin/build.sh
-COPY scripts/test.sh /usr/local/bin/test.sh
+COPY docker/build.sh /usr/local/bin/build.sh
+COPY docker/test.sh /usr/local/bin/test.sh
 
 RUN chmod +x \
     /usr/local/bin/build.sh \
