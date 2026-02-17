@@ -3,7 +3,6 @@ website:
     contents:
       - index.ipynb
       - 00_core.ipynb
-      - README.ipynb
       - classify.ipynb
       - dtw_classification.ipynb
       - embeddings.ipynb
