@@ -1,6 +1,14 @@
 repos:
   - repo: https://github.com/fastai/nbdev
-    rev: 3.0.12  # or whatever you're pinned to
+    rev: 3.0.12
     hooks:
       - id: nbdev-clean
       - id: nbdev-export
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: "(^nbdev_fhemb/.*\\.py$|.*\\.ipynb$)"
+      - id: end-of-file-fixer
+        exclude: ".*\\.ipynb"
