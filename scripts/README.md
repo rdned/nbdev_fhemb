@@ -8,7 +8,7 @@
 
 A CI‑safe helper script for downloading a specific asset (typically a wheel) from a GitHub release identified by tag. Works with both public and private repositories and supports integrity verification when the release metadata includes a `SHA‑256` digest.
 
-The script provides defaults for all positional parameters, but **a valid authentication token is always required**.
+>⚠️ The script provides defaults for all positional parameters, but **a valid authentication token is always required**.
 
 #### Tokens (mandatory)
 

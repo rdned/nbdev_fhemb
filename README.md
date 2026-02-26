@@ -38,13 +38,6 @@ The analysis pipeline has two major stages:
 2.  **Time‑series similarity analysis** — comparing embedding
     trajectories across subjects, sessions, or conditions.
 
-``` python
-# Minimal placeholder example — API still evolving
-# from nbdev_fhemb.core import compute_embedding
-# emb = compute_embedding(subject_id=1)
-# emb
-```
-
 ### Embedding
 
 Embedding extraction may involve up to three steps:
@@ -75,22 +68,20 @@ using:
 
 ## Quick Start
 
-### 1. Install the fhemb wheel:
+> This section shows the minimal steps required to get `fhemb` running
+> on a local machine.
 
-``` sh
-pip install <fhemb-wheel-name>.whl
-```
+### 1. Install the library
 
-or from [conda](https://anaconda.org/rdned/nbdev_fhemb)
+Download the latest wheel from the CI release assets (see
+`scripts/README.md`, section [*1. CI release asset
+download*](../scripts/README.md#1-ci-release-asset-download)).
 
-``` sh
-conda install -c rdned fhemb
-```
+> ⚠️ **Access requires an authentication token provided by the
+> repository owner!**
 
-or from [pypi](https://pypi.org/project/nbdev_fhemb/)
-
-``` sh
-pip install fhemb
+``` bash
+pip install /path/to/<fhemb-wheel-name>.whl
 ```
 
 ------------------------------------------------------------------------
@@ -120,13 +111,18 @@ Edit both files and fill in your real SSH, database, and NAS paths.
 ### 3. Mount the NAS
 
 `fhemb` expects the NAS directories defined in `.env.paths` to be
-mounted before use.
+mounted before use. Use provided `mount_nas_storage.sh` (documented in
+[scripts.README](../scripts/README.md#2-nas-mount-scripts)) on macOS:
 
-Example (macOS):
-
-`~/scripts/mount_nas_storage.sh`
+``` bash
+~/scripts/mount_nas_storage.sh
+```
 
 On Linux or Windows, mount the NAS using your usual SMB/sshfs method.
+
+> ⚠️ **Network prerequisite**: NAS mount assumes that the NAS hosts are
+> reachable on your local network. If you are off‑LAN, establish your
+> VPN connection (e.g., Tunnelblick) before running any mount script.
 
 ------------------------------------------------------------------------
 
@@ -196,8 +192,8 @@ not commit the filled-in versions.**
 > **Important**:
 >
 > The NAS directories specified in `.env.paths` must be mounted before
-> running any analysis. Refer to the [scripts/README](scripts/README.md)
-> for mount instructions.
+> running any analysis. Refer to the
+> [scripts/README](../scripts/README.md) for mount instructions.
 
 ### Configuration file reference
 
@@ -331,9 +327,24 @@ We recommend the following three steps workflow:
 
 ### 1. Install nbdev_fhemb in development mode
 
+> ⚠️ Cloning the repository requires that your GitHub account has been
+> granted access to this private repository.
+>
+> You may authenticate using either:
+>
+> - an SSH key registered with your GitHub account that has access to
+>   this repository, or
+> - an HTTPS clone using a GitHub Personal Access Token (PAT) with
+>   `repo` scope.
+
 ``` sh
+# SSH clone (requires SSH key and repo access)
+git clone git@github.com:rdned/nbdev_fhemb.git
+
+# or HTTPS clone with a Personal Access Token (PAT)
 git clone https://github.com/rdned/nbdev_fhemb.git
-cd nbdev_fhemb
+
+cd fhemb
 pip install -e .
 ```
 
@@ -375,12 +386,12 @@ pre-commit run --all-files
 
 ## License
 
-`fhemb` is released under the Apache-2.0 License. See the `LICENSE` file
-for details.
+`fhemb` is released under the Apache-2.0 License. See the
+[LICENSE](../LICENSE) file for details.
 
 ------------------------------------------------------------------------
 
-For additional examples/ usecase, advanced workflows, see a project
+For additional examples / usecase, advanced workflows, see a project
 documentation hosted on the GitHub Pages site:
 <https://rdned.github.io/ml-projects/>.
 
