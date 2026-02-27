@@ -68,14 +68,14 @@ using:
 
 ## Quick Start
 
-> This section shows the minimal steps required to get `fhemb` running
+> This section shows the minimal steps required to get `nbdev_fhemb` running
 > on a local machine.
 
-### 1. Install the library
+### 1. Install the `fhemb` library
 
 Download the latest wheel from the CI release assets (see
 `scripts/README.md`, section [*1. CI release asset
-download*](../scripts/README.md#1-ci-release-asset-download)).
+download*](scripts/README.md#1-ci-release-asset-download) ).
 
 > ⚠️ **Access requires an authentication token provided by the
 > repository owner!**
@@ -112,7 +112,7 @@ Edit both files and fill in your real SSH, database, and NAS paths.
 
 `fhemb` expects the NAS directories defined in `.env.paths` to be
 mounted before use. Use provided `mount_nas_storage.sh` (documented in
-[scripts.README](../scripts/README.md#2-nas-mount-scripts)) on macOS:
+[scripts/README](../scripts/README.md#2-nas-mount-scripts)) on macOS:
 
 ``` bash
 ~/scripts/mount_nas_storage.sh

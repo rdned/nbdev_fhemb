@@ -8,7 +8,7 @@ RUN wget -q https://quarto.org/download/latest/quarto-linux-amd64.deb -O /tmp/qu
     dpkg -i /tmp/quarto.deb || apt-get -f install -y -qq && \
     rm /tmp/quarto.deb && apt-get clean
 
-RUN pip install --no-cache-dir nbdev==3.0.10
+RUN pip install --no-cache-dir nbdev==3.0.12
 
 WORKDIR /workspace
 
