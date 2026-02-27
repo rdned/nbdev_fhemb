@@ -8,13 +8,6 @@ RUN wget -q https://quarto.org/download/latest/quarto-linux-amd64.deb -O /tmp/qu
     dpkg -i /tmp/quarto.deb || apt-get -f install -y -qq && \
     rm /tmp/quarto.deb && apt-get clean
 
-COPY .github/workflows/reusable-pins.yml /tmp/reusable-pins.yml
-
-RUN NBDEV_VERSION="$(awk -F': *' '/NBDEV_VERSION_PIN:/ {print $2; exit}' /tmp/reusable-pins.yml)" && \
-    test -n "$NBDEV_VERSION" && \
-    pip install --no-cache-dir "nbdev==${NBDEV_VERSION}" && \
-    rm -f /tmp/reusable-pins.yml
-
 WORKDIR /workspace
 
 # --- core helper scripts ---
