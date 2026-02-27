@@ -9,6 +9,19 @@ repos:
     rev: v6.0.0
     hooks:
       - id: trailing-whitespace
-        exclude: "(^nbdev_fhemb/.*\\.py$|.*\\.ipynb$)"
+        exclude: |
+          (?x)(
+            ^README\.md$
+            | ^docs/
+            | ^nbdev_fhemb/_modidx\.py$
+            | ^nbdev_fhemb/.*\.py$
+          )
+
       - id: end-of-file-fixer
-        exclude: ".*\\.ipynb"
+        exclude: |
+          (?x)(
+            ^README\.md$
+            | ^docs/
+            | ^nbdev_fhemb/_modidx\.py$
+            | ^nbdev_fhemb/.*\.py$
+          )
