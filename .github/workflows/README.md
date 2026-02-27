@@ -17,7 +17,8 @@ A Docker image is build from `Dockerfile`.
 ```bash
 # Build a docker image from the Dockerfile in the current directory
 # and tag the resulting image as <image-name>:<image-tag>
-docker build -t <image-name>:<image-tag> .
+docker build \
+  -t <image-name>:<image-tag> .
 
 # Push the tagged image to the configured container registry.
 # The image name must include the registry prefix unless Docker Hub is implied.
@@ -70,7 +71,15 @@ External CI dependencies are pinned explicitly in `.github/workflows/reusable-pi
 
 - **CI_UTILS_COMMIT** — pinned commit of external CI helper scripts.
 
+- **NBDEV_VERSION** — pinned `nbdev` version used when building the CI container image.
+
 - **NBDEV_FHEMB_IMAGE** — pinned Docker image tag used to run CI build/test jobs. It coincides with the `<image-tag>`.
+
+When rebuilding the CI image, `Dockerfile` reads the pin automatically from `.github/workflows/reusable-pins.yml`:
+
+```bash
+docker build -t <image-name>:<image-tag> .
+```
 
 To bump external dependencies, update only `.github/workflows/reusable-pins.yml` and open a PR.
 
