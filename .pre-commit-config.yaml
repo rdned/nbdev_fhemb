@@ -4,3 +4,34 @@ repos:
     hooks:
       - id: nbdev-clean
       - id: nbdev-export
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: |
+          (?x)(
+            ^README\.md$
+            | ^docs/
+            | ^nbdev_fhemb/_modidx\.py$
+            | ^nbdev_fhemb/.*\.py$
+          )
+
+      - id: end-of-file-fixer
+        exclude: |
+          (?x)(
+            ^README\.md$
+            | ^docs/
+            | ^nbdev_fhemb/_modidx\.py$
+            | ^nbdev_fhemb/.*\.py$
+          )
+
+  - repo: local
+    hooks:
+      - id: nbdev-readme
+        name: nbdev-readme
+        entry: nbdev-readme
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+        always_run: false
