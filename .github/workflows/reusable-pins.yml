@@ -4,7 +4,7 @@ env:
   FHEMB_TAG_PIN: v0.2.2
   CI_UTILS_COMMIT_PIN: f28361f5457dfe7e0fa8053205267431609d99d5
   NBDEV_VERSION_PIN: 3.0.12
-  NBDEV_FHEMB_IMAGE_PIN: rdned/nbdev_fhemb-ci:3.0.12-2
+  NBDEV_FHEMB_IMAGE_PIN: rdned/nbdev_fhemb-ci:3.0.12-3
 
 on:
   workflow_call:

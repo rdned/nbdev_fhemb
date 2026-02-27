@@ -7,6 +7,9 @@ echo "=== CLONE REPOSITORY ===" >&2
 git clone https://github.com/${GITHUB_REPOSITORY}.git repo
 cd repo
 
+# Install dev dependencies (including nbdev)
+python3 -m pip install -e "."
+
 # --- setup environment (clears caches) ---
 source /usr/local/bin/setup-env.sh
 
