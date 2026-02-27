@@ -41,8 +41,12 @@ if [ "$MODE" = "test" ]; then
     nbdev-test --flags "" || echo "WARNING: nbdev_test failed" >&2
 
     if [ -n "$(git status --porcelain -uno)" ]; then
+        echo "=== DIFF START ===" >&2
+        git --no-pager diff --color=always >&2
+        echo "=== DIFF END ===" >&2
         echo "::error::Notebooks and library are not in sync."
         exit 1
     fi
+
     echo "=== SYNC OK ==="
 fi

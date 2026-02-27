@@ -81,6 +81,7 @@ download*](../scripts/README.md#1-ci-release-asset-download)).
 > repository owner!**
 
 ``` bash
+pip install wheel
 pip install /path/to/<fhemb-wheel-name>.whl
 ```
 
