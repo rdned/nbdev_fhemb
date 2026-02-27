@@ -68,14 +68,14 @@ using:
 
 ## Quick Start
 
-> This section shows the minimal steps required to get `nbdev_fhemb` running
+> This section shows the minimal steps required to get `fhemb` running
 > on a local machine.
 
 ### 1. Install the `fhemb` library
 
 Download the latest wheel from the CI release assets (see
 `scripts/README.md`, section [*1. CI release asset
-download*](scripts/README.md#1-ci-release-asset-download) ).
+download*](../scripts/README.md#1-ci-release-asset-download)).
 
 > ⚠️ **Access requires an authentication token provided by the
 > repository owner!**
@@ -323,7 +323,7 @@ directory, and notebooks are exported into the Python package using
 [![nbdev](https://img.shields.io/badge/nbdev-3-blueviolet.png)](https://nbdev.fast.ai/)
 [![Python](https://img.shields.io/badge/python-%3E%3D3.9-blue)](https://www.python.org/downloads/)
 
-We recommend the following three steps workflow:
+> We recommend the following four steps workflow:
 
 ### 1. Install nbdev_fhemb in development mode
 
@@ -350,7 +350,16 @@ pip install -e .
 
 ### 2. Work inside `nbs/`
 
-### 3. Export code and clean notebooks
+### 3. Update CI Infrastructure
+
+- Check the CI dependency pins
+- Build and publish a new Docker image if you have edited any of the
+  Docker build scripts or the Dockerfile.
+
+> For more details refer to
+> [.github/workflows/README](../.github/workflows/README.md)
+
+### 4. Export code and clean notebooks
 
 #### a) Official `nbdev` hooks:
 
