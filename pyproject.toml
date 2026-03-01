@@ -18,6 +18,11 @@ dependencies = [
 	"kaleido",
 ]
 
+[project.optional-dependencies]
+dev = [
+	"ipykernel",
+]
+
 [project.urls]
 Repository = "https://github.com/rdned/nbdev_fhemb"
 Documentation = "https://rdned.github.io/nbdev_fhemb"
