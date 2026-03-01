@@ -51,7 +51,7 @@ docker push <image-name>:<image-tag>
 **Example Image**:
 
 ```text
-rdned/nbdev_fhemb-ci:v0.2.2-3.0.12-0
+rdned/nbdev_fhemb-ci:0.1.0-hardened-debian13-1
 ```
 
 where `docker.io` is implicit, i.e., this Docker image is published to Docker Hub.
