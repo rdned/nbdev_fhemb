@@ -7,6 +7,9 @@ echo "=== CLONE REPOSITORY ===" >&2
 git clone https://github.com/${GITHUB_REPOSITORY}.git repo
 cd repo
 
+# Bootstrap: upgrade pip
+python3 -m pip install --upgrade pip
+
 # Install dev dependencies (including nbdev)
 python3 -m pip install -e "."
 
@@ -21,8 +24,6 @@ export SSH_PID  # ← Make it available to parent script
 source /usr/local/bin/install-fhemb.sh
 
 # --- setup rendering ---
-echo "=== INSTALL RENDERING STACK ===" >&2
-python3 -m pip install -U kaleido plotly
 python3 - <<'EOF'
 import plotly.io as pio
 pio.renderers.default = "png"
