@@ -8,10 +8,10 @@ git clone https://github.com/${GITHUB_REPOSITORY}.git repo
 cd repo
 
 # Bootstrap: upgrade pip
-python3 -m pip install --upgrade pip
+python3 -m pip install --upgrade pip --root-user-action=ignore
 
 # Install dev dependencies (including nbdev)
-python3 -m pip install -e "."
+python3 -m pip install -e "." --root-user-action=ignore
 
 # --- setup environment (clears caches) ---
 source /usr/local/bin/setup-env.sh
