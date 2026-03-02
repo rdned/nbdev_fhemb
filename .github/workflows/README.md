@@ -46,15 +46,30 @@ docker push <image-name>:<image-tag>
 >>    - `<org-or-user>` is the GitHub namespace,
 >>    - `<repo>-ci` is the repository name with a `-ci` suffix to distinguish CI images from runtime images.
 >>
->>2. `<image-tag> = <fhemb-version>-<nbdev-version>-<package-version>`
+>>2. decide whether the CI image uses a hardened base. The tag naming should reflect that choice:
+>>   `<image-tag> = <project-version>-<base>-<revision>` (non-hardened base)
+>>   `<image-tag> = <project-version>-hardened-<base>-<revision>` (hardened base)
+>>   examples: `0.1.0-debian13-4`, `0.1.0-hardened-debian13-4`
 
 **Example Image**:
 
 ```text
-rdned/nbdev_fhemb-ci:0.1.0-hardened-debian13-1
+rdned/nbdev_fhemb-ci:0.1.0-hardened-debian13-4
 ```
 
 where `docker.io` is implicit, i.e., this Docker image is published to Docker Hub.
+
+>**Hardened base image reference**
+>
+>The current CI image uses Docker Hardened Images Python **Debian 13 dev** base.
+>To verify the exact base metadata locally, run:
+>
+>```bash
+>docker pull dhi.io/python:3.11-debian13-dev
+>docker image inspect dhi.io/python:3.11-debian13-dev --format '{{index .Config.Labels "com.docker.dhi.definition"}} {{index .Config.Labels "com.docker.dhi.variant"}} {{index .Config.Labels "com.docker.dhi.version"}}'
+>```
+>
+>Expected definition pattern: `image/python/debian-13/3.11-dev`.
 
 Images for other than Docker Hub registries must use fully qualified names
 and require explicit authentication, for example:

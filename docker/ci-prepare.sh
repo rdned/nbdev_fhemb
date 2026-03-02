@@ -42,7 +42,8 @@ nbdev-prepare
 
 if [ "$MODE" = "test" ]; then
     echo "=== NBDEV TEST ===" >&2
-    nbdev-test --flags "" || echo "WARNING: nbdev_test failed" >&2
+    PYTHONWARNINGS="ignore:resource_tracker:UserWarning:joblib.externals.loky.backend.resource_tracker" \
+      nbdev-test --flags "" || echo "WARNING: nbdev_test failed" >&2
 
     if [ -n "$(git status --porcelain -uno)" ]; then
         echo "=== DIFF START ===" >&2

@@ -21,6 +21,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
 	"ipykernel",
+	"pre-commit",
 ]
 
 [project.urls]

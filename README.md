@@ -346,7 +346,7 @@ git clone git@github.com:rdned/nbdev_fhemb.git
 git clone https://github.com/rdned/nbdev_fhemb.git
 
 cd fhemb
-pip install -e .
+pip install -e ".[dev]"
 ```
 
 ### 2. Work inside `nbs/`
