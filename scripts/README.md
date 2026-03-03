@@ -32,7 +32,7 @@ Often insufficient for private or cross‑repo downloads.
 >- Contributors
 >   - Cannot create a `PAT` for someone else’s private repository.
 >   - Use the token provided by the owner:
->     - via CI secrets (`FHEB_TOKEN`), or
+>     - via CI secrets (`FHEMB_TOKEN`), or
 >     - via the built‑in `GITHUB_TOKEN` when running inside the same repository’s GitHub Actions.
 
 Set one of:
@@ -55,8 +55,8 @@ Angle brackets indicate placeholders, not literal syntax.
 All parameters have script defaults, so they are optional, but in real use you normally override them.
 
 - `OWNER/REPO` — GitHub repository (default: `rdned/fhemb`)
-- `TAG` — release tag (default: `0.1.0`)
-- `ASSET_NAME` — asset filename (default: `fhemb-0.1.0-py3-none-anywhl`)
+- `TAG` — release tag (default: `v0.1.0`)
+- `ASSET_NAME` — asset filename (default: `fhemb-0.1.0-py3-none-any.whl`)
 - `OUT_PATH` — output path (default: same as `ASSET_NAME`)
 
 ##### Example

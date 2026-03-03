@@ -49,12 +49,12 @@ docker push <image-name>:<image-tag>
 >>2. decide whether the CI image uses a hardened base. The tag naming should reflect that choice:
 >>   `<image-tag> = <project-version>-<base>-<revision>` (non-hardened base)
 >>   `<image-tag> = <project-version>-hardened-<base>-<revision>` (hardened base)
->>   examples: `0.1.0-debian13-4`, `0.1.0-hardened-debian13-4`
+>>   examples: `0.1.0-debian13-3`, `0.1.0-hardened-debian13-3`
 
 **Example Image**:
 
 ```text
-rdned/nbdev_fhemb-ci:0.1.0-hardened-debian13-4
+rdned/nbdev_fhemb-ci:0.1.0-hardened-debian13-3
 ```
 
 where `docker.io` is implicit, i.e., this Docker image is published to Docker Hub.

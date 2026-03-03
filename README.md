@@ -81,7 +81,6 @@ download*](../scripts/README.md#1-ci-release-asset-download)).
 > repository owner!**
 
 ``` bash
-pip install wheel
 pip install /path/to/<fhemb-wheel-name>.whl
 ```
 
@@ -345,18 +344,42 @@ git clone git@github.com:rdned/nbdev_fhemb.git
 # or HTTPS clone with a Personal Access Token (PAT)
 git clone https://github.com/rdned/nbdev_fhemb.git
 
-cd fhemb
+cd nbdev_fhemb
 pip install -e ".[dev]"
+```
+
+- activate your favorite isolated environment first (venv/pyenv/conda)
+  - examples (alternatives):
+
+``` bash
+# venv
+source .venv/bin/activate 
+
+# pyenv
+pyenv activate <env-name>
+```
+
+- install the package in editable mode together with developer extras
+  (including `ipykernel` for local notebook work)
+
+``` bash
+pip install -e ".[dev]"
+```
+
+- optionally register a named kernel in Jupyter’s kernelspec list
+  - recommended if you use JupyterLab/classic Jupyter or share notebooks
+    across environments
+  - usually not needed for VS Code if the correct Python env is already
+    selected
+
+``` bash
+python -m ipykernel install --user --name fhemb --display-name "Python (fhemb)"
 ```
 
 ### 2. Work inside `nbs/`
 
-Working in Jupyter notebooks, image export using the “kaleido” engine
-requires the Kaleido package:
-
-``` bash
-pip install --upgrade kaleido
-```
+Work in Jupyter notebooks, use `nbdev` directives, export images using
+the “kaleido” engine.
 
 ### 3. Update CI Infrastructure
 
@@ -369,37 +392,56 @@ pip install --upgrade kaleido
 
 ### 4. Export code and clean notebooks
 
-#### a) Official `nbdev` hooks:
+#### a) Hooks configured in `.pre-commit-config.yaml`:
 
-This repository includes a `.pre-commit-config.yaml` file with
-formatting and notebook-output cleaning hooks.
+This repository includes hooks from `fastai/nbdev`,
+`pre-commit/pre-commit-hooks`, and a local `nbdev-readme` hook.
 
 - `nbdev-clean` — strip outputs (except frozen cells) and normalize
   notebooks
 - `nbdev-export` — export Python modules from notebooks
+- `nbdev-readme` — render README content from this source notebook
+- `trailing-whitespace` and `end-of-file-fixer` — basic text formatting
+  checks
 
-To execute them manually:
+`pre-commit` is installed by `pip install -e ".[dev]"`. Run
+
+``` sh
+pre-commit install
+```
+
+to register Git hooks from `.pre-commit-config.yaml` so checks run
+automatically on each `git commit`.
+
+> Optionally, when you want to bump pinned hook versions (rev: of
+> pre-commit-hooks):
+>
+> ``` sh
+> pre-commit autoupdate
+> ```
+
+#### b) To execute the hooks manually:
+
+- **nbdev** hooks only
 
 ``` bash
 nbdev-export
 nbdev-clean
+nbdev-readme
 ```
 
-#### b) If you wish, you can use `pre-commit` hooks.
+- All **pre-commit** hooks
 
-To activate them locally:
-
-``` sh
-pip install pre-commit
-pre-commit autoupdate
-pre-commit install
-```
-
-You can normalize the repository manually with:
+If you do not run `pre-commit install`, run checks manually:
 
 ``` sh
 pre-commit run --all-files
 ```
+
+executes all hooks configured for the pre-commit stage in
+`.pre-commit-config.yaml`: `nbdev-clean`, `nbdev-export`,
+`nbdev-readme`, `trailing-whitespace`, and `end-of-file-fixer` (subject
+to each hook’s `exclude` rules).
 
 ## License
 
