@@ -3,7 +3,7 @@ name: Reusable - External Pins
 env:
   FHEMB_TAG_PIN: v0.2.2
   CI_UTILS_COMMIT_PIN: f28361f5457dfe7e0fa8053205267431609d99d5
-  NBDEV_FHEMB_IMAGE_PIN: rdned/nbdev_fhemb-ci:0.1.0-hardened-debian13-6
+  NBDEV_FHEMB_IMAGE_PIN: rdned/nbdev_fhemb-ci:0.1.0-hardened-debian13-7
 
 on:
   workflow_call:

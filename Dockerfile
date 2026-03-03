@@ -29,9 +29,11 @@ RUN chmod +x \
 # --- build/test entry scripts ---
 COPY docker/build.sh /usr/local/bin/build.sh
 COPY docker/test.sh /usr/local/bin/test.sh
+COPY docker/build-docs.sh /usr/local/bin/build-docs.sh
 
 RUN chmod +x \
     /usr/local/bin/build.sh \
-    /usr/local/bin/test.sh
+    /usr/local/bin/test.sh \
+    /usr/local/bin/build-docs.sh
 
 # No ENTRYPOINT - scripts are called explicitly

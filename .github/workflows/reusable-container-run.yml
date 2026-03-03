@@ -15,6 +15,10 @@ on:
       entrypoint:
         required: true
         type: string
+      artifact_name:
+        required: false
+        type: string
+        default: ""
     secrets:
       FHEMB_TOKEN:
         required: true
@@ -64,9 +68,18 @@ jobs:
 
           CI_UTILS_COMMIT: ${{ inputs.ci_utils_commit }}
           NBDEV_FHEMB_IMAGE: ${{ inputs.nbdev_fhemb_image }}
+          ARTIFACT_NAME: ${{ inputs.artifact_name }}
 
         run: |
           set -euo pipefail
+
+          rm -rf .ci_artifacts
+          mkdir -p .ci_artifacts
+
+          DOCS_OUT_DIR=/ci_artifacts/site-docs
+          if [ -n "$ARTIFACT_NAME" ]; then
+            DOCS_OUT_DIR="/ci_artifacts/${ARTIFACT_NAME}"
+          fi
 
           # Compute derived variables
           FHEMB_VERSION=${FHEMB_TAG#v}
@@ -89,9 +102,19 @@ jobs:
           # Run container (pass multi-line vars explicitly)
           docker run --rm \
             --network host \
+            -v "${{ github.workspace }}/.ci_artifacts:/ci_artifacts" \
             --env-file envfile \
             -e FHEMB_SSH_KEY \
             -e FHEMB_ENV_DB \
             -e FHEMB_ENV_PATHS \
+            -e DOCS_OUT_DIR="$DOCS_OUT_DIR" \
             "$NBDEV_FHEMB_IMAGE" \
             ${{ inputs.entrypoint }}
+
+      - name: Upload artifact
+        if: inputs.artifact_name != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: .ci_artifacts/${{ inputs.artifact_name }}
+          if-no-files-found: error
