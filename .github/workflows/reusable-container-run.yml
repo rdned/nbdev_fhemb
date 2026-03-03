@@ -15,6 +15,10 @@ on:
       entrypoint:
         required: true
         type: string
+      deploy_enabled:
+        required: false
+        type: boolean
+        default: false
     secrets:
       FHEMB_TOKEN:
         required: true
@@ -64,6 +68,7 @@ jobs:
 
           CI_UTILS_COMMIT: ${{ inputs.ci_utils_commit }}
           NBDEV_FHEMB_IMAGE: ${{ inputs.nbdev_fhemb_image }}
+          DEPLOY_ENABLED: ${{ inputs.deploy_enabled }}
 
         run: |
           set -euo pipefail
@@ -84,6 +89,7 @@ jobs:
             printf 'FHEMB_TAG=%q\n' "$FHEMB_TAG"
             printf 'FHEMB_WHEEL=%q\n' "$FHEMB_WHEEL"
             printf 'CI_UTILS_COMMIT=%q\n' "$CI_UTILS_COMMIT"
+            printf 'DEPLOY_ENABLED=%q\n' "$DEPLOY_ENABLED"
           } > envfile
 
           # Run container (pass multi-line vars explicitly)
