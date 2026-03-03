@@ -20,21 +20,25 @@ jobs:
   pins:
     uses: ./.github/workflows/reusable-pins.yml
 
-  test_and_build:
+  test:
     needs: pins
     uses: ./.github/workflows/reusable-container-run.yml
     with:
       fhemb_tag: ${{ needs.pins.outputs.fhemb_tag }}
       ci_utils_commit: ${{ needs.pins.outputs.ci_utils_commit }}
       nbdev_fhemb_image: ${{ needs.pins.outputs.nbdev_fhemb_image }}
-      entrypoint: /usr/local/bin/combined.sh
-      deploy_enabled: ${{ github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')) }}
+      entrypoint: /usr/local/bin/test.sh
     secrets: inherit
 
   deploy:
-    needs: test_and_build
+    needs:
+      - pins
+      - test
     if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy notification
-        run: echo "✓ Tests passed. Docs deployed to gh-pages."
+    uses: ./.github/workflows/reusable-container-run.yml
+    with:
+      fhemb_tag: ${{ needs.pins.outputs.fhemb_tag }}
+      ci_utils_commit: ${{ needs.pins.outputs.ci_utils_commit }}
+      nbdev_fhemb_image: ${{ needs.pins.outputs.nbdev_fhemb_image }}
+      entrypoint: /usr/local/bin/build.sh
+    secrets: inherit

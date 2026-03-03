@@ -29,11 +29,9 @@ RUN chmod +x \
 # --- build/test entry scripts ---
 COPY docker/build.sh /usr/local/bin/build.sh
 COPY docker/test.sh /usr/local/bin/test.sh
-COPY docker/combined.sh /usr/local/bin/combined.sh
 
 RUN chmod +x \
     /usr/local/bin/build.sh \
-    /usr/local/bin/test.sh \
-    /usr/local/bin/combined.sh
+    /usr/local/bin/test.sh
 
 # No ENTRYPOINT - scripts are called explicitly
