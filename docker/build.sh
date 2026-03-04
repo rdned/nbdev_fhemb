@@ -10,8 +10,10 @@ source /usr/local/bin/ci-prepare.sh build
 echo "=== QUARTO VERSION ===" >&2
 quarto --version 2>&1 || echo "Quarto not found" >&2
 
+echo "=== BUILD DOCS ===" >&2
 nbdev-docs
 
+echo "=== LOCATE SITE ===" >&2
 echo "=== DEPLOY TO GH-PAGES ===" >&2
 git config --global user.email "github-actions@github.com"
 git config --global user.name "github-actions"
@@ -30,3 +32,5 @@ touch .nojekyll
 git add .
 git commit -m "docs: auto-generated documentation" || true
 git push origin gh-pages -f
+
+echo "=== DEPLOYMENT COMPLETE ===" >&2
