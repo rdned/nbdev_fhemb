@@ -75,7 +75,7 @@ using:
 
 Download the latest wheel from the CI release assets (see
 `scripts/README.md`, section [*1. CI release asset
-download*](scripts/README.md#1-ci-release-asset-download)).
+download*](../scripts/README.md#1-ci-release-asset-download)).
 
 > ⚠️ **Access requires an authentication token provided by the
 > repository owner!**
@@ -112,7 +112,7 @@ Edit both files and fill in your real SSH, database, and NAS paths.
 
 `fhemb` expects the NAS directories defined in `.env.paths` to be
 mounted before use. Use provided `mount_nas_storage.sh` (documented in
-[scripts/README](scripts/README.md#2-nas-mount-scripts)) on macOS:
+[scripts/README](../scripts/README.md#2-nas-mount-scripts)) on macOS:
 
 ``` bash
 ~/scripts/mount_nas_storage.sh
@@ -192,8 +192,8 @@ not commit the filled-in versions.**
 > **Important**:
 >
 > The NAS directories specified in `.env.paths` must be mounted before
-> running any analysis. Refer to the [scripts/README](scripts/README.md)
-> for mount instructions.
+> running any analysis. Refer to the
+> [scripts/README](../scripts/README.md) for mount instructions.
 
 ### Configuration file reference
 
@@ -388,7 +388,7 @@ the “kaleido” engine.
   Docker build scripts or the Dockerfile.
 
 > For more details refer to
-> [.github/workflows/README](.github/workflows/README.md)
+> [.github/workflows/README](../.github/workflows/README.md)
 
 ### 4. Export code and clean notebooks
 
