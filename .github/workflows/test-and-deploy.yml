@@ -36,10 +36,15 @@ jobs:
     if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
     runs-on: ubuntu-latest
     steps:
+      - name: Configure git init default branch
+        run: git config --global init.defaultBranch main
+
       - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Download docs artifact
+        env:
+          NODE_OPTIONS: --no-deprecation
         uses: actions/download-artifact@v4
         with:
           name: docs

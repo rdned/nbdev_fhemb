@@ -1,9 +1,8 @@
 # Build & CI Infrastructure
 
-The CI/CD workflows
+The CI/CD workflow
 
-- `.github/workflows/test.yaml` or
-- `.github/workflows/deploy.yaml`,
+- `.github/workflows/test-and-deploy.yml`,
 
 1. pulls the *Docker image* that defines the CI execution environment,
 2. imports pinned CI dependencies through the reusable `pins` workflow job,
@@ -96,12 +95,11 @@ All Docker-related scripts now live under the `docker/` directory:
 
 ```text
 docker/
-  build.sh
   ci-prepare.sh
   configure-ssh.sh
   install-fhemb.sh
   setup-env.sh
-  test.sh
+  test-and-build.sh
 ```
 
 The Dockerfile expects these paths, so keep all build scripts inside this directory.

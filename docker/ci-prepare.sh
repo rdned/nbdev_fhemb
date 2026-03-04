@@ -2,6 +2,7 @@
 set -eE -ex
 
 MODE="$1"
+JOBLIB_RESOURCE_TRACKER_WARNINGS="ignore:resource_tracker:UserWarning:joblib.externals.loky.backend.resource_tracker"
 
 echo "=== CLONE REPOSITORY ===" >&2
 git clone https://github.com/${GITHUB_REPOSITORY}.git repo
@@ -40,11 +41,11 @@ if [ "$MODE" = "test" ]; then
 fi
 
 echo "=== NBDEV PREPARE ===" >&2
-nbdev-prepare
+PYTHONWARNINGS="$JOBLIB_RESOURCE_TRACKER_WARNINGS" nbdev-prepare
 
 if [ "$MODE" = "test" ]; then
     echo "=== NBDEV TEST ===" >&2
-    PYTHONWARNINGS="ignore:resource_tracker:UserWarning:joblib.externals.loky.backend.resource_tracker" \
+    PYTHONWARNINGS="$JOBLIB_RESOURCE_TRACKER_WARNINGS" \
       nbdev-test --flags "" || echo "WARNING: nbdev_test failed" >&2
 
     echo "=== CHECK SYNC ===" >&2

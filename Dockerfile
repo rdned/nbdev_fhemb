@@ -26,14 +26,10 @@ RUN chmod +x \
     /usr/local/bin/setup-env.sh \
     /usr/local/bin/ci-prepare.sh
 
-# --- build/test entry scripts ---
-COPY docker/build.sh /usr/local/bin/build.sh
-COPY docker/test.sh /usr/local/bin/test.sh
+# --- CI entry script ---
 COPY docker/test-and-build.sh /usr/local/bin/test-and-build.sh
 
 RUN chmod +x \
-    /usr/local/bin/build.sh \
-    /usr/local/bin/test.sh \
     /usr/local/bin/test-and-build.sh
 
 # No ENTRYPOINT - scripts are called explicitly

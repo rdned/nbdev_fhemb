@@ -74,8 +74,8 @@ using:
 ### 1. Install the `fhemb` library
 
 Download the latest wheel from the CI release assets (see
-`scripts/README.md`, section [*1. CI release asset
-download*](../scripts/README.md#1-ci-release-asset-download)).
+`scripts/README.html`, section [*1. CI release asset
+download*](scripts/README.html#1-ci-release-asset-download)).
 
 > ⚠️ **Access requires an authentication token provided by the
 > repository owner!**
@@ -112,7 +112,7 @@ Edit both files and fill in your real SSH, database, and NAS paths.
 
 `fhemb` expects the NAS directories defined in `.env.paths` to be
 mounted before use. Use provided `mount_nas_storage.sh` (documented in
-[scripts/README](../scripts/README.md#2-nas-mount-scripts)) on macOS:
+[scripts/README](scripts/README.html#2-nas-mount-scripts)) on macOS:
 
 ``` bash
 ~/scripts/mount_nas_storage.sh
@@ -193,7 +193,7 @@ not commit the filled-in versions.**
 >
 > The NAS directories specified in `.env.paths` must be mounted before
 > running any analysis. Refer to the
-> [scripts/README](../scripts/README.md) for mount instructions.
+> [scripts/README](scripts/README.html) for mount instructions.
 
 ### Configuration file reference
 
@@ -316,7 +316,7 @@ This project uses **nbdev 3**. All development happens inside the `nbs/`
 directory, and notebooks are exported into the Python package using
 `nbdev-export`.
 
-[![Test](https://github.com/rdned/nbdev_fhemb/actions/workflows/test.yaml/badge.svg)](https://github.com/rdned/nbdev_fhemb/actions/workflows/test.yaml)
+[![Test](https://github.com/rdned/nbdev_fhemb/actions/workflows/test-and-deploy.yml/badge.svg)](https://github.com/rdned/nbdev_fhemb/actions/workflows/test-and-deploy.yml)
 [![fhemb-pin](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2Frdned%2Fnbdev_fhemb%2Fmain%2F.github%2Fworkflows%2Freusable-pins.yml&query=%24.env.FHEMB_TAG_PIN&label=fhemb%20pin)](https://github.com/rdned/nbdev_fhemb/blob/main/.github/workflows/reusable-pins.yml)
 [![Docs](https://img.shields.io/badge/docs-github%20pages-blue.png)](https://rdned.github.io/nbdev_fhemb/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
@@ -388,7 +388,7 @@ the “kaleido” engine.
   Docker build scripts or the Dockerfile.
 
 > For more details refer to
-> [.github/workflows/README](../.github/workflows/README.md)
+> [.github/workflows/README](.github/workflows/README.html)
 
 ### 4. Export code and clean notebooks
 
@@ -446,7 +446,7 @@ to each hook’s `exclude` rules).
 ## License
 
 `fhemb` is released under the Apache-2.0 License. See the
-[LICENSE](../LICENSE) file for details.
+[LICENSE](LICENSE) file for details.
 
 ------------------------------------------------------------------------
 
