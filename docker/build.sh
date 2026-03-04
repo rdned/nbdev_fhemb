@@ -7,9 +7,6 @@ trap cleanup ERR EXIT
 
 source /usr/local/bin/ci-prepare.sh build
 
-echo "=== QUARTO VERSION ===" >&2
-quarto --version 2>&1 || echo "Quarto not found" >&2
-
 echo "=== BUILD DOCS ===" >&2
 nbdev-docs
 

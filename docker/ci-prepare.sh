@@ -34,6 +34,8 @@ if [ "$MODE" = "test" ]; then
     pwd
     python3 --version
     pip show nbdev || true
+    echo "=== QUARTO VERSION ===" >&2
+    quarto --version 2>&1 || echo "Quarto not found" >&2
     locale
 fi
 
@@ -45,7 +47,7 @@ if [ "$MODE" = "test" ]; then
     PYTHONWARNINGS="ignore:resource_tracker:UserWarning:joblib.externals.loky.backend.resource_tracker" \
       nbdev-test --flags "" || echo "WARNING: nbdev_test failed" >&2
 
-        echo "=== CHECK SYNC ===" >&2
+    echo "=== CHECK SYNC ===" >&2
     if [ -n "$(git status --porcelain -uno)" ]; then
         echo "=== DIFF START ===" >&2
         git --no-pager diff --color=always >&2
