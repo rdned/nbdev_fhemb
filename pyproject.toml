@@ -38,3 +38,4 @@ version = {attr = "nbdev_fhemb.__version__"}
 include = ["nbdev_fhemb"]
 
 [tool.nbdev]
+custom_sidebar = true

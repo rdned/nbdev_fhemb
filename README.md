@@ -387,8 +387,7 @@ the “kaleido” engine.
 - Build and publish a new Docker image if you have edited any of the
   Docker build scripts or the Dockerfile.
 
-> For more details refer to
-> [.github/workflows/README](./.github/workflows/README.md)
+> For more details refer to [workflows/README](./workflows/README.md)
 
 ### 4. Export code and clean notebooks
 

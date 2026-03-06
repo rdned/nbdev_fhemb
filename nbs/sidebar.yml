@@ -1,7 +1,13 @@
 website:
   sidebar:
     contents:
-      - index.ipynb
+      - section: Welcome to nbdev_fhemb
+        href: ./index.ipynb
+        contents:
+          - text: Scripts
+            href: ./scripts/README.md
+          - text: Workflows
+            href: ./workflows/README.md
       - 00_core.ipynb
       - classify.ipynb
       - dtw_classification.ipynb

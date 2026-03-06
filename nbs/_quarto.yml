@@ -1,6 +1,10 @@
 project:
   type: website
-
+  render:
+    - scripts/README.qmd
+    - scripts/README.md
+    - workflows/README.md
+    - "*.ipynb"
 execute:
   execute_before:
     - "import plotly.io as pio; pio.renderers.default = 'png'"

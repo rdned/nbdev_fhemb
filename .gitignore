@@ -153,6 +153,16 @@ checklink/cookies.txt
 
 # Generated model artifacts
 nbs/saved_models/
+nbs/*.html.md
+nbs/*_files/
+nbs/site_libs/
+scripts/*.html.md
+nbs/.quarto/
+nbs/_site/
+.quarto/
+
+# Quarto/nbdev generated markdown (root + nested under nbs/)
+nbs/**/*.html.md
 
 # Generated .py artifacts
 nbdev_fhemb/**/*.py
