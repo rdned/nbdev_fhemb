@@ -9,4 +9,5 @@ d = { 'settings': { 'branch': 'main',
             'nbdev_fhemb.dtw_classification': {},
             'nbdev_fhemb.embeddings': {},
             'nbdev_fhemb.lagged_ccorr': {},
+            'nbdev_fhemb.piece_ex': {},
             'nbdev_fhemb.tfreq': {}}}

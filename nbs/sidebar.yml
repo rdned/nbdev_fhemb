@@ -8,9 +8,33 @@ website:
             href: ./scripts/README.md
           - text: Workflows
             href: ./workflows/README.md
-      - 00_core.ipynb
-      - classify.ipynb
+      - section: API
+        href: ./api.ipynb
+        contents:
+          - text: Piece
+            href: ./piece.ipynb
+          - text: Datasource
+            href: ./datasource.ipynb
+          - text: Embedding
+            href: ./embedding.ipynb
+          - text: Core
+            href: ./00_core.ipynb
+      - section: API Running Example
+        contents:
+          - text: Piece
+            href: ./piece_ex.ipynb
+          - text: Datasource
+            href: ./datasource_ex.ipynb
+          - text: Embedding
+            href: ./embedding_ex.ipynb
+      - section: Intelligence
+        href: ./intelligence.ipynb
+        contents:
+          - text: Basic Analysis
+            href: ./tfreq.ipynb
+          - text: Crosscorrelations
+            href: ./lagged_ccorr.ipynb
+          - text: Classificaton
+            href: ./classify.ipynb
       - dtw_classification.ipynb
       - embeddings.ipynb
-      - lagged_ccorr.ipynb
-      - tfreq.ipynb
