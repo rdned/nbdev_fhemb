@@ -11,30 +11,39 @@ website:
       - section: API
         href: ./api.ipynb
         contents:
-          - text: Piece
+          - text: Piece Class
             href: ./piece.ipynb
-          - text: Datasource
+          - text: Datasource Class
             href: ./datasource.ipynb
-          - text: Embedding
-            href: ./embedding.ipynb
-          - text: Wdecomposition
+          - text: Embeddings
+            href: ./embeddings.ipynb
+            contents:
+              - text: Embedding Class
+                href: ./embedding.ipynb
+              - text: EmbeddingCollection Class
+                href: ./embeddingColl.ipynb
+          - text: Wdecomposition Class
             href: ./wdecomposition.ipynb
           - text: Core
             href: ./00_core.ipynb
       - section: API Running Example
         contents:
-          - text: Piece
+          - text: Piece Objects
             href: ./piece_ex.ipynb
-          - text: Datasource
+          - text: Datasource Objects
             href: ./datasource_ex.ipynb
-          - text: Embedding
+          - text: Embedding(Collection) Objects
             href: ./embedding_ex.ipynb
             contents:
               - text: Inspect
                 href: ./inspectEmb_ex.ipynb
+              - text: Block Bootstrap
+                href: ./bbootstrap_ex.ipynb
+              - text: Laggged Cross Correlation
+                href: ./laggedCc_ex.ipynb
               - text: Decompose
                 href: ./decomposeEmb_ex.ipynb
-          - text: Wdecompostion
+          - text: Wdecompostion Objects
             href: wdecomposition_ex.ipynb
       - section: Intelligence
         href: ./intelligence.ipynb
