@@ -17,6 +17,8 @@ website:
             href: ./datasource.ipynb
           - text: Embedding
             href: ./embedding.ipynb
+          - text: Wdecomposition
+            href: ./wdecomposition.ipynb
           - text: Core
             href: ./00_core.ipynb
       - section: API Running Example
@@ -27,6 +29,13 @@ website:
             href: ./datasource_ex.ipynb
           - text: Embedding
             href: ./embedding_ex.ipynb
+            contents:
+              - text: Inspect
+                href: ./inspectEmb_ex.ipynb
+              - text: Decompose
+                href: ./decomposeEmb_ex.ipynb
+          - text: Wdecompostion
+            href: wdecomposition_ex.ipynb
       - section: Intelligence
         href: ./intelligence.ipynb
         contents:
