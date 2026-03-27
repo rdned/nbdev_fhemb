@@ -45,6 +45,13 @@ website:
                 href: ./decomposeEmb_ex.ipynb
           - text: Wdecompostion Objects
             href: wdecomposition_ex.ipynb
+            contents:
+              - text: Inspect
+                href: ./inspectRec_ex.ipynb
+              - text: Block Bootstrap
+                href: ./bbootstrapRec_ex.ipynb
+              - text: Lagged Cross Correlation
+                href: ./laggedCcRec_ex.ipynb
       - section: Intelligence
         href: ./intelligence.ipynb
         contents:
