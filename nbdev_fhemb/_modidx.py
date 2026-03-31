@@ -13,4 +13,6 @@ d = { 'settings': { 'branch': 'main',
             'nbdev_fhemb.embeddings': {},
             'nbdev_fhemb.lagged_ccorr': {},
             'nbdev_fhemb.piece_ex': {},
-            'nbdev_fhemb.tfreq': {}}}
+            'nbdev_fhemb.tfreq': {},
+            'nbdev_fhemb.wdecomposition_ex': {},
+            'nbdev_fhemb.wreconstruction_ex': {}}}

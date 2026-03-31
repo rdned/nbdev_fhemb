@@ -8,7 +8,7 @@ website:
             href: ./scripts/README.md
           - text: Workflows
             href: ./workflows/README.md
-      - section: API
+      - section: FhEmb API
         href: ./api.ipynb
         contents:
           - text: Piece Class
@@ -44,7 +44,14 @@ website:
               - text: Decompose
                 href: ./decomposeEmb_ex.ipynb
           - text: Wdecompostion Objects
-            href: wdecomposition_ex.ipynb
+            href: ./wdecomposition_ex.ipynb
+            contents:
+              - text: Inspect
+                href: ./inspectDec_ex.ipynb
+              - text: Reconstruct
+                href: ./reconstructDec_ex.ipynb
+          - text: Reconstructed EmbeddingCollection Objects
+            href: ./wreconstruction_ex.ipynb
             contents:
               - text: Inspect
                 href: ./inspectRec_ex.ipynb
@@ -61,5 +68,3 @@ website:
             href: ./lagged_ccorr.ipynb
           - text: Classificaton
             href: ./classify.ipynb
-      - dtw_classification.ipynb
-      - embeddings.ipynb

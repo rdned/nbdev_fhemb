@@ -152,6 +152,7 @@ checklink/cookies.txt
 .quarto
 
 # Generated model artifacts
+saved_models/
 nbs/saved_models/
 nbs/*.html.md
 nbs/*_files/
