@@ -15,7 +15,7 @@ website:
             href: ./piece.ipynb
           - text: Datasource Class
             href: ./datasource.ipynb
-          - text: Embeddings
+          - subsection: Embeddings
             href: ./embeddings.ipynb
             contents:
               - text: Embedding Class
@@ -24,15 +24,25 @@ website:
                 href: ./embeddingColl.ipynb
           - text: Wdecomposition Class
             href: ./wdecomposition.ipynb
+      - section: Module-level Functions API
+        href: ./module_functions.ipynb
+        contents:
+          - text: Embedding Videos
+            href: ./video.ipynb
+          - text: DTW
+            href: ./dtw.ipynb
+          - text: Clustering
+            href: ./clustering.ipynb
           - text: Core
             href: ./00_core.ipynb
-      - section: API Running Example
+      - section: FhEmb Running Examples
         contents:
           - text: Piece Objects
             href: ./piece_ex.ipynb
           - text: Datasource Objects
             href: ./datasource_ex.ipynb
-          - text: Embedding(Collection) Objects
+          - subsection: Embedding(Collection) Objects
+            text: Embedding(Collection) Objects
             href: ./embedding_ex.ipynb
             contents:
               - text: Inspect
@@ -43,14 +53,16 @@ website:
                 href: ./laggedCc_ex.ipynb
               - text: Decompose
                 href: ./decomposeEmb_ex.ipynb
-          - text: Wdecompostion Objects
+          - subsection: Wdecompostion Objects
+            text: Wdecomposition Objects
             href: ./wdecomposition_ex.ipynb
             contents:
               - text: Inspect
                 href: ./inspectDec_ex.ipynb
               - text: Reconstruct
                 href: ./reconstructDec_ex.ipynb
-          - text: Reconstructed EmbeddingCollection Objects
+          - subsection: Reconstructed EmbeddingCollection Objects
+            text: Reconstructed EmbeddingCollection Objects
             href: ./wreconstruction_ex.ipynb
             contents:
               - text: Inspect
@@ -59,6 +71,16 @@ website:
                 href: ./bbootstrapRec_ex.ipynb
               - text: Lagged Cross Correlation
                 href: ./laggedCcRec_ex.ipynb
+      - section: Module-level Examples
+        text: Module-level Examples
+        href: ./module_functions_ex.ipynb
+        contents:
+          - text: Embedding Videos
+            href: ./video_ex.ipynb
+          - text: DTW
+            href: ./dtw_ex.ipynb
+          - text: Clustering
+            href: ./clustering_ex.ipynb
       - section: Intelligence
         href: ./intelligence.ipynb
         contents:
