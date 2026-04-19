@@ -29,6 +29,10 @@ website:
         contents:
           - text: Embedding Videos
             href: ./video.ipynb
+          - text: Shapelets
+            href: ./shapelets.ipynb
+          - text: Prototypical Networks
+            href: ./prototypical.ipynb
           - text: DTW
             href: ./dtw.ipynb
           - text: Clustering
@@ -77,6 +81,10 @@ website:
         contents:
           - text: Embedding Videos
             href: ./video_ex.ipynb
+          - text: Shapelets
+            href: ./shapelets_ex.ipynb
+          - text: Prototypical Networks
+            href: ./prototypical_ex.ipynb
           - text: DTW
             href: ./dtw_ex.ipynb
           - text: Clustering
