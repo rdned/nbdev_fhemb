@@ -29,17 +29,20 @@ website:
         contents:
           - text: Embedding Videos
             href: ./video.ipynb
+          - text: DVAE
+            href: ./dvae.ipynb
           - text: Shapelets
             href: ./shapelets.ipynb
           - text: Prototypical Networks
             href: ./prototypical.ipynb
-          - text: DTW
-            href: ./dtw.ipynb
+          - text: Inter-Series Distance Matrices
+            href: ./dms.ipynb
           - text: Clustering
             href: ./clustering.ipynb
           - text: Core
             href: ./00_core.ipynb
       - section: FhEmb Running Examples
+        href: ./api_ex.ipynb
         contents:
           - text: Piece Objects
             href: ./piece_ex.ipynb
@@ -75,18 +78,20 @@ website:
                 href: ./bbootstrapRec_ex.ipynb
               - text: Lagged Cross Correlation
                 href: ./laggedCcRec_ex.ipynb
-      - section: Module-level Examples
-        text: Module-level Examples
+      - section: Module-Level Examples
+        text: Module-Level Examples
         href: ./module_functions_ex.ipynb
         contents:
           - text: Embedding Videos
             href: ./video_ex.ipynb
+          - text: DVAE
+            href: ./dvae_ex.ipynb
           - text: Shapelets
             href: ./shapelets_ex.ipynb
           - text: Prototypical Networks
             href: ./prototypical_ex.ipynb
-          - text: DTW
-            href: ./dtw_ex.ipynb
+          - text: Inter-Series Distance Matrices
+            href: ./dms_ex.ipynb
           - text: Clustering
             href: ./clustering_ex.ipynb
       - section: Intelligence
