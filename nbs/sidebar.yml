@@ -24,7 +24,7 @@ website:
                 href: ./embeddingColl.ipynb
           - text: Wdecomposition Class
             href: ./wdecomposition.ipynb
-      - section: Module-level Functions API
+      - section: Module-Level Functions API
         href: ./module_functions.ipynb
         contents:
           - text: Embedding Videos
@@ -35,12 +35,10 @@ website:
             href: ./shapelets.ipynb
           - text: Prototypical Networks
             href: ./prototypical.ipynb
-          - text: Inter-Series Distance Matrices
+          - text: Pairwise Relations
             href: ./dms.ipynb
           - text: Clustering
             href: ./clustering.ipynb
-          - text: Core
-            href: ./00_core.ipynb
       - section: FhEmb Running Examples
         href: ./api_ex.ipynb
         contents:
@@ -90,7 +88,7 @@ website:
             href: ./shapelets_ex.ipynb
           - text: Prototypical Networks
             href: ./prototypical_ex.ipynb
-          - text: Inter-Series Distance Matrices
+          - text: Pairwise Relations
             href: ./dms_ex.ipynb
           - text: Clustering
             href: ./clustering_ex.ipynb
