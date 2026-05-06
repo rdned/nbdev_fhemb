@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Inspect Embeddings – nbdev_fhemb</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-54d7eb624e8e9f250d9e9d0cab51a5ae.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="Inspect Embeddings – nbdev_fhemb">
+<meta property="og:image" content="https://rdned.github.io/nbdev_fhemb/inspectEmb_ex_files/figure-html/cell-8-output-1.png">
+<meta property="og:site_name" content="nbdev_fhemb">
+<meta property="og:image:height" content="390">
+<meta property="og:image:width" content="1190">
+<meta name="twitter:title" content="Inspect Embeddings – nbdev_fhemb">
+<meta name="twitter:image" content="https://rdned.github.io/nbdev_fhemb/inspectEmb_ex_files/figure-html/cell-8-output-1.png">
+<meta name="twitter:image-height" content="390">
+<meta name="twitter:image-width" content="1190">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">nbdev_fhemb</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_ex.html">FhEmb Running Examples</a></li><li class="breadcrumb-item"><a href="./embedding_ex.html">Embedding(Collection) Objects</a></li><li class="breadcrumb-item"><a href="./inspectemb_ex.html">Inspect</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome to nbdev_fhemb</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./scripts/README.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Scripts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./workflows/README.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Workflows</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./api.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FhEmb API</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./piece.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Piece Class</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./datasource.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Datasource Class</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./embeddings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Embeddings</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./embedding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Embedding Class</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./embeddingcoll.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">EmbeddingCollection Class</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./wdecomposition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Wdecomposition Class</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./module_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Module-Level Functions API</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./video.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Embedding Videos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dvae.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">DVAE</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./shapelets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Shapelets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prototypical.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prototypical Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./pr_emb.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pairwise Relation Embedding</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pairwise Relation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pr_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pr_geometry.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Geometry</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Clustering</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./api_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FhEmb Running Examples</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./piece_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Piece Objects</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./datasource_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Datasource Objects</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./embedding_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Embedding(Collection) Objects</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./inspectemb_ex.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Inspect</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bbootstrap_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Block Bootstrap</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./laggedcc_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Laggged Cross Correlation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./decomposeemb_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Decompose</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./wdecomposition_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Wdecomposition Objects</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./inspectDec_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inspect</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./reconstructdec_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Reconstruct</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./wreconstruction_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Reconstructed EmbeddingCollection Objects</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./inspectrec_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inspect</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bbootstraprec_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Block Bootstrap</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./laggedccrec_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lagged Cross Correlation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./module_functions_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Module-Level Examples</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./video_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Embedding Videos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dvae_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">DVAE</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./shapelets_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Shapelets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prototypical_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prototypical Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./pr_emb_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pairwise Relation Embedding</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pr_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pairwise Relation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pr_classification_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pr_geometry_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Geometry</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./clustering_ex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Clustering</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./intelligence.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Application - Project on Music &amp; Emotions</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./sedynamics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Signals of Emotional Dynamics</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dg_synch_class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Synchronization Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dg_cluster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Clustering of Signals</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dg_stat_dependance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Statistical Dependendance of Signals</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-numeric-data" id="toc-the-numeric-data" class="nav-link active" data-scroll-target="#the-numeric-data">The Numeric Data</a></li>
+  <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a>
+  <ul class="collapse">
+  <li><a href="#a-projection-to-a-chosen-embedding-component-feature" id="toc-a-projection-to-a-chosen-embedding-component-feature" class="nav-link" data-scroll-target="#a-projection-to-a-chosen-embedding-component-feature">A projection to a chosen embedding component (<code>feature</code>)</a></li>
+  <li><a href="#summaries-of-a-binheight-embedding-bin_emb-over-chosen-frames-frms" id="toc-summaries-of-a-binheight-embedding-bin_emb-over-chosen-frames-frms" class="nav-link" data-scroll-target="#summaries-of-a-binheight-embedding-bin_emb-over-chosen-frames-frms">Summaries of a binheight embedding (<code>bin_emb</code>) over chosen frames (<code>frms</code>)</a></li>
+  <li><a href="#summaries-of-a-selected-embedding-normfacevec_t-over-chosen-frames-frms" id="toc-summaries-of-a-selected-embedding-normfacevec_t-over-chosen-frames-frms" class="nav-link" data-scroll-target="#summaries-of-a-selected-embedding-normfacevec_t-over-chosen-frames-frms">Summaries of a selected embedding (<code>normfacevec_t</code>) over chosen frames (<code>frms</code>)</a></li>
+  <li><a href="#a-summary-of-a-selected-embedding-component-feature-over-a-chosen-frame-interval-intvl" id="toc-a-summary-of-a-selected-embedding-component-feature-over-a-chosen-frame-interval-intvl" class="nav-link" data-scroll-target="#a-summary-of-a-selected-embedding-component-feature-over-a-chosen-frame-interval-intvl">A summary of a selected embedding component (<code>feature</code>) over a chosen frame interval (<code>intvl</code>)</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/rdned/nbdev_fhemb/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="inspectemb_ex.html.md"><i class="bi bi-file-code"></i>CommonMark</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api_ex.html">FhEmb Running Examples</a></li><li class="breadcrumb-item"><a href="./embedding_ex.html">Embedding(Collection) Objects</a></li><li class="breadcrumb-item"><a href="./inspectemb_ex.html">Inspect</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Inspect Embeddings</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<div id="c1deacdc" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nbdev_fhemb.embedding_ex <span class="im">import</span> dg0, pca, percentile_emb, bin_emb, pca_emb, combined_emb0, combined_emb1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that <code>EmbeddingCollection</code> invokes <code>.get_ts_subjs</code>, <code>.binedges</code>, <code>.plot_signal</code> methods through its <a href="./embeddingcoll.html#dynamic-attribute-access">Dynamic Attribute Forwarding</a>.</p>
+</div>
+</div>
+<section id="the-numeric-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-numeric-data">The Numeric Data</h2>
+<section id="a-request-for-a-single-percentile-returns-a-pandas-dataframe" class="level4">
+<h4 class="anchored" data-anchor-id="a-request-for-a-single-percentile-returns-a-pandas-dataframe">A request for a single percentile returns a Pandas dataframe</h4>
+<div id="00282595" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>percentile_emb.get_ts_subjs(<span class="st">'p55'</span>)   <span class="co"># percentiles are prefixed by 'p'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">subj40</th>
+<th data-quarto-table-cell-role="th">subj41</th>
+<th data-quarto-table-cell-role="th">subj42</th>
+<th data-quarto-table-cell-role="th">subj43</th>
+<th data-quarto-table-cell-role="th">subj44</th>
+<th data-quarto-table-cell-role="th">subj47</th>
+<th data-quarto-table-cell-role="th">subj48</th>
+<th data-quarto-table-cell-role="th">subj49</th>
+<th data-quarto-table-cell-role="th">subj50</th>
+<th data-quarto-table-cell-role="th">subj51</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">subj65</th>
+<th data-quarto-table-cell-role="th">subj66</th>
+<th data-quarto-table-cell-role="th">subj67</th>
+<th data-quarto-table-cell-role="th">subj68</th>
+<th data-quarto-table-cell-role="th">subj69</th>
+<th data-quarto-table-cell-role="th">subj70</th>
+<th data-quarto-table-cell-role="th">subj71</th>
+<th data-quarto-table-cell-role="th">subj73</th>
+<th data-quarto-table-cell-role="th">subj74</th>
+<th data-quarto-table-cell-role="th">subj75</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>31.506458</td>
+<td>32.125240</td>
+<td>31.800814</td>
+<td>32.560140</td>
+<td>32.786428</td>
+<td>32.909038</td>
+<td>31.316922</td>
+<td>32.117474</td>
+<td>32.503437</td>
+<td>32.068295</td>
+<td>...</td>
+<td>31.930644</td>
+<td>31.914812</td>
+<td>32.245775</td>
+<td>31.501505</td>
+<td>32.069073</td>
+<td>31.687185</td>
+<td>31.310745</td>
+<td>31.930449</td>
+<td>32.181499</td>
+<td>31.233722</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>31.182337</td>
+<td>32.105428</td>
+<td>31.784720</td>
+<td>32.560905</td>
+<td>32.789658</td>
+<td>32.899582</td>
+<td>31.333058</td>
+<td>32.113586</td>
+<td>32.477349</td>
+<td>32.074715</td>
+<td>...</td>
+<td>31.918918</td>
+<td>31.875685</td>
+<td>32.241907</td>
+<td>31.506657</td>
+<td>32.078602</td>
+<td>31.687185</td>
+<td>31.299582</td>
+<td>31.930449</td>
+<td>32.187313</td>
+<td>31.242910</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>31.189138</td>
+<td>32.117085</td>
+<td>31.717500</td>
+<td>32.548653</td>
+<td>32.789658</td>
+<td>32.895798</td>
+<td>31.325089</td>
+<td>32.106983</td>
+<td>32.495766</td>
+<td>32.060902</td>
+<td>...</td>
+<td>31.915594</td>
+<td>31.899557</td>
+<td>32.241907</td>
+<td>31.509430</td>
+<td>32.070824</td>
+<td>31.683247</td>
+<td>31.291605</td>
+<td>31.926540</td>
+<td>32.185375</td>
+<td>31.231324</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>31.190339</td>
+<td>32.105816</td>
+<td>31.722616</td>
+<td>32.549036</td>
+<td>32.774844</td>
+<td>32.896744</td>
+<td>31.332262</td>
+<td>32.098045</td>
+<td>32.504204</td>
+<td>32.097657</td>
+<td>...</td>
+<td>31.915203</td>
+<td>31.919113</td>
+<td>32.237652</td>
+<td>31.494174</td>
+<td>32.070824</td>
+<td>31.683247</td>
+<td>31.280437</td>
+<td>31.909728</td>
+<td>32.179562</td>
+<td>31.232523</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>31.185738</td>
+<td>32.120969</td>
+<td>31.737957</td>
+<td>32.544440</td>
+<td>32.771424</td>
+<td>32.897689</td>
+<td>31.343811</td>
+<td>32.098434</td>
+<td>32.492699</td>
+<td>32.087742</td>
+<td>...</td>
+<td>31.906990</td>
+<td>31.854143</td>
+<td>32.249256</td>
+<td>31.490805</td>
+<td>32.072964</td>
+<td>31.691124</td>
+<td>31.267667</td>
+<td>31.918722</td>
+<td>32.195061</td>
+<td>31.235718</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">995</th>
+<td>31.781578</td>
+<td>32.151637</td>
+<td>31.801207</td>
+<td>32.846565</td>
+<td>32.790037</td>
+<td>32.948723</td>
+<td>31.836508</td>
+<td>32.069462</td>
+<td>32.504204</td>
+<td>32.164051</td>
+<td>...</td>
+<td>31.997012</td>
+<td>31.864719</td>
+<td>32.346948</td>
+<td>31.460073</td>
+<td>32.133007</td>
+<td>31.903078</td>
+<td>31.385396</td>
+<td>31.914812</td>
+<td>32.334225</td>
+<td>31.122852</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">996</th>
+<td>31.785505</td>
+<td>32.152024</td>
+<td>31.802384</td>
+<td>32.838985</td>
+<td>32.808260</td>
+<td>32.952688</td>
+<td>31.824745</td>
+<td>32.070824</td>
+<td>32.497300</td>
+<td>32.160172</td>
+<td>...</td>
+<td>31.981410</td>
+<td>31.870398</td>
+<td>32.338081</td>
+<td>31.441220</td>
+<td>32.143294</td>
+<td>31.870986</td>
+<td>31.382414</td>
+<td>31.914812</td>
+<td>32.334225</td>
+<td>31.113629</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">997</th>
+<td>31.809054</td>
+<td>32.151248</td>
+<td>31.796889</td>
+<td>32.861725</td>
+<td>32.808260</td>
+<td>32.964014</td>
+<td>31.771562</td>
+<td>32.055064</td>
+<td>32.503437</td>
+<td>32.148533</td>
+<td>...</td>
+<td>31.992916</td>
+<td>31.875685</td>
+<td>32.353500</td>
+<td>31.445390</td>
+<td>32.135531</td>
+<td>31.847483</td>
+<td>31.389373</td>
+<td>31.922630</td>
+<td>32.340008</td>
+<td>31.154911</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">998</th>
+<td>31.785505</td>
+<td>32.159784</td>
+<td>31.792963</td>
+<td>32.846186</td>
+<td>32.827041</td>
+<td>32.956276</td>
+<td>31.724386</td>
+<td>32.042216</td>
+<td>32.489629</td>
+<td>32.179562</td>
+<td>...</td>
+<td>32.008709</td>
+<td>31.877837</td>
+<td>32.361210</td>
+<td>31.450945</td>
+<td>32.131648</td>
+<td>31.871769</td>
+<td>31.382414</td>
+<td>31.910902</td>
+<td>32.328438</td>
+<td>31.168527</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">999</th>
+<td>31.800225</td>
+<td>32.143877</td>
+<td>31.804739</td>
+<td>32.838985</td>
+<td>32.831591</td>
+<td>32.952877</td>
+<td>31.738940</td>
+<td>32.066933</td>
+<td>32.488862</td>
+<td>32.173162</td>
+<td>...</td>
+<td>31.989016</td>
+<td>31.873923</td>
+<td>32.344441</td>
+<td>31.455510</td>
+<td>32.135531</td>
+<td>31.894667</td>
+<td>31.378437</td>
+<td>31.918722</td>
+<td>32.322651</td>
+<td>31.164523</td>
+</tr>
+</tbody>
+</table>
+
+<p>1000 rows × 32 columns</p>
+</div>
+</div>
+</div>
+<div id="30e7a0d8" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>combined_emb0.get_ts_subjs(<span class="st">'p55'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>{'pcomponents_ts': Empty DataFrame
+ Columns: []
+ Index: [],
+ 'percentiles_ts':         subj40     subj41     subj42     subj43     subj44     subj47  \
+ 0    31.506458  32.125240  31.800814  32.560140  32.786428  32.909038   
+ 1    31.182337  32.105428  31.784720  32.560905  32.789658  32.899582   
+ 2    31.189138  32.117085  31.717500  32.548653  32.789658  32.895798   
+ 3    31.190339  32.105816  31.722616  32.549036  32.774844  32.896744   
+ 4    31.185738  32.120969  31.737957  32.544440  32.771424  32.897689   
+ ..         ...        ...        ...        ...        ...        ...   
+ 995  31.781578  32.151637  31.801207  32.846565  32.790037  32.948723   
+ 996  31.785505  32.152024  31.802384  32.838985  32.808260  32.952688   
+ 997  31.809054  32.151248  31.796889  32.861725  32.808260  32.964014   
+ 998  31.785505  32.159784  31.792963  32.846186  32.827041  32.956276   
+ 999  31.800225  32.143877  31.804739  32.838985  32.831591  32.952877   
+ 
+         subj48     subj49     subj50     subj51  ...     subj65     subj66  \
+ 0    31.316922  32.117474  32.503437  32.068295  ...  31.930644  31.914812   
+ 1    31.333058  32.113586  32.477349  32.074715  ...  31.918918  31.875685   
+ 2    31.325089  32.106983  32.495766  32.060902  ...  31.915594  31.899557   
+ 3    31.332262  32.098045  32.504204  32.097657  ...  31.915203  31.919113   
+ 4    31.343811  32.098434  32.492699  32.087742  ...  31.906990  31.854143   
+ ..         ...        ...        ...        ...  ...        ...        ...   
+ 995  31.836508  32.069462  32.504204  32.164051  ...  31.997012  31.864719   
+ 996  31.824745  32.070824  32.497300  32.160172  ...  31.981410  31.870398   
+ 997  31.771562  32.055064  32.503437  32.148533  ...  31.992916  31.875685   
+ 998  31.724386  32.042216  32.489629  32.179562  ...  32.008709  31.877837   
+ 999  31.738940  32.066933  32.488862  32.173162  ...  31.989016  31.873923   
+ 
+         subj67     subj68     subj69     subj70     subj71     subj73  \
+ 0    32.245775  31.501505  32.069073  31.687185  31.310745  31.930449   
+ 1    32.241907  31.506657  32.078602  31.687185  31.299582  31.930449   
+ 2    32.241907  31.509430  32.070824  31.683247  31.291605  31.926540   
+ 3    32.237652  31.494174  32.070824  31.683247  31.280437  31.909728   
+ 4    32.249256  31.490805  32.072964  31.691124  31.267667  31.918722   
+ ..         ...        ...        ...        ...        ...        ...   
+ 995  32.346948  31.460073  32.133007  31.903078  31.385396  31.914812   
+ 996  32.338081  31.441220  32.143294  31.870986  31.382414  31.914812   
+ 997  32.353500  31.445390  32.135531  31.847483  31.389373  31.922630   
+ 998  32.361210  31.450945  32.131648  31.871769  31.382414  31.910902   
+ 999  32.344441  31.455510  32.135531  31.894667  31.378437  31.918722   
+ 
+         subj74     subj75  
+ 0    32.181499  31.233722  
+ 1    32.187313  31.242910  
+ 2    32.185375  31.231324  
+ 3    32.179562  31.232523  
+ 4    32.195061  31.235718  
+ ..         ...        ...  
+ 995  32.334225  31.122852  
+ 996  32.334225  31.113629  
+ 997  32.340008  31.154911  
+ 998  32.328438  31.168527  
+ 999  32.322651  31.164523  
+ 
+ [1000 rows x 32 columns],
+ 'binheights_ts': Empty DataFrame
+ Columns: []
+ Index: []}</code></pre>
+</div>
+</div>
+</section>
+<section id="a-request-for-a-list-of-percentiles-returns-a-dictionary-of-dataframes" class="level4">
+<h4 class="anchored" data-anchor-id="a-request-for-a-list-of-percentiles-returns-a-dictionary-of-dataframes">A request for a list of percentiles returns a dictionary of dataframes</h4>
+<div id="fbeec4b7" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>percentile_emb.get_ts_subjs([<span class="st">'p50'</span>,<span class="st">'p55'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>{'p50':         subj40     subj41     subj42     subj43     subj44     subj47  \
+ 0    31.252890  32.008514  31.667484  32.511105  32.745951  32.861725   
+ 1    31.010395  32.016308  31.663542  32.514938  32.736443  32.861723   
+ 2    31.018439  31.992916  31.584604  32.491932  32.736443  32.861725   
+ 3    31.048591  32.004616  31.568792  32.511105  32.738344  32.857935   
+ 4    31.052611  31.992916  31.592506  32.495766  32.736441  32.854145   
+ ..         ...        ...        ...        ...        ...        ...   
+ 995  31.732450  32.086380  31.754076  32.827610  32.747852  32.922272   
+ 996  31.732450  32.059151  31.742283  32.823814  32.764961  32.929832   
+ 997  31.722616  32.059151  31.746214  32.831402  32.783960  32.929832   
+ 998  31.718681  32.074715  31.738350  32.827610  32.785858  32.929831   
+ 999  31.730484  32.063042  31.734417  32.827610  32.791555  32.918491   
+ 
+         subj48     subj49     subj50     subj51  ...     subj65     subj66  \
+ 0    31.216936  32.066933  32.457382  31.998767  ...  31.836508  31.781578   
+ 1    31.208939  32.061096  32.442017  31.996817  ...  31.775686  31.758007   
+ 2    31.216934  32.061096  32.442017  31.969505  ...  31.775686  31.801207   
+ 3    31.208939  32.039684  32.449699  31.946077  ...  31.779614  31.785505   
+ 4    31.220933  32.035789  32.445858  31.994865  ...  31.779614  31.761936   
+ ..         ...        ...        ...        ...  ...        ...        ...   
+ 995  31.655657  31.983165  32.430485  32.068878  ...  31.877642  31.730484   
+ 996  31.649740  31.955841  32.430485  32.076658  ...  31.869811  31.730484   
+ 997  31.620152  31.963650  32.422794  32.086382  ...  31.871769  31.746214   
+ 998  31.614229  31.977312  32.422794  32.088326  ...  31.858061  31.736383   
+ 999  31.562860  31.975361  32.422794  32.068878  ...  31.856102  31.736383   
+ 
+         subj67     subj68     subj69     subj70     subj71     subj73  \
+ 0    32.198936  31.434074  32.014360  31.606332  31.150906  31.846307   
+ 1    32.202808  31.426132  32.018257  31.612255  31.122852  31.844347   
+ 2    32.191189  31.412229  32.008514  31.608306  31.130869  31.848267   
+ 3    32.206684  31.430105  32.024105  31.600409  31.118843  31.842387   
+ 4    32.210556  31.428118  32.018257  31.608307  31.114832  31.848267   
+ ..         ...        ...        ...        ...        ...        ...   
+ 995  32.305286  31.316724  32.084436  31.824745  31.272855  31.836508   
+ 996  32.303356  31.314732  32.086380  31.781578  31.270860  31.816902   
+ 997  32.311073  31.334652  32.092215  31.765865  31.266868  31.812979   
+ 998  32.303356  31.310745  32.101933  31.769794  31.258884  31.824745   
+ 999  32.318792  31.328677  32.082493  31.750145  31.264873  31.816902   
+ 
+         subj74     subj75  
+ 0    32.113586  31.022463  
+ 1    32.082493  31.022463  
+ 2    32.098045  31.030504  
+ 3    32.086380  31.042564  
+ 4    32.082493  31.030504  
+ ..         ...        ...  
+ 995  32.276318  30.913694  
+ 996  32.276318  30.909658  
+ 997  32.256992  30.958052  
+ 998  32.264725  30.945959  
+ 999  32.256992  30.949991  
+ 
+ [1000 rows x 32 columns],
+ 'p55':         subj40     subj41     subj42     subj43     subj44     subj47  \
+ 0    31.506458  32.125240  31.800814  32.560140  32.786428  32.909038   
+ 1    31.182337  32.105428  31.784720  32.560905  32.789658  32.899582   
+ 2    31.189138  32.117085  31.717500  32.548653  32.789658  32.895798   
+ 3    31.190339  32.105816  31.722616  32.549036  32.774844  32.896744   
+ 4    31.185738  32.120969  31.737957  32.544440  32.771424  32.897689   
+ ..         ...        ...        ...        ...        ...        ...   
+ 995  31.781578  32.151637  31.801207  32.846565  32.790037  32.948723   
+ 996  31.785505  32.152024  31.802384  32.838985  32.808260  32.952688   
+ 997  31.809054  32.151248  31.796889  32.861725  32.808260  32.964014   
+ 998  31.785505  32.159784  31.792963  32.846186  32.827041  32.956276   
+ 999  31.800225  32.143877  31.804739  32.838985  32.831591  32.952877   
+ 
+         subj48     subj49     subj50     subj51  ...     subj65     subj66  \
+ 0    31.316922  32.117474  32.503437  32.068295  ...  31.930644  31.914812   
+ 1    31.333058  32.113586  32.477349  32.074715  ...  31.918918  31.875685   
+ 2    31.325089  32.106983  32.495766  32.060902  ...  31.915594  31.899557   
+ 3    31.332262  32.098045  32.504204  32.097657  ...  31.915203  31.919113   
+ 4    31.343811  32.098434  32.492699  32.087742  ...  31.906990  31.854143   
+ ..         ...        ...        ...        ...  ...        ...        ...   
+ 995  31.836508  32.069462  32.504204  32.164051  ...  31.997012  31.864719   
+ 996  31.824745  32.070824  32.497300  32.160172  ...  31.981410  31.870398   
+ 997  31.771562  32.055064  32.503437  32.148533  ...  31.992916  31.875685   
+ 998  31.724386  32.042216  32.489629  32.179562  ...  32.008709  31.877837   
+ 999  31.738940  32.066933  32.488862  32.173162  ...  31.989016  31.873923   
+ 
+         subj67     subj68     subj69     subj70     subj71     subj73  \
+ 0    32.245775  31.501505  32.069073  31.687185  31.310745  31.930449   
+ 1    32.241907  31.506657  32.078602  31.687185  31.299582  31.930449   
+ 2    32.241907  31.509430  32.070824  31.683247  31.291605  31.926540   
+ 3    32.237652  31.494174  32.070824  31.683247  31.280437  31.909728   
+ 4    32.249256  31.490805  32.072964  31.691124  31.267667  31.918722   
+ ..         ...        ...        ...        ...        ...        ...   
+ 995  32.346948  31.460073  32.133007  31.903078  31.385396  31.914812   
+ 996  32.338081  31.441220  32.143294  31.870986  31.382414  31.914812   
+ 997  32.353500  31.445390  32.135531  31.847483  31.389373  31.922630   
+ 998  32.361210  31.450945  32.131648  31.871769  31.382414  31.910902   
+ 999  32.344441  31.455510  32.135531  31.894667  31.378437  31.918722   
+ 
+         subj74     subj75  
+ 0    32.181499  31.233722  
+ 1    32.187313  31.242910  
+ 2    32.185375  31.231324  
+ 3    32.179562  31.232523  
+ 4    32.195061  31.235718  
+ ..         ...        ...  
+ 995  32.334225  31.122852  
+ 996  32.334225  31.113629  
+ 997  32.340008  31.154911  
+ 998  32.328438  31.168527  
+ 999  32.322651  31.164523  
+ 
+ [1000 rows x 32 columns]}</code></pre>
+</div>
+</div>
+</section>
+<section id="binheights" class="level4">
+<h4 class="anchored" data-anchor-id="binheights">Binheights</h4>
+<blockquote class="blockquote">
+<p>this type of embedding has binedges, which define the bin intervals. Bin intervals do not have to have the same width.</p>
+</blockquote>
+<div id="2451ee11" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>bin_emb.binedges[<span class="st">'subj66'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>array([[27.018463, 27.336157],
+       [27.336157, 27.65385 ],
+       [27.65385 , 27.971544],
+       [27.971544, 28.289238],
+       [28.289238, 28.606934],
+       [28.606934, 28.924627],
+       [28.924627, 29.242321],
+       [29.242321, 29.560015],
+       [29.560015, 29.877708],
+       [29.877708, 30.195402],
+       [30.195402, 30.513096],
+       [30.513096, 30.83079 ],
+       [30.83079 , 31.148483],
+       [31.148483, 31.466177],
+       [31.466177, 31.78387 ],
+       [31.78387 , 32.101566],
+       [32.101566, 32.41926 ],
+       [32.41926 , 32.736954],
+       [32.736954, 33.054646],
+       [33.054646, 33.37234 ]], dtype=float32)</code></pre>
+</div>
+</div>
+<div id="cb60b143" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>combined_emb1.binedges[<span class="st">'binheights_ts'</span>][<span class="st">'subj66'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>array([[27.018463, 27.336157],
+       [27.336157, 27.65385 ],
+       [27.65385 , 27.971544],
+       [27.971544, 28.289238],
+       [28.289238, 28.606934],
+       [28.606934, 28.924627],
+       [28.924627, 29.242321],
+       [29.242321, 29.560015],
+       [29.560015, 29.877708],
+       [29.877708, 30.195402],
+       [30.195402, 30.513096],
+       [30.513096, 30.83079 ],
+       [30.83079 , 31.148483],
+       [31.148483, 31.466177],
+       [31.466177, 31.78387 ],
+       [31.78387 , 32.101566],
+       [32.101566, 32.41926 ],
+       [32.41926 , 32.736954],
+       [32.736954, 33.054646],
+       [33.054646, 33.37234 ]], dtype=float32)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="plots" class="level2">
+<h2 class="anchored" data-anchor-id="plots">Plots</h2>
+<section id="a-projection-to-a-chosen-embedding-component-feature" class="level3">
+<h3 class="anchored" data-anchor-id="a-projection-to-a-chosen-embedding-component-feature">A projection to a chosen embedding component (<code>feature</code>)</h3>
+<section id="percentiles" class="level4">
+<h4 class="anchored" data-anchor-id="percentiles">Percentiles</h4>
+<div id="a06aa341" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>percentile_emb.plot_signal(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    subjs<span class="op">=</span>[<span class="dv">40</span>,<span class="dv">41</span>],    <span class="co"># specify subject(s) to plot</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    feature<span class="op">=</span><span class="st">'p0'</span>      <span class="co"># specify feature to plot (e.g., 'p0' for 0th percentile        </span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inspectEmb_ex_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>(&lt;Figure size 1200x400 with 2 Axes&gt;,
+ [&lt;Axes: title={'center': 'subj40: Frequency interval All Hz, period interval All s'}&gt;,
+  &lt;Axes: title={'center': 'subj41: Frequency interval All Hz, period interval All s'}&gt;])</code></pre>
+</div>
+</div>
+<div id="2420238e" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>combined_emb1.plot_signal(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    subjs<span class="op">=</span>[<span class="dv">40</span>,<span class="dv">41</span>],    <span class="co"># specify subject(s) to plot</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    feature<span class="op">=</span><span class="st">'p0'</span>      <span class="co"># specify feature to plot (e.g., 'p0' for 0th percentile</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inspectEmb_ex_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>{'percentiles_ts': (&lt;Figure size 1200x400 with 2 Axes&gt;,
+  [&lt;Axes: title={'center': 'subj40: Frequency interval All Hz, period interval All s'}&gt;,
+   &lt;Axes: title={'center': 'subj41: Frequency interval All Hz, period interval All s'}&gt;])}</code></pre>
+</div>
+</div>
+</section>
+<section id="eigenfaces" class="level4">
+<h4 class="anchored" data-anchor-id="eigenfaces">Eigenfaces</h4>
+<div id="d3c1f96b" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>pca_emb.plot_signal(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    subjs<span class="op">=</span>[<span class="dv">40</span>,<span class="dv">41</span>],   <span class="co"># specify subject(s) to plot: may be specified also as intervals, e.g., [(40, 45), 47] </span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    feature<span class="op">=</span><span class="st">'pc2'</span>    <span class="co"># specify feature to plot: principal components are prefixed by 'pc'    </span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inspectEmb_ex_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>(&lt;Figure size 1200x400 with 2 Axes&gt;,
+ [&lt;Axes: title={'center': 'subj40: Frequency interval All Hz, period interval All s'}&gt;,
+  &lt;Axes: title={'center': 'subj41: Frequency interval All Hz, period interval All s'}&gt;])</code></pre>
+</div>
+</div>
+<div id="208a1993" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>combined_emb1.plot_signal(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    subjs<span class="op">=</span>[<span class="dv">40</span>,<span class="dv">41</span>],   <span class="co"># specify subject(s) to plot: may be specified also as intervals, e.g., [(40, 45), 47] </span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    feature<span class="op">=</span><span class="st">'pc2'</span>    <span class="co"># specify feature to plot: principal components are prefixed by 'pc'</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inspectEmb_ex_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>{'pcomponents_ts': (&lt;Figure size 1200x400 with 2 Axes&gt;,
+  [&lt;Axes: title={'center': 'subj40: Frequency interval All Hz, period interval All s'}&gt;,
+   &lt;Axes: title={'center': 'subj41: Frequency interval All Hz, period interval All s'}&gt;])}</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Heatmap time series are embedded into eigenface coordinate system by projecting each heatmap onto the eigenface basis that can be visualized.</p>
+</blockquote>
+<div id="2f4e0f39" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>pca_emb.visualize_eigenfaces(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    subjs<span class="op">=</span>[<span class="dv">40</span>],       <span class="co"># specify subject(s) to plot: may be specified also as intervals, e.g., [(40, 45), 47] </span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    components<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">1</span>]  <span class="co"># specify principle components, i.e., eigenfaces</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inspectEmb_ex_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inspectEmb_ex_files/figure-html/cell-12-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>{'subj40': [&lt;Figure size 640x480 with 2 Axes&gt;,
+  &lt;Figure size 640x480 with 2 Axes&gt;]}</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>We can also visualize eigenfaces from a <code>Datasource</code> object with a nonstationary shape. Such a <code>Datasource</code>, like for example <code>facebbox_t</code>, must be “stationarized” by converting into <code>DatasourceResized</code> via <code>.rsfacebbox_t</code>.</p>
+</blockquote>
+<div id="287d03fc" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pca_emb_rs <span class="op">=</span> dg0.facebbox_t.rsfacebbox_t.create_pca_embedding(factory<span class="op">=</span>pca)[<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="90a0df03" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>pca_emb_rs.plot_signal(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    subjs<span class="op">=</span>[<span class="dv">40</span>,<span class="dv">41</span>],    <span class="co"># specify subject(s) to plot: may be specified also as intervals, e.g., [(40, 45), 47]  </span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    feature<span class="op">=</span><span class="st">'pc2'</span>     <span class="co"># specify feature to plot: principal components are prefixed by 'pc'    </span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inspectEmb_ex_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>(&lt;Figure size 1200x400 with 2 Axes&gt;,
+ [&lt;Axes: title={'center': 'subj40: Frequency interval All Hz, period interval All s'}&gt;,
+  &lt;Axes: title={'center': 'subj41: Frequency interval All Hz, period interval All s'}&gt;])</code></pre>
+</div>
+</div>
+<div id="a0727be0" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>pca_emb_rs.visualize_eigenfaces(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>        subjs<span class="op">=</span>[<span class="dv">40</span>],       <span class="co"># specify subject(s) to plot: may be specified also as intervals, e.g., [(40, 45), 47] </span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>        components<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">1</span>]  <span class="co"># specify principle components, i.e., eigenfaces</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inspectEmb_ex_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inspectEmb_ex_files/figure-html/cell-15-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>{'subj40': [&lt;Figure size 640x480 with 2 Axes&gt;,
+  &lt;Figure size 640x480 with 2 Axes&gt;]}</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="summaries-of-a-binheight-embedding-bin_emb-over-chosen-frames-frms" class="level3">
+<h3 class="anchored" data-anchor-id="summaries-of-a-binheight-embedding-bin_emb-over-chosen-frames-frms">Summaries of a binheight embedding (<code>bin_emb</code>) over chosen frames (<code>frms</code>)</h3>
+<div id="ceffead0" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>bin_emb.plot_temperaturebars(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    subjs<span class="op">=</span>[<span class="dv">40</span>, <span class="dv">41</span>],      <span class="co"># specify subject(s) to plot: may be specified also as intervals, e.g., [(40, 45), 47] </span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    frms<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">100</span>,<span class="dv">900</span>],    <span class="co"># specify frame(s) to plot (e.g., [0, 100, 900])</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    centralized<span class="op">=</span><span class="va">False</span>    <span class="co"># specify whether to centralize the data (default: False): each bin around its own mean (centralized=True)     </span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inspectEmb_ex_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="summaries-of-a-selected-embedding-normfacevec_t-over-chosen-frames-frms" class="level3">
+<h3 class="anchored" data-anchor-id="summaries-of-a-selected-embedding-normfacevec_t-over-chosen-frames-frms">Summaries of a selected embedding (<code>normfacevec_t</code>) over chosen frames (<code>frms</code>)</h3>
+<div id="2831b89c" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>dg0.facebbox_t.rsfacebbox_t.normfacevec_ts.plot_temperaturehist(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    subjs<span class="op">=</span>[<span class="dv">40</span>, <span class="dv">41</span>],  <span class="co"># sspecify subject(s) to plot: may be specified also as intervals, e.g., [(40, 45), 47] </span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    frms<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">100</span>,<span class="dv">200</span>] <span class="co"># specify frames to plot (e.g., [0, 100, 200]</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inspectEmb_ex_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="a-summary-of-a-selected-embedding-component-feature-over-a-chosen-frame-interval-intvl" class="level3">
+<h3 class="anchored" data-anchor-id="a-summary-of-a-selected-embedding-component-feature-over-a-chosen-frame-interval-intvl">A summary of a selected embedding component (<code>feature</code>) over a chosen frame interval (<code>intvl</code>)</h3>
+<div id="16d3389d" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>percentile_emb.plot_intvlhist(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    subjs<span class="op">=</span>[<span class="dv">41</span>],        <span class="co"># specify subject(s) to plot: may be specified also as intervals, e.g., [(40, 45), 47] </span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    intvl<span class="op">=</span>(<span class="dv">900</span>,<span class="dv">1000</span>),  <span class="co"># specify interval of frames to plot (e.g., (900, 1000))</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    feature<span class="op">=</span><span class="st">'p90'</span>      <span class="co"># specify feature to plot (e.g., 'p90' for 90th percentile</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="inspectEmb_ex_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/rdned\.github\.io\/nbdev_fhemb");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/rdned/nbdev_fhemb/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
