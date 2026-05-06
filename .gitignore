@@ -156,6 +156,7 @@ saved_models/
 nbs/saved_models/
 nbs/*.html.md
 nbs/*_files/
+nbs/*.png
 nbs/site_libs/
 scripts/*.html.md
 nbs/.quarto/

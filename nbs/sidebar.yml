@@ -35,8 +35,16 @@ website:
             href: ./shapelets.ipynb
           - text: Prototypical Networks
             href: ./prototypical.ipynb
-          - text: Pairwise Relations
-            href: ./dms.ipynb
+          - subsection: Pairwise Relation Embedding
+            text: Pairwise Relation Embedding
+            href: ./pr_emb.ipynb
+            contents:
+              - text: Pairwise Relation
+                href: ./pr.ipynb
+              - text: Classification
+                href: ./pr_classification.ipynb
+              - text: Geometry
+                href: ./pr_geometry.ipynb
           - text: Clustering
             href: ./clustering.ipynb
       - section: FhEmb Running Examples
@@ -88,16 +96,28 @@ website:
             href: ./shapelets_ex.ipynb
           - text: Prototypical Networks
             href: ./prototypical_ex.ipynb
-          - text: Pairwise Relations
-            href: ./dms_ex.ipynb
+          - subsectin: Pairwise Relation Embedding
+            text: Pairwise Relation Embedding
+            href: ./pr_emb_ex.ipynb
+            contents:
+              - text: Pairwise Relation
+                href: ./pr_ex.ipynb
+              - text: Classification
+                href: ./pr_classification_ex.ipynb
+              - text: Geometry
+                href: ./pr_geometry_ex.ipynb
           - text: Clustering
             href: ./clustering_ex.ipynb
-      - section: Intelligence
+      - section:  Application - Project on Music & Emotions
         href: ./intelligence.ipynb
         contents:
-          - text: Basic Analysis
-            href: ./tfreq.ipynb
-          - text: Crosscorrelations
-            href: ./lagged_ccorr.ipynb
-          - text: Classificaton
-            href: ./classify.ipynb
+          - subsection: Signals of Emotional Dynamics
+            text: Signals of Emotional Dynamics
+            href: ./sedynamics.ipynb
+            contents:
+              - text: Synchronization Classification
+                href: ./dg_synch_class.ipynb
+              - text: Clustering of Signals
+                href: ./dg_cluster.ipynb
+          - text: Statistical Dependendance of Signals
+            href: ./dg_stat_dependance.ipynb
